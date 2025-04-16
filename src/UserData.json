@@ -1,0 +1,235 @@
+{
+  "History": [
+    {
+      "player": "JohnDoe",
+      "score": "8/10",
+      "category": "Science",
+      "timestamp": "2025-04-15T14:30:00",
+      "status": "pass"
+    },
+    {
+      "player": "JaneSmith",
+      "score": "7/10",
+      "category": "Science",
+      "timestamp": "2025-04-15T15:45:00",
+      "status": "pass"
+    },
+    {
+      "player": "JaneSmith",
+      "score": "5/10",
+      "category": "Math",
+      "timestamp": "2025-04-15T15:45:00",
+      "status": "pass"
+    },
+    {
+      "player": "JohnDoe",
+      "score": "6/10",
+      "category": "Math",
+      "timestamp": "2025-04-15T15:45:00",
+      "status": "pass"
+    },
+    {
+      "player": "Neill",
+      "score": "3/10",
+      "category": "History",
+      "timestamp": "2025-04-15T15:45:00",
+      "status": "fail"
+    },
+    {
+      "player": "JohnDoe",
+      "score": "7/10",
+      "category": "English",
+      "timestamp": "2025-04-16T09:15:00",
+      "status": "pass"
+    },
+    {
+      "player": "Enter player name",
+      "score": "3/10",
+      "category": "Math",
+      "timestamp": "2025-04-15T10:00:00",
+      "status": "fail"
+    },
+    {
+      "player": "ahsdiahd",
+      "score": "3/10",
+      "category": "Science",
+      "timestamp": "2025-04-15T10:05:00",
+      "status": "fail"
+    },
+    {
+      "player": "Hello",
+      "score": "3/10",
+      "category": "Math",
+      "timestamp": "2025-04-15T10:10:00",
+      "status": "fail"
+    },
+    {
+      "player": "Neil",
+      "score": "3/10",
+      "category": "Science",
+      "timestamp": "2025-04-15T10:15:00",
+      "status": "fail"
+    },
+    {
+      "player": "jex",
+      "score": "3/10",
+      "category": "English",
+      "timestamp": "2025-04-15T10:20:00",
+      "status": "fail"
+    },
+    {
+      "player": "Eduardo II L. Millondaga",
+      "score": "3/10",
+      "category": "Math",
+      "timestamp": "2025-04-15T10:25:00",
+      "status": "fail"
+    },
+    {
+      "player": "Enter player name",
+      "score": "3/10",
+      "category": "English",
+      "timestamp": "2025-04-15T10:30:00",
+      "status": "fail"
+    },
+    {
+      "player": "Enter player name",
+      "score": "3/10",
+      "category": "Math",
+      "timestamp": "2025-04-15T10:35:00",
+      "status": "fail"
+    },
+    {
+      "player": "Enter player name",
+      "score": "3/10",
+      "category": "Math",
+      "timestamp": "2025-04-15T10:40:00",
+      "status": "fail"
+    },
+    {
+      "player": "Justin",
+      "score": "3/10",
+      "category": "Math",
+      "timestamp": "2025-04-15T10:45:00",
+      "status": "fail"
+    }
+  ],
+  "Standing": [
+    {
+      "player": "JohnDoe",
+      "quizzesDone": 6,
+      "category": "Science",
+      "timestamp": "2025-04-15T14:30:00"
+    },
+    {
+      "player": "JaneSmith",
+      "quizzesDone": 4,
+      "category": "Science",
+      "timestamp": "2025-04-15T15:45:00"
+    },
+    {
+      "player": "JaneSmith",
+      "quizzesDone": 7,
+      "category": "Math",
+      "timestamp": "2025-04-15T15:45:00"
+    },
+    {
+      "player": "JohnDoe",
+      "quizzesDone": 4,
+      "category": "Math",
+      "timestamp": "2025-04-15T15:45:00"
+    },
+    {
+      "player": "Neill",
+      "quizzesDone": 9,
+      "category": "History",
+      "timestamp": "2025-04-15T15:45:00"
+    },
+    {
+      "player": "JohnDoe",
+      "quizzesDone": 4,
+      "category": "English",
+      "timestamp": "2025-04-16T09:15:00"
+    },
+    {
+      "player": "Enter player name",
+      "quizzesDone": 1,
+      "category": "Math",
+      "timestamp": "2025-04-15T10:00:00"
+    },
+    {
+      "player": "ahsdiahd",
+      "quizzesDone": 1,
+      "category": "Science",
+      "timestamp": "2025-04-15T10:05:00"
+    },
+    {
+      "player": "Hello",
+      "quizzesDone": 1,
+      "category": "Math",
+      "timestamp": "2025-04-15T10:10:00"
+    },
+    {
+      "player": "Neil",
+      "quizzesDone": 1,
+      "category": "Science",
+      "timestamp": "2025-04-15T10:15:00"
+    },
+    {
+      "player": "jex",
+      "quizzesDone": 1,
+      "category": "English",
+      "timestamp": "2025-04-15T10:20:00"
+    },
+    {
+      "player": "Eduardo II L. Millondaga",
+      "quizzesDone": 1,
+      "category": "Math",
+      "timestamp": "2025-04-15T10:25:00"
+    },
+    {
+      "player": "Enter player name",
+      "quizzesDone": 1,
+      "category": "English",
+      "timestamp": "2025-04-15T10:30:00"
+    },
+    {
+      "player": "Justin",
+      "quizzesDone": 1,
+      "category": "Math",
+      "timestamp": "2025-04-15T10:45:00"
+    }
+  ],
+    "Accounts": [{
+            "password": "password1",
+            "type": "Game Master",
+            "username": "user1"
+        }, {
+            "password": "password2",
+            "type": "Player",
+            "username": "user2"
+        }, {
+            "password": "test1",
+            "type": "Game Master",
+            "username": "test1"
+        }, {
+            "password": "test2",
+            "type": "Player",
+            "username": "test2"
+        }, {
+            "password": "test3",
+            "type": "Game Master",
+            "username": "test3"
+        }, {
+            "password": "test10",
+            "type": "Game Master",
+            "username": "test10"
+        }, {
+            "password": "neill",
+            "type": "Game Master",
+            "username": "Neill"
+        }, {
+            "password": "james",
+            "type": "Player",
+            "username": "James"
+        }]
+}
