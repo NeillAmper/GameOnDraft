@@ -19,19 +19,21 @@ public class Quiz extends javax.swing.JFrame {
     public static int score = 0;
     public static int maxscore = 0;
     private final String playerName;
+    private final String quizData;
     private String correctanswer;
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
     private int index = 0;
     private String selectedCategory;
     private javax.swing.Timer questionTimer;
-    private int timeLeft = 300;
+    private int timeLeft = 300;  // 5-minute timer per question
     private final List<JSONObject> scenarioList = new ArrayList<>();
     private final List<String> scenarioHistory = new ArrayList<>();
     private final List<String> scenarioPaths = new ArrayList<>();
 
-    public Quiz(String playerName) {
+    public Quiz(String playerName, String quizData) {
         initComponents();
         this.playerName = playerName;
+        this.quizData = quizData;
         selectedCategory = QuizSelection.getCategorySelection_selected();
         if (selectedCategory == null || selectedCategory.isEmpty()) {
             selectedCategory = "Default";
@@ -53,7 +55,7 @@ public class Quiz extends javax.swing.JFrame {
         option3 = new javax.swing.JToggleButton();
         option4 = new javax.swing.JToggleButton();
         nextButton = new javax.swing.JButton();
-        compbtn = new javax.swing.JButton();
+        completeButton = new javax.swing.JButton();
         timerLabel = new javax.swing.JLabel();
         scenarioLabel = new javax.swing.JLabel();
         previousQuestionButton = new javax.swing.JButton();
@@ -103,11 +105,11 @@ public class Quiz extends javax.swing.JFrame {
             }
         });
 
-        compbtn.setText("Complete");
-        compbtn.setEnabled(false);
-        compbtn.addActionListener(new java.awt.event.ActionListener() {
+        completeButton.setText("Complete");
+        completeButton.setEnabled(false);
+        completeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                compbtnActionPerformed(evt);
+                completeButtonActionPerformed(evt);
             }
         });
 
@@ -132,7 +134,7 @@ public class Quiz extends javax.swing.JFrame {
                         .addGap(177, 177, 177)
                         .addComponent(nextButton)
                         .addGap(121, 121, 121)
-                        .addComponent(compbtn))
+                        .addComponent(completeButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -187,7 +189,7 @@ public class Quiz extends javax.swing.JFrame {
                 .addGap(45, 45, 45)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nextButton)
-                    .addComponent(compbtn)
+                    .addComponent(completeButton)
                     .addComponent(previousQuestionButton))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
@@ -257,15 +259,16 @@ public class Quiz extends javax.swing.JFrame {
 
     }//GEN-LAST:event_option4ActionPerformed
 
-    private void compbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compbtnActionPerformed
+    private void completeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completeButtonActionPerformed
         try {
             saveQuizResults();
         } catch (IOException | ParseException e) {
             Logger.getLogger(Quiz.class.getName()).log(Level.SEVERE, null, e);
         }
         JOptionPane.showMessageDialog(this, "Quiz Completed!");
-        dispose();
-    }//GEN-LAST:event_compbtnActionPerformed
+        this.setVisible(false);
+        new QuizResult(playerName, quizData, 1, 2, "Player").setVisible(true);
+    }//GEN-LAST:event_completeButtonActionPerformed
 
     private void previousQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousQuestionButtonActionPerformed
         if (index > 0) {
@@ -277,7 +280,7 @@ public class Quiz extends javax.swing.JFrame {
     private void loadQuizData() {
         try (FileReader reader = new FileReader(FILE_PATH[0])) {
             JSONParser jsonParser = new JSONParser();
-            JSONObject quizData = (JSONObject) jsonParser.parse(reader);
+            JSONObject quizData = (JSONObject) jsonParser.parse(reader); // Fix the missing variable assignment
             JSONArray quizzes = (JSONArray) quizData.get("Quizzes");
 
             for (Object obj : quizzes) {
@@ -307,7 +310,7 @@ public class Quiz extends javax.swing.JFrame {
 
     private void loadNextQuestion() {
         if (index >= scenarioList.size()) {
-            compbtn.setEnabled(true);
+            completeButton.setEnabled(true);
             nextButton.setEnabled(false);
             if (questionTimer != null) {
                 questionTimer.stop();
@@ -444,14 +447,14 @@ public class Quiz extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Quiz("Player1").setVisible(true);
+            new Quiz("Player1", "Test").setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel categoryLabel;
-    private javax.swing.JButton compbtn;
+    private javax.swing.JButton completeButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton nextButton;
     private javax.swing.JToggleButton option1;

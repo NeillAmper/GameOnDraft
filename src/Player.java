@@ -3,7 +3,7 @@ public class Player extends javax.swing.JFrame {
 
     private final String playerName;
 
-    public Player(String playerName) {
+    public Player(String playerName, String player, int par, int par1, String player1) {
         this.playerName = playerName; // ✅ Store it for later use
         initComponents();
         jLabel1.setText("Welcome, Player " + playerName + "!"); // DYNAMIC GREETING
@@ -136,7 +136,7 @@ public class Player extends javax.swing.JFrame {
 
     private void StartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartGameActionPerformed
         this.setVisible(false);
-        new QuizSelection(playerName).setVisible(true);
+        new QuizSelection(playerName, "Player").setVisible(true);
     }//GEN-LAST:event_StartGameActionPerformed
 
     private void ProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileActionPerformed
@@ -146,7 +146,7 @@ public class Player extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Player("TestName").setVisible(true);
+            new Player("TestName", "Player", 1, 2, "Player").setVisible(true);
         });
     }
 

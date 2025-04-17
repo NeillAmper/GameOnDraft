@@ -15,7 +15,7 @@ import org.json.simple.parser.ParseException;
 public class SignIn extends javax.swing.JFrame {
 
     private static String usname, pass;
-
+    private final String quizData = null;
     private static final String FILE_PATH = "src/UserData.json";
     private static final JSONParser jsonParser = new JSONParser();
     private static JSONObject record = new JSONObject();
@@ -198,7 +198,7 @@ public class SignIn extends javax.swing.JFrame {
                     //If the user has an Admin type, it will open the Admin JFrame then it will close the Login JFrame.
 
                 } else if (foundType != null && foundType.equalsIgnoreCase("Player")) {
-                    Player p = new Player(usname);
+                    Player p = new Player(usname, "Player", 1, 2, "Player");
                     p.setVisible(true);
                     setVisible(false);
                     //If the user has a Member type, it will open the Member JFrame then it will close the Login JFrame.

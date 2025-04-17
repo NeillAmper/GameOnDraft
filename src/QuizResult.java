@@ -6,8 +6,10 @@ public final class QuizResult extends javax.swing.JFrame {
     private final String category;
     private final int maxScore;
     private final int finalScore;
+    private final String quizData;
 
-    public QuizResult(String playerName, int finalScore, int maxScore, String category) {
+    public QuizResult(String playerName, String quizData, int finalScore, int maxScore, String category) {
+        this.quizData = quizData;
         this.playerName = playerName;
         this.finalScore = finalScore;
         this.maxScore = maxScore;
@@ -143,23 +145,23 @@ public final class QuizResult extends javax.swing.JFrame {
 
     private void RetryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RetryButtonActionPerformed
         this.setVisible(false);
-        new QuizSelection(playerName).setVisible(true);
+        new QuizSelection(playerName, quizData).setVisible(true);
     }//GEN-LAST:event_RetryButtonActionPerformed
 
     private void LeaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardButtonActionPerformed
         this.setVisible(false);
-        new Leaderboard(playerName, "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
+        new Leaderboard(playerName, quizData).setVisible(true); // ✅ Fixed by adding "GameMaster"
     }//GEN-LAST:event_LeaderboardButtonActionPerformed
 
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed
-        Player p = new Player(playerName);
+        Player p = new Player(playerName, "Player", 1, 2, "Player");
         p.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_MenuButtonActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new QuizResult("DefaultPlayer", 8, 10, "Science").setVisible(true); // Example
+            new QuizResult("DefaultPlayer", "Science", 1, 2, "Test").setVisible(true); // Example
         });
     }
 

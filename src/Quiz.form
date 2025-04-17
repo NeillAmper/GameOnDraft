@@ -54,7 +54,7 @@
                           <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
                           <Component id="nextButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="121" max="-2" attributes="0"/>
-                          <Component id="compbtn" min="-2" max="-2" attributes="0"/>
+                          <Component id="completeButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
@@ -126,7 +126,7 @@
                   <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="compbtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="completeButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="previousQuestionButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="49" max="32767" attributes="0"/>
@@ -197,13 +197,13 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nextButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="compbtn">
+        <Component class="javax.swing.JButton" name="completeButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Complete"/>
             <Property name="enabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="compbtnActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="completeButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="timerLabel">

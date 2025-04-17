@@ -1,14 +1,24 @@
 
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import java.io.FileReader;
+import java.io.IOException;
+import org.json.simple.*;
+import org.json.simple.parser.*;
 
 public class QuizSelection extends javax.swing.JFrame {
 
-    private static String Player, selected;
+    private final String quizData;
     private final String playerName;
-    
-    public QuizSelection(String playerName) {
+    private JSONArray quizzesArray;
+
+    public QuizSelection(String playerName, String quizData) {
         this.playerName = playerName;
+        this.quizData = quizData;
         initComponents();
+        loadQuizData();
+        populateTable(quizzesArray);
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -17,40 +27,22 @@ public class QuizSelection extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
-        playername = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        mathbtn = new javax.swing.JToggleButton();
-        sciencebtn = new javax.swing.JToggleButton();
-        historybtn = new javax.swing.JToggleButton();
-        englishbtn = new javax.swing.JToggleButton();
-        jButton1 = new javax.swing.JButton();
+        quizSelection = new javax.swing.JLabel();
+        startButton = new javax.swing.JButton();
         Back = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        quizTable = new javax.swing.JTable();
+        categorySelection = new javax.swing.JComboBox<>();
+        searchField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        playername.setText("Enter player name");
+        quizSelection.setText("Select a quiz!");
 
-        jLabel1.setText("Category Selection");
-
-        jLabel2.setText("Please Select a Category");
-
-        buttonGroup1.add(mathbtn);
-        mathbtn.setText("Math");
-
-        buttonGroup1.add(sciencebtn);
-        sciencebtn.setText("Science");
-
-        buttonGroup1.add(historybtn);
-        historybtn.setText("History");
-
-        buttonGroup1.add(englishbtn);
-        englishbtn.setText("English");
-
-        jButton1.setText("START GAME");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        startButton.setText("START GAME");
+        startButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                startButtonActionPerformed(evt);
             }
         });
 
@@ -61,62 +53,74 @@ public class QuizSelection extends javax.swing.JFrame {
             }
         });
 
+        quizTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Quiz Title", "Creator", "Category"
+            }
+        ));
+        jScrollPane1.setViewportView(quizTable);
+
+        categorySelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Math", "Science", "History", "English", " " }));
+        categorySelection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                categorySelectionActionPerformed(evt);
+            }
+        });
+
+        searchField.setText("            ");
+        searchField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(18, 18, 18)
+                            .addComponent(Back)
+                            .addGap(102, 102, 102)
+                            .addComponent(quizSelection))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(124, 124, 124)
+                            .addComponent(startButton))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(36, 36, 36)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(101, 101, 101)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(playername, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(123, 123, 123)
-                        .addComponent(jButton1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(Back)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel1)
-                                .addGap(92, 92, 92))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(mathbtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sciencebtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(historybtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(englishbtn)))))
-                .addContainerGap(74, Short.MAX_VALUE))
+                        .addGap(53, 53, 53)
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(categorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(Back)))
-                .addGap(18, 18, 18)
-                .addComponent(playername, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
-                .addComponent(jLabel2)
-                .addGap(47, 47, 47)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Back)
+                    .addComponent(quizSelection))
+                .addGap(22, 22, 22)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mathbtn)
-                    .addComponent(sciencebtn)
-                    .addComponent(historybtn)
-                    .addComponent(englishbtn))
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addContainerGap(32, Short.MAX_VALUE))
+                    .addComponent(categorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(startButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -141,121 +145,108 @@ public class QuizSelection extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        Player g = new Player(playerName);
-        g.setVisible(true);
-        setVisible(false);
+        new Player(playerName, "Player", 1, 2, "Player").setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_BackActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
+        int row = quizTable.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a quiz from the table.");
+            return;
+        }
 
-        answer();
+        String selectedTitle = (String) quizTable.getValueAt(row, 0);
+        for (Object o : quizzesArray) {
+            JSONObject quiz = (JSONObject) o;
+            if (quiz.get("QuizTitle").equals(selectedTitle)) {
+                Quiz quizFrame = new Quiz(playerName, quizData); // You'll need this constructor
+                quizFrame.setVisible(true);
+                this.dispose();
+                return;
+            }
+        }
 
-        GameUI_Entry();
+        JOptionPane.showMessageDialog(this, "Selected quiz data not found.");
+    }//GEN-LAST:event_startButtonActionPerformed
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
+        String text = searchField.getText().trim().toLowerCase();
+        JSONArray filtered = new JSONArray();
+
+        for (Object o : quizzesArray) {
+            JSONObject quiz = (JSONObject) o;
+            String title = ((String) quiz.get("QuizTitle")).toLowerCase();
+            String creator = ((String) quiz.get("Creator")).toLowerCase();
+            String category = ((String) quiz.get("Category")).toLowerCase();
+
+            if (title.contains(text) || creator.contains(text) || category.contains(text)) {
+                filtered.add(quiz);
+            }
+        }
+
+        populateTable(filtered);
+    }//GEN-LAST:event_searchFieldActionPerformed
+
+    private void categorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySelectionActionPerformed
+        String selectedCategory = (String) categorySelection.getSelectedItem();
+        if (selectedCategory.equals("All")) {
+            populateTable(quizzesArray);
+            return;
+        }
+
+        JSONArray filtered = new JSONArray();
+        for (Object o : quizzesArray) {
+            JSONObject quiz = (JSONObject) o;
+            String category = (String) quiz.get("Category");
+            if (category.equalsIgnoreCase(selectedCategory)) {
+                filtered.add(quiz);
+            }
+        }
+
+        populateTable(filtered);
+    }//GEN-LAST:event_categorySelectionActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new QuizSelection("Test").setVisible(true);
+            new QuizSelection("Test", "Tests").setVisible(true);
         });
     }
 
-    public void answer() {
-        Player = playername.getText();
-
-        if (buttonGroup1.getSelection() == null) {
-            JOptionPane.showMessageDialog(null, "Please select an answer to proceed.", "Error!", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (Player.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter a player name to proceed.", "Error!", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (mathbtn.isSelected()) {
-            selected = mathbtn.getActionCommand();
-            System.out.println("You've selected: " + selected);
-        }
-
-        if (sciencebtn.isSelected()) {
-            selected = sciencebtn.getActionCommand();
-            System.out.println("You've selected: " + selected);
-        }
-
-        if (historybtn.isSelected()) {
-            selected = historybtn.getActionCommand();
-            System.out.println("You've selected: " + selected);
-        }
-
-        if (englishbtn.isSelected()) {
-            selected = englishbtn.getActionCommand();
-            System.out.println("You've selected: " + selected);
-        }
-
-        // Set the selected category to the static variable (for use in Quiz)
-        QuizSelection.setCategorySelection(selected);
-
-        setVisible(false);
-    }
-
-    public static void setCategorySelection(String category) {
-        selected = category;  // This sets the selected category globally within QuizSelection
-    }
-
-    public void GameUI_Entry() {
-
-        // Ensure the category is set before launching the quiz
-        if (selected == null || selected.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please select a category to proceed.", "Error!", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if ("Math".equals(selected)) {
-            Quiz x = new Quiz(playerName);
-            x.setVisible(true);
-        }
-
-        if ("Science".equals(selected)) {
-            Quiz x = new Quiz(playerName);
-            x.setVisible(true);
-        }
-
-        if ("History".equals(selected)) {
-            Quiz x = new Quiz(playerName);
-            x.setVisible(true);
-        }
-
-        if ("English".equals(selected)) {
-            Quiz x = new Quiz(playerName);
-            x.setVisible(true);
+    private void loadQuizData() {
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject obj = (JSONObject) parser.parse(new FileReader("QuizData.json"));
+            quizzesArray = (JSONArray) obj.get("Quizzes");
+        } catch (IOException | ParseException e) {
+            JOptionPane.showMessageDialog(this, "Failed to load quiz data.");
+            quizzesArray = new JSONArray();
         }
     }
 
-    public static String getCategorySelection_Player() {
+    private void populateTable(JSONArray array) {
+        DefaultTableModel model = (DefaultTableModel) quizTable.getModel();
+        model.setRowCount(0); // Clear existing rows
 
-        return Player;
-
-    }
-
-    public static String getCategorySelection_selected() {
-
-        return selected;
-
+        for (Object o : array) {
+            JSONObject quiz = (JSONObject) o;
+            String title = (String) quiz.get("QuizTitle");
+            String creator = (String) quiz.get("Creator");
+            String category = (String) quiz.get("Category");
+            model.addRow(new Object[]{title, creator, category});
+        }
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Back;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JToggleButton englishbtn;
-    private javax.swing.JToggleButton historybtn;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JComboBox<String> categorySelection;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JToggleButton mathbtn;
-    private javax.swing.JTextField playername;
-    private javax.swing.JToggleButton sciencebtn;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel quizSelection;
+    private javax.swing.JTable quizTable;
+    private javax.swing.JTextField searchField;
+    private javax.swing.JButton startButton;
     // End of variables declaration//GEN-END:variables
 }

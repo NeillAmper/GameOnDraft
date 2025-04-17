@@ -137,7 +137,7 @@ public class Leaderboard extends javax.swing.JFrame {
         if (gameMasterName != null && !gameMasterName.isEmpty()) {
             new GameMaster(gameMasterName).setVisible(true);
         } else if (playerName != null && !playerName.isEmpty()) {
-            new Player(playerName).setVisible(true);
+            new Player(playerName, "Player", 1, 2, "Player").setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_BackActionPerformed

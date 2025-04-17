@@ -179,7 +179,7 @@ public class Profile extends javax.swing.JFrame {
         if (gameMasterName != null && !gameMasterName.isEmpty()) {
             new GameMaster(gameMasterName).setVisible(true);
         } else if (playerName != null && !playerName.isEmpty()) {
-            new Player(playerName).setVisible(true);
+            new Player(playerName, "Player", 1, 2, "Player").setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
@@ -282,7 +282,7 @@ public class Profile extends javax.swing.JFrame {
                 if ("Game Master".equals(newType)) {
                     new GameMaster(newUsername).setVisible(true);
                 } else {
-                    new Player(newUsername).setVisible(true);
+                    new Player(newUsername, "Player", 1, 2, "Player").setVisible(true);
                 }
 
                 this.dispose();
