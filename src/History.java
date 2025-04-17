@@ -16,11 +16,13 @@ import javax.swing.event.DocumentEvent;
 
 public class History extends javax.swing.JFrame {
 
-    private final String userType; // "GameMaster" or "Player"
+    private final String gameMasterName;
+    private final String playerName;
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
 
-    public History(String userType) {
-        this.userType = userType;
+    public History(String gameMasterName, String playerName) {
+        this.gameMasterName = gameMasterName;
+        this.playerName = playerName;
         initComponents();
         populateCategorySelection(); // Populate the combo box
         loadHistory(); // Load history data
@@ -143,12 +145,12 @@ public class History extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        if ("GameMaster".equals(userType)) {
-            new GameMaster("GameMaster").setVisible(true);
-        } else if ("Player".equals(userType)) {
-            new Player("Player").setVisible(true);
+        if (gameMasterName != null && !gameMasterName.isEmpty()) {
+            new GameMaster(gameMasterName).setVisible(true);
+        } else if (playerName != null && !playerName.isEmpty()) {
+            new Player(playerName).setVisible(true);
         }
-        this.dispose(); // Close current window
+        this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
 
     private void HistoryTableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_HistoryTableAncestorAdded
@@ -336,9 +338,13 @@ public class History extends javax.swing.JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        new History("Player").setVisible(true); // Example to launch the frame with Player
+    // Main method for testing
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() -> {
+            new History("Player", "GameMaster").setVisible(true);
+        });
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;

@@ -7,18 +7,35 @@ import org.json.simple.parser.*;
 
 public class Profile extends javax.swing.JFrame {
 
-    private final String currentUsername;
-    private final String userType;
-    private static final String FILE_PATH = "src/UserData.json";
+    private final String gameMasterName;
+    private final String playerName;
+    private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
+    private String userType;
+    private final String userName;
 
-    public Profile(String userType, String username) {
-        this.currentUsername = username;
+    public Profile(String gameMasterName, String playerName, String userType, String userName) {
+        this.gameMasterName = gameMasterName;
+        this.playerName = playerName;
+
+        if (gameMasterName != null && !gameMasterName.isEmpty()) {
+            userName = gameMasterName;
+        } else if (playerName != null && !playerName.isEmpty()) {
+            userName = playerName;
+        } else {
+            userName = "Unknown";
+        }
+
+        this.userName = userName;
         this.userType = userType;
-        initComponents();
-        jLabel1.setText("Edit Profile Information for " + currentUsername + "");
 
-        // ✅ Set JComboBox selection based on userType
-        TypeComboBox.setSelectedItem(userType.equalsIgnoreCase("GameMaster") ? "Game Master" : "Player");
+        fetchUserType();
+        initComponents();
+
+        jLabel1.setText("Edit Profile Information for user " + userName);
+
+        if (userType != null) {
+            TypeComboBox.setSelectedItem(userType.equalsIgnoreCase("GameMaster") ? "Game Master" : "Player");
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -36,6 +53,7 @@ public class Profile extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        DeleteButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,6 +92,13 @@ public class Profile extends javax.swing.JFrame {
 
         jLabel4.setText("Confirm New Password:");
 
+        DeleteButton.setText("Delete Account");
+        DeleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -85,12 +110,13 @@ public class Profile extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(DeleteButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(ConfirmButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
@@ -128,7 +154,9 @@ public class Profile extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(TypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(ConfirmButton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ConfirmButton)
+                    .addComponent(DeleteButton))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
 
@@ -148,10 +176,10 @@ public class Profile extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        if ("GameMaster".equalsIgnoreCase(userType) || "Game Master".equalsIgnoreCase(userType)) {
-            new GameMaster(currentUsername).setVisible(true);
-        } else {
-            new Player(currentUsername).setVisible(true);
+        if (gameMasterName != null && !gameMasterName.isEmpty()) {
+            new GameMaster(gameMasterName).setVisible(true);
+        } else if (playerName != null && !playerName.isEmpty()) {
+            new Player(playerName).setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
@@ -162,42 +190,31 @@ public class Profile extends javax.swing.JFrame {
         String confirmPassword = ConfirmNewPasswordField.getText().trim();
         String newType = TypeComboBox.getSelectedItem().toString();
 
-        // ✅ Check if nothing was changed
-        if (newUsername.equals("Enter New Username") && newPassword.equals("Enter New Password") && confirmPassword.equals("Confirm New Password") && newType.equalsIgnoreCase("Game Master") && (userType.equalsIgnoreCase("GameMaster") || (newType.equalsIgnoreCase("Player") && userType.equalsIgnoreCase("Player")))) {
+        if (newUsername.equals("Enter New Username") && newPassword.equals("Enter New Password")
+                && confirmPassword.equals("Confirm New Password") && newType.equalsIgnoreCase(userType)) {
             JOptionPane.showMessageDialog(this, "No changes were made to your profile.", "No Changes", JOptionPane.INFORMATION_MESSAGE);
             return;
-        } else {
         }
 
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "Are you sure you want to update your profile?",
-                "Confirm Changes", JOptionPane.YES_NO_OPTION);
-
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to update your profile?", "Confirm Changes", JOptionPane.YES_NO_OPTION);
         if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
 
         try {
             JSONParser parser = new JSONParser();
-            FileReader reader = new FileReader(FILE_PATH);
-            JSONObject root = (JSONObject) parser.parse(reader);
-            JSONArray users = (JSONArray) root.get("Accounts");
-
-            if (users == null) {
-                JOptionPane.showMessageDialog(this, "No users found in the database file.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            JSONObject userData = (JSONObject) parser.parse(new FileReader(FILE_PATH[1]));
+            JSONArray users = (JSONArray) userData.get("Accounts");
 
             boolean updated = false;
 
             for (Object obj : users) {
                 JSONObject user = (JSONObject) obj;
-                if (user.get("username").toString().equals(currentUsername)) {
-
+                if (user.get("username").toString().equals(userName)) {
                     if (!newUsername.isBlank() && !newUsername.equals("Enter New Username")) {
                         user.put("username", newUsername);
                     } else {
-                        newUsername = currentUsername; // Keep current if not changed
+                        newUsername = userName;
                     }
 
                     if (!newPassword.isBlank() && !newPassword.equals("Enter New Password")) {
@@ -208,7 +225,7 @@ public class Profile extends javax.swing.JFrame {
                         user.put("password", newPassword);
                     }
 
-                    if (newType != null && !newType.equals(user.get("type").toString())) {
+                    if (!newType.equalsIgnoreCase(user.get("type").toString())) {
                         user.put("type", newType);
                     }
 
@@ -218,10 +235,48 @@ public class Profile extends javax.swing.JFrame {
             }
 
             if (updated) {
-                try (FileWriter writer = new FileWriter(FILE_PATH)) {
-                    root.put("Users", users);
-                    writer.write(root.toJSONString());
+                // Update quizzes
+                JSONObject quizData = (JSONObject) parser.parse(new FileReader(FILE_PATH[0]));
+                JSONArray quizzes = (JSONArray) quizData.get("Quizzes");
+                for (Object obj : quizzes) {
+                    JSONObject quiz = (JSONObject) obj;
+                    if (quiz.get("creator").toString().equals(userName)) {
+                        quiz.put("creator", newUsername);
+                    }
                 }
+                try (FileWriter writer = new FileWriter(FILE_PATH[0])) {
+                    quizData.put("Quizzes", quizzes);
+                    writer.write(quizData.toJSONString());
+                }
+
+                // Update history and standing
+                JSONArray history = (JSONArray) userData.get("History");
+                if (history != null) {
+                    for (Object obj : history) {
+                        JSONObject entry = (JSONObject) obj;
+                        if (entry.get("player").toString().equals(userName)) {
+                            entry.put("player", newUsername);
+                        }
+                    }
+                }
+
+                JSONArray standing = (JSONArray) userData.get("Standing");
+                if (standing != null) {
+                    for (Object obj : standing) {
+                        JSONObject entry = (JSONObject) obj;
+                        if (entry.get("player").toString().equals(userName)) {
+                            entry.put("player", newUsername);
+                        }
+                    }
+                }
+
+                try (FileWriter writer = new FileWriter(FILE_PATH[1])) {
+                    userData.put("Accounts", users);
+                    userData.put("History", history);
+                    userData.put("Standing", standing);
+                    writer.write(userData.toJSONString());
+                }
+
                 JOptionPane.showMessageDialog(this, "Profile updated successfully!");
 
                 if ("Game Master".equals(newType)) {
@@ -229,6 +284,7 @@ public class Profile extends javax.swing.JFrame {
                 } else {
                     new Player(newUsername).setVisible(true);
                 }
+
                 this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "User not found!");
@@ -243,14 +299,81 @@ public class Profile extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_NewUsernameFieldActionPerformed
 
-    public static void main(String[] args) {
-        new Profile("Game Master", "GameMasterName").setVisible(true);
+    private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
+        int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to permanently delete your account?\nThis will remove all associated data.", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject userData = (JSONObject) parser.parse(new FileReader(FILE_PATH[1]));
+            JSONArray accounts = (JSONArray) userData.get("Accounts");
+            JSONArray history = (JSONArray) userData.get("History");
+            JSONArray standing = (JSONArray) userData.get("Standing");
+
+            accounts.removeIf(obj -> ((JSONObject) obj).get("username").toString().equals(userName));
+            if (history != null) {
+                history.removeIf(obj -> ((JSONObject) obj).get("player").toString().equals(userName));
+            }
+            if (standing != null) {
+                standing.removeIf(obj -> ((JSONObject) obj).get("player").toString().equals(userName));
+            }
+
+            try (FileWriter writer = new FileWriter(FILE_PATH[1])) {
+                userData.put("Accounts", accounts);
+                userData.put("History", history);
+                userData.put("Standing", standing);
+                writer.write(userData.toJSONString());
+            }
+
+            // Remove user's quizzes
+            JSONObject quizData = (JSONObject) parser.parse(new FileReader(FILE_PATH[0]));
+            JSONArray quizzes = (JSONArray) quizData.get("Quizzes");
+            quizzes.removeIf(obj -> ((JSONObject) obj).get("creator").toString().equals(userName));
+
+            try (FileWriter writer = new FileWriter(FILE_PATH[0])) {
+                quizData.put("Quizzes", quizzes);
+                writer.write(quizData.toJSONString());
+            }
+
+            JOptionPane.showMessageDialog(this, "Account deleted successfully.");
+            new SignIn().setVisible(true);
+            this.dispose();
+
+        } catch (IOException | ParseException e) {
+            JOptionPane.showMessageDialog(this, "Error deleting account: " + e.getMessage());
+        }
+    }//GEN-LAST:event_DeleteButtonActionPerformed
+
+    private void fetchUserType() {
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject userData = (JSONObject) parser.parse(new FileReader(FILE_PATH[1]));
+            JSONArray accounts = (JSONArray) userData.get("Accounts");
+            for (Object obj : accounts) {
+                JSONObject user = (JSONObject) obj;
+                if (user.get("username").toString().equals(userName)) {
+                    userType = user.get("type").toString();
+                    break;
+                }
+            }
+        } catch (IOException | ParseException e) {
+            userType = "Unknown";
+        }
+    }
+
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() -> {
+            new Profile("Player", "GameMaster", "Username", "UserType").setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;
     private javax.swing.JButton ConfirmButton;
     private javax.swing.JTextField ConfirmNewPasswordField;
+    private javax.swing.JButton DeleteButton;
     private javax.swing.JTextField NewPasswordField;
     private javax.swing.JTextField NewUsernameField;
     private javax.swing.JComboBox<String> TypeComboBox;

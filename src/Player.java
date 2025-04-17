@@ -125,32 +125,25 @@ public class Player extends javax.swing.JFrame {
     }//GEN-LAST:event_LogoutActionPerformed
 
     private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
-        Leaderboard l = new Leaderboard("Player");
-        l.setVisible(true);
-        setVisible(false);
+        this.setVisible(false);
+        new Leaderboard(playerName, "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
     }//GEN-LAST:event_LeaderboardActionPerformed
 
     private void HistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistoryActionPerformed
-        History h = new History("Player");
-        h.setVisible(true);
-        setVisible(false);
+        this.setVisible(false);
+        new History(playerName, "Player").setVisible(true);
     }//GEN-LAST:event_HistoryActionPerformed
 
     private void StartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartGameActionPerformed
-        QuizSelection c = new QuizSelection();
-        c.setVisible(true);
-        setVisible(false);
+        this.setVisible(false);
+        new QuizSelection(playerName).setVisible(true);
     }//GEN-LAST:event_StartGameActionPerformed
 
     private void ProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileActionPerformed
-        Profile p = new Profile("Player", playerName); // ✅ Pass both user type and name
-        p.setVisible(true);
-        setVisible(false);
+        this.setVisible(false);
+        new Profile(null, playerName, "Player", playerName).setVisible(true);
     }//GEN-LAST:event_ProfileActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new Player("TestName").setVisible(true);

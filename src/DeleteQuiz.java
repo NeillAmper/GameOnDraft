@@ -16,9 +16,12 @@ public class DeleteQuiz extends javax.swing.JFrame {
     private static final String FILE_PATH = "src/QuizData.json";
     private JSONObject lastDeletedQuiz = null;
     private int lastDeletedRowIndex = -1;
+    private final String gameMasterName;
 
-    public DeleteQuiz() {
-        initComponents(); // This initializes the form components (auto-generated)
+    public DeleteQuiz(String gameMasterName) {
+        this.gameMasterName = gameMasterName;
+        initComponents();
+        loadQuizzesByCreator();
         populateCategorySelection(); // Populates category combo box with available categories
         loadCategoryQuizzes(); // Loads quizzes based on the selected category
         addSearchListener(); // Adds listener to search field for live updates
@@ -152,7 +155,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        GameMaster g = new GameMaster("GameMaster");
+        GameMaster g = new GameMaster(gameMasterName);
         g.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_BackButtonActionPerformed
@@ -168,8 +171,15 @@ public class DeleteQuiz extends javax.swing.JFrame {
             return;
         }
 
-        String category = (String) QuizTable.getValueAt(row, 0);
-        String quizid = (String) QuizTable.getValueAt(row, 1);
+        String quizTitle = (String) QuizTable.getValueAt(row, 0);
+        String creator = (String) QuizTable.getValueAt(row, 1);
+        String category = (String) QuizTable.getValueAt(row, 2);
+
+        // ONLY ALLOW DELETION IF THE LOGGED-IN USER IS THE CREATOR
+        if (!creator.equals(gameMasterName)) {
+            JOptionPane.showMessageDialog(DeleteQuiz.this, "You can only delete quizzes you created.", "Access Denied", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         try (FileReader reader = new FileReader(FILE_PATH)) {
             JSONParser parser = new JSONParser();
@@ -178,7 +188,10 @@ public class DeleteQuiz extends javax.swing.JFrame {
 
             for (int i = 0; i < quizzes.size(); i++) {
                 JSONObject quiz = (JSONObject) quizzes.get(i);
-                if (category.equals(quiz.get("Category")) && quizid.equals(quiz.get("QuizTitle"))) {
+                if (quizTitle.equals(quiz.get("QuizTitle"))
+                        && creator.equals(quiz.get("Creator"))
+                        && category.equals(quiz.get("Category"))) {
+
                     lastDeletedQuiz = quiz;
                     lastDeletedRowIndex = row;
                     quizzes.remove(i);
@@ -233,7 +246,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new DeleteQuiz().setVisible(true);
+            new DeleteQuiz("Test").setVisible(true);
         });
     }
 
@@ -282,11 +295,14 @@ public class DeleteQuiz extends javax.swing.JFrame {
                 JSONObject quiz = (JSONObject) obj;
                 String category = (String) quiz.get("Category");
 
-                if (selectedCategory.equals("All") || selectedCategory.equals(category)) {
+                String creator = (String) quiz.get("Creator");
+
+                if ((selectedCategory.equals("All") || selectedCategory.equals(category))
+                        && gameMasterName.equals(creator)) {
                     model.addRow(new Object[]{
                         quiz.get("QuizTitle"),
-                        quiz.get("Creator"),
-                        quiz.get("Category")
+                        creator,
+                        category
                     });
                 }
             }
@@ -324,6 +340,8 @@ public class DeleteQuiz extends javax.swing.JFrame {
         });
     }
 
+// SEARCH FUNCTION THAT FILTERS QUIZZES BY CATEGORY, TITLE, OR CREATOR
+// AND ONLY DISPLAYS QUIZZES CREATED BY THE LOGGED-IN GAME MASTER
     private void searchQuizzes(String keyword) {
         DefaultTableModel model = (DefaultTableModel) QuizTable.getModel();
         model.setRowCount(0); // Clear the table before populating
@@ -335,16 +353,18 @@ public class DeleteQuiz extends javax.swing.JFrame {
 
             for (Object obj : quizzes) {
                 JSONObject quiz = (JSONObject) obj;
-                String category = (String) quiz.get("QuizTitle");
-                String question = (String) quiz.get("Creator");
-                String quizid = (String) quiz.get("Category");
+                String title = (String) quiz.get("QuizTitle");
+                String creator = (String) quiz.get("Creator");
+                String category = (String) quiz.get("Category");
 
-                // CASE-INSENSITIVE SEARCH MATCHING category, quizid, OR question
-                if (category.toLowerCase().contains(keyword.toLowerCase())
-                        || quizid.toLowerCase().contains(keyword.toLowerCase())
-                        || question.toLowerCase().contains(keyword.toLowerCase())) {
+                // CASE-INSENSITIVE SEARCH MATCHING title, category, OR creator
+                // ONLY SHOW QUIZZES CREATED BY THE CURRENTLY LOGGED-IN GAME MASTER
+                if ((title.toLowerCase().contains(keyword.toLowerCase())
+                        || category.toLowerCase().contains(keyword.toLowerCase())
+                        || creator.toLowerCase().contains(keyword.toLowerCase()))
+                        && gameMasterName.equals(creator)) {
 
-                    model.addRow(new Object[]{category, quizid, question});
+                    model.addRow(new Object[]{title, creator, category});
                 }
             }
 
@@ -353,6 +373,28 @@ public class DeleteQuiz extends javax.swing.JFrame {
         }
     }
 
+    private void loadQuizzesByCreator() {
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject data = (JSONObject) parser.parse(new FileReader("data.json"));
+            JSONArray quizzes = (JSONArray) data.get("Quizzes");
+
+            DefaultTableModel model = (DefaultTableModel) QuizTable.getModel();
+            model.setRowCount(0);
+
+            for (Object obj : quizzes) {
+                JSONObject quiz = (JSONObject) obj;
+                if (gameMasterName.equals(quiz.get("creator"))) {
+                    model.addRow(new Object[]{
+                        quiz.get("quizid"),
+                        quiz.get("category"),
+                        quiz.get("question")
+                    });
+                }
+            }
+        } catch (IOException | ParseException e) {
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;

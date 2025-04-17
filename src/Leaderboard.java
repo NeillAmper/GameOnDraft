@@ -12,19 +12,20 @@ import javax.swing.JOptionPane;
 
 public class Leaderboard extends javax.swing.JFrame {
 
-    private final String userType;
+    private final String gameMasterName;
+    private final String playerName;
     private final DefaultTableModel tableModel;
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
     private boolean isLoadingCategories = false;
 
-    public Leaderboard(String userType) {
-
-        this.userType = userType;
+    public Leaderboard(String gameMasterName, String playerName) {
+        this.gameMasterName = gameMasterName;
+        this.playerName = playerName;
         initComponents();
         tableModel = (DefaultTableModel) LeaderboardTable.getModel();
-        loadCategories();
-        loadAllLeaderboardData();
-        addSearchListener();
+        loadCategories();               // Placeholder method
+        loadAllLeaderboardData();       // Placeholder method
+        addSearchListener();            // Placeholder method
     }
 
     @SuppressWarnings("unchecked")
@@ -133,10 +134,10 @@ public class Leaderboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        if ("GameMaster".equals(userType)) {
-            new GameMaster("GameMaster").setVisible(true);
-        } else if ("Player".equals(userType)) {
-            new Player("Player").setVisible(true);
+        if (gameMasterName != null && !gameMasterName.isEmpty()) {
+            new GameMaster(gameMasterName).setVisible(true);
+        } else if (playerName != null && !playerName.isEmpty()) {
+            new Player(playerName).setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_BackActionPerformed
@@ -360,11 +361,12 @@ public class Leaderboard extends javax.swing.JFrame {
             for (Object obj : leaderboard) {
                 JSONObject quiz = (JSONObject) obj;
                 String category = (String) quiz.get("category");
-                if (category != null) {
+                if (category != null && !category.isEmpty()) {
                     categories.add(category);
                 }
             }
 
+            // Populate category dropdown
             CategorySelection.removeAllItems();
             CategorySelection.addItem("All");
             for (String category : categories) {
@@ -372,7 +374,7 @@ public class Leaderboard extends javax.swing.JFrame {
             }
 
         } catch (IOException | ParseException ex) {
-            JOptionPane.showMessageDialog(this, "Error loading data: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error loading categories: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             isLoadingCategories = false;
         }
@@ -381,7 +383,7 @@ public class Leaderboard extends javax.swing.JFrame {
     // Main method for testing
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Leaderboard("Player").setVisible(true);
+            new Leaderboard("Player", "GameMaster").setVisible(true);
         });
     }
 

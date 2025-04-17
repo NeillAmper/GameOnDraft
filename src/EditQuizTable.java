@@ -15,9 +15,12 @@ import org.json.simple.parser.ParseException;
 public class EditQuizTable extends javax.swing.JFrame {
 
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
+    private final String gameMasterName;
 
-    public EditQuizTable() {
-        initComponents(); // This initializes the form components (auto-generated)
+    public EditQuizTable(String gameMasterName) {
+        this.gameMasterName = gameMasterName;
+        initComponents();
+        loadQuizzesByCreator();
         populateCategorySelection(); // Populates category combo box with available categories
         loadCategoryQuizzes(); // Loads quizzes based on the selected category
         addSearchListener(); // Adds listener to search field for live updates
@@ -142,7 +145,7 @@ public class EditQuizTable extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        GameMaster g = new GameMaster("GameMaster");
+        GameMaster g = new GameMaster(gameMasterName);
         g.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_BackButtonActionPerformed
@@ -175,7 +178,7 @@ public class EditQuizTable extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Failed to read quiz for undo.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        EditQuiz e = new EditQuiz(selectedQuizID, this);
+        EditQuiz e = new EditQuiz(selectedQuizID, gameMasterName);
         e.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_EditButtonActionPerformed
@@ -288,9 +291,33 @@ public class EditQuizTable extends javax.swing.JFrame {
         });
     }
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new EditQuizTable().setVisible(true));
+    private void loadQuizzesByCreator() {
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject data = (JSONObject) parser.parse(new FileReader("data.json"));
+            JSONArray quizzes = (JSONArray) data.get("Quizzes");
+
+            DefaultTableModel model = (DefaultTableModel) QuizTable.getModel();
+            model.setRowCount(0);
+
+            for (Object obj : quizzes) {
+                JSONObject quiz = (JSONObject) obj;
+                if (gameMasterName.equals(quiz.get("creator"))) {
+                    model.addRow(new Object[]{
+                        quiz.get("quizid"),
+                        quiz.get("category"),
+                        quiz.get("question")
+                    });
+                }
+            }
+        } catch (IOException | ParseException e) {
+        }
     }
+
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() -> new EditQuizTable("Test").setVisible(true));
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BackButton;

@@ -2,6 +2,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
@@ -17,12 +18,12 @@ public final class CreateQuiz extends javax.swing.JFrame {
     private final JSONArray newQuizArray = new JSONArray();
     private static final JSONParser jsonParser = new JSONParser();
     private static final String FILE_PATH = "src/QuizData.json";
-    private final String usname;
+    private final String gameMasterName;
     private final ButtonGroup answerGroup;
 
-    public CreateQuiz(String usname) {
+    public CreateQuiz(String gameMasterName) {
         initComponents();
-        this.usname = usname;
+        this.gameMasterName = gameMasterName;
         answerGroup = new ButtonGroup();
         answerGroup.add(answer1);
         answerGroup.add(answer2);
@@ -40,7 +41,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        categorybox = new javax.swing.JComboBox<>();
+        CategorySelection = new javax.swing.JComboBox<>();
         labelquestioncounter = new javax.swing.JLabel();
         questionUI = new javax.swing.JTextField();
         answer1 = new javax.swing.JRadioButton();
@@ -54,10 +55,10 @@ public final class CreateQuiz extends javax.swing.JFrame {
         AddButton = new javax.swing.JButton();
         Back = new javax.swing.JButton();
         SelectedItem = new javax.swing.JLabel();
-        numberquizUI = new javax.swing.JComboBox<>();
-        InputBtn = new javax.swing.JButton();
+        QuestionAmount = new javax.swing.JComboBox<>();
+        InputButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        quiztitleUI = new javax.swing.JTextField();
+        QuizTitle = new javax.swing.JTextField();
         CreateAgain = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -66,11 +67,11 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
         jLabel2.setText("Category:");
 
-        categorybox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Math", "Science", "History", "English" }));
-        categorybox.setActionCommand("");
-        categorybox.addActionListener(new java.awt.event.ActionListener() {
+        CategorySelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Math", "Science", "History", "English" }));
+        CategorySelection.setActionCommand("");
+        CategorySelection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                categoryboxActionPerformed(evt);
+                CategorySelectionActionPerformed(evt);
             }
         });
 
@@ -142,17 +143,17 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
         SelectedItem.setText("# of Questions");
 
-        numberquizUI.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
-        numberquizUI.addActionListener(new java.awt.event.ActionListener() {
+        QuestionAmount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        QuestionAmount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numberquizUIActionPerformed(evt);
+                QuestionAmountActionPerformed(evt);
             }
         });
 
-        InputBtn.setText("Input");
-        InputBtn.addActionListener(new java.awt.event.ActionListener() {
+        InputButton.setText("Input");
+        InputButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                InputBtnActionPerformed(evt);
+                InputButtonActionPerformed(evt);
             }
         });
 
@@ -186,13 +187,13 @@ public final class CreateQuiz extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(jLabel2)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(categorybox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(18, 18, 18)
                                     .addComponent(SelectedItem)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(numberquizUI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(QuestionAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(18, 18, 18)
-                                    .addComponent(InputBtn)))
+                                    .addComponent(InputButton)))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(75, 75, 75)
@@ -225,7 +226,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
                         .addGap(110, 110, 110)
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
-                        .addComponent(quiztitleUI, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(QuizTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -238,14 +239,14 @@ public final class CreateQuiz extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(quiztitleUI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(QuizTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(categorybox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SelectedItem)
-                    .addComponent(numberquizUI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(InputBtn))
+                    .addComponent(QuestionAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(InputButton))
                 .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelquestioncounter)
@@ -296,7 +297,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
     }//GEN-LAST:event_answer1ActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        GameMaster g = new GameMaster(usname);
+        GameMaster g = new GameMaster(gameMasterName);
         g.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_BackActionPerformed
@@ -317,7 +318,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
         try {
-            category = (String) categorybox.getSelectedItem();
+            category = (String) CategorySelection.getSelectedItem();
             question = questionUI.getText();
             opt1 = opt1UI.getText();
             opt2 = opt2UI.getText();
@@ -329,6 +330,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
                 return;
             }
 
+            // Identify selected answer
             if (answer1.isSelected()) {
                 correctanswer = opt1;
             } else if (answer2.isSelected()) {
@@ -340,22 +342,31 @@ public final class CreateQuiz extends javax.swing.JFrame {
             }
 
             JSONObject questionObject = new JSONObject();
-            questionObject.put("questionnumber", String.valueOf(questionCounter + 1));  // ✅ stored as string
+            questionObject.put("questionnumber", String.valueOf(questionCounter + 1));
             questionObject.put("question", question);
             questionObject.put("answer", correctanswer);
             questionObject.put("option1", opt1);
             questionObject.put("option2", opt2);
             questionObject.put("option3", opt3);
             questionObject.put("option4", opt4);
+            questionObject.put("scenarios", Arrays.asList("correct", "wrong"));
+
+            if (questionCounter > 0) {
+                JSONObject previousQuestion = (JSONObject) newQuizArray.get(questionCounter - 1);
+                previousQuestion.put("next_if_correct", String.valueOf(questionCounter + 1));
+                previousQuestion.put("next_if_wrong", String.valueOf(questionCounter + 2));
+            }
 
             newQuizArray.add(questionObject);
             questionCounter++;
 
-            clearFields();
-
             if (questionCounter == numberOfQuizToEnter) {
-                saveQuizToFile();
+                saveQuizToFile(); // Will enable CreateAgain button
+                resetInputFields(); // Reset input fields only (not full form)
+                toggleInputMode(false); // ❌ Disable question UI
+                toggleStartFields(true); // ✅ Enable title/category input again
             } else {
+                clearFields(); // Ready for next question
                 labelquestioncounter.setText("Question #" + (questionCounter + 1));
                 JOptionPane.showMessageDialog(null, "Question saved. Enter the next one.");
             }
@@ -384,14 +395,14 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
     }//GEN-LAST:event_savequizActionPerformed
 
-    private void categoryboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryboxActionPerformed
+    private void CategorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategorySelectionActionPerformed
 
 
-    }//GEN-LAST:event_categoryboxActionPerformed
+    }//GEN-LAST:event_CategorySelectionActionPerformed
 
-    private void InputBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputBtnActionPerformed
-        title = quiztitleUI.getText();
-        numberofquiz = (String) numberquizUI.getSelectedItem();
+    private void InputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputButtonActionPerformed
+        title = QuizTitle.getText();
+        numberofquiz = (String) QuestionAmount.getSelectedItem();
 
         if (title.isEmpty() || numberofquiz == null) {
             JOptionPane.showMessageDialog(null, "Please input quiz title and number of questions.");
@@ -403,12 +414,12 @@ public final class CreateQuiz extends javax.swing.JFrame {
         labelquestioncounter.setText("Question #1");
         loadCreateQuiz();
         JOptionPane.showMessageDialog(null, "Ready to enter " + numberOfQuizToEnter + " questions.");
-    }//GEN-LAST:event_InputBtnActionPerformed
+    }//GEN-LAST:event_InputButtonActionPerformed
 
-    private void numberquizUIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberquizUIActionPerformed
+    private void QuestionAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuestionAmountActionPerformed
 
 
-    }//GEN-LAST:event_numberquizUIActionPerformed
+    }//GEN-LAST:event_QuestionAmountActionPerformed
 
     private void opt1UIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opt1UIActionPerformed
         // TODO add your handling code here:
@@ -422,12 +433,12 @@ public final class CreateQuiz extends javax.swing.JFrame {
         newQuizArray.clear();
 
         // Reset all UI elements
-        quiztitleUI.setText("");
-        quiztitleUI.setEnabled(true);
-        categorybox.setEnabled(true);
-        numberquizUI.setEnabled(true);
-        InputBtn.setEnabled(true);
-        numberquizUI.setSelectedIndex(0);
+        QuizTitle.setText("");
+        QuizTitle.setEnabled(true);
+        CategorySelection.setEnabled(true);
+        QuestionAmount.setEnabled(true);
+        InputButton.setEnabled(true);
+        QuestionAmount.setSelectedIndex(0);
 
         labelquestioncounter.setText("Question #1:");
         labelquestioncounter.setEnabled(false);
@@ -468,21 +479,8 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
     private void loadCreateQuiz() {
         boolean ready = numberofquiz != null;
-        quiztitleUI.setEnabled(!ready);
-        categorybox.setEnabled(!ready);
-        InputBtn.setEnabled(!ready);
-        numberquizUI.setEnabled(!ready);
-        labelquestioncounter.setEnabled(ready);
-        AddButton.setEnabled(ready);
-        questionUI.setEnabled(ready);
-        opt1UI.setEnabled(ready);
-        opt2UI.setEnabled(ready);
-        opt3UI.setEnabled(ready);
-        opt4UI.setEnabled(ready);
-        answer1.setEnabled(ready);
-        answer2.setEnabled(ready);
-        answer3.setEnabled(ready);
-        answer4.setEnabled(ready);
+        toggleStartFields(!ready);     // ❌ Disable title/category when quiz starts
+        toggleInputMode(ready);        // ✅ Enable question input
         if (ready) {
             SelectedItem.setText("Selected: " + numberofquiz);
         }
@@ -505,7 +503,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
             // Build new quiz structure that matches your required format
             JSONObject quizObject = new JSONObject();
             quizObject.put("QuizTitle", title);          // ✅ Correct key
-            quizObject.put("Creator", usname);           // ✅ Automatically use signed-in username
+            quizObject.put("Creator", gameMasterName);   // ✅ Automatically use signed-in username
             quizObject.put("Category", category);        // ✅ Category
             quizObject.put("Questions", newQuizArray);   // ✅ Questions array
 
@@ -527,6 +525,37 @@ public final class CreateQuiz extends javax.swing.JFrame {
         }
     }
 
+    private void toggleInputMode(boolean enable) {
+        questionUI.setEnabled(enable);
+        opt1UI.setEnabled(enable);
+        opt2UI.setEnabled(enable);
+        opt3UI.setEnabled(enable);
+        opt4UI.setEnabled(enable);
+        answer1.setEnabled(enable);
+        answer2.setEnabled(enable);
+        answer3.setEnabled(enable);
+        answer4.setEnabled(enable);
+        AddButton.setEnabled(enable);
+        labelquestioncounter.setEnabled(enable);
+    }
+
+    private void toggleStartFields(boolean enable) {
+        QuizTitle.setEnabled(enable);
+        CategorySelection.setEnabled(enable);
+        QuestionAmount.setEnabled(enable);
+        InputButton.setEnabled(enable);
+    }
+
+    private void resetInputFields() {
+        questionUI.setText("");
+        opt1UI.setText("");
+        opt2UI.setText("");
+        opt3UI.setText("");
+        opt4UI.setText("");
+        answerGroup.clearSelection();
+        labelquestioncounter.setText("Question #1");
+    }
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
             new GameMaster("TestName").setVisible(true); // Replace "TestName" with any string for testing
@@ -536,26 +565,26 @@ public final class CreateQuiz extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddButton;
     private javax.swing.JButton Back;
+    private javax.swing.JComboBox<String> CategorySelection;
     private javax.swing.JButton CreateAgain;
-    private javax.swing.JButton InputBtn;
+    private javax.swing.JButton InputButton;
+    private javax.swing.JComboBox<String> QuestionAmount;
+    private javax.swing.JTextField QuizTitle;
     private javax.swing.JLabel SelectedItem;
     private javax.swing.JRadioButton answer1;
     private javax.swing.JRadioButton answer2;
     private javax.swing.JRadioButton answer3;
     private javax.swing.JRadioButton answer4;
     private javax.swing.ButtonGroup buttonGroup;
-    private javax.swing.JComboBox<String> categorybox;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel labelquestioncounter;
-    private javax.swing.JComboBox<String> numberquizUI;
     private javax.swing.JTextField opt1UI;
     private javax.swing.JTextField opt2UI;
     private javax.swing.JTextField opt3UI;
     private javax.swing.JTextField opt4UI;
     private javax.swing.JTextField questionUI;
-    private javax.swing.JTextField quiztitleUI;
     // End of variables declaration//GEN-END:variables
 }

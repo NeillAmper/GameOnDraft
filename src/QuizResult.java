@@ -1,15 +1,14 @@
 
-import javax.swing.*;
 
 public final class QuizResult extends javax.swing.JFrame {
 
-    private final String player;
+    private final String playerName;
     private final String category;
     private final int maxScore;
     private final int finalScore;
 
     public QuizResult(String playerName, int finalScore, int maxScore, String category) {
-        this.player = playerName;
+        this.playerName = playerName;
         this.finalScore = finalScore;
         this.maxScore = maxScore;
         this.category = category;
@@ -143,19 +142,17 @@ public final class QuizResult extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void RetryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RetryButtonActionPerformed
-        QuizSelection q = new QuizSelection();
-        q.setVisible(true);
-        setVisible(false);
+        this.setVisible(false);
+        new QuizSelection(playerName).setVisible(true);
     }//GEN-LAST:event_RetryButtonActionPerformed
 
     private void LeaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardButtonActionPerformed
-        Leaderboard l = new Leaderboard("Player"); // You can use actual userType if tracked
-        l.setVisible(true);
-        setVisible(false);
+        this.setVisible(false);
+        new Leaderboard(playerName, "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
     }//GEN-LAST:event_LeaderboardButtonActionPerformed
 
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed
-        Player p = new Player(player);
+        Player p = new Player(playerName);
         p.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_MenuButtonActionPerformed

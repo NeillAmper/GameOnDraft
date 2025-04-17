@@ -3,13 +3,11 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javax.swing.*;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,19 +15,22 @@ public class Quiz extends javax.swing.JFrame {
 
     public static int score = 0;
     public static int maxscore = 0;
-    private String PlayerName, answer_selected, correctanswer;
-    private static final String FILE_PATH = "src/QuizData.json";
+    private String playerName, correctanswer;
+    private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
     private final List<JSONObject> userlist = new ArrayList<>();
     private int index = 0;
     private String selectedCategory;
+    private javax.swing.Timer questionTimer;
+    private int timeLeft = 300; // 5 minutes per question
 
-    public Quiz() {
+    public Quiz(String playerName) {
         initComponents();
+        this.playerName = playerName;
         selectedCategory = QuizSelection.getCategorySelection_selected();
         if (selectedCategory == null || selectedCategory.isEmpty()) {
             selectedCategory = "Default";
         }
-        loadQuizData(selectedCategory); // FIXED: Added selectedCategory parameter
+        loadQuizData(selectedCategory);
         startQuiz();
     }
 
@@ -196,6 +197,9 @@ public class Quiz extends javax.swing.JFrame {
             return;
         }
         checkAnswer();
+        if (questionTimer != null) {
+            questionTimer.stop();
+        }
         startQuiz();
     }//GEN-LAST:event_nxtbtnActionPerformed
 
@@ -220,18 +224,18 @@ public class Quiz extends javax.swing.JFrame {
     }//GEN-LAST:event_opt4UIActionPerformed
 
     private void compbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compbtnActionPerformed
-        PlayerName = QuizSelection.getCategorySelection_Player();
+        playerName = QuizSelection.getCategorySelection_Player();
         try {
             saveResults();
         } catch (IOException | ParseException ex) {
             Logger.getLogger(Quiz.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();
-        new QuizResult(PlayerName, score, maxscore, selectedCategory).setVisible(true); // FIXED: replaced undefined CATEGORY_SELECTED
+        new QuizResult(playerName, score, maxscore, selectedCategory).setVisible(true);
     }//GEN-LAST:event_compbtnActionPerformed
 
     private void loadQuizData(String selectedCategory) {
-        try (FileReader reader = new FileReader(FILE_PATH)) {
+        try (FileReader reader = new FileReader(FILE_PATH[0])) {
             JSONObject root = (JSONObject) new JSONParser().parse(reader);
             JSONArray quizzes = (JSONArray) root.get("Quizzes");
 
@@ -254,82 +258,111 @@ public class Quiz extends javax.swing.JFrame {
                                 question.put("option3", questionObj.get("option3"));
                                 question.put("option4", questionObj.get("option4"));
                                 question.put("category", category);
+                                question.put("scenarios", questionObj.get("scenarios")); // scenario branching
                                 userlist.add(question);
                             }
                         }
                     }
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "No quizzes available in the JSON file.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (IOException | ParseException ex) {
             Logger.getLogger(Quiz.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Error loading quiz data.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to load quiz data.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void startQuiz() {
-        if (index >= userlist.size()) {
-            questionUI.setText("Quiz Completed!");
-            nxtbtn.setEnabled(false);
+        if (index < userlist.size()) {
+            JSONObject current = userlist.get(index);
+            questionUI.setText((String) current.get("question"));
+            opt1UI.setText((String) current.get("option1"));
+            opt2UI.setText((String) current.get("option2"));
+            opt3UI.setText((String) current.get("option3"));
+            opt4UI.setText((String) current.get("option4"));
+            jLabel2.setText("Category: " + current.get("category"));
+            correctanswer = (String) current.get("answer");
+
+            JSONArray scenarios = (JSONArray) current.get("scenarios");
+            if (scenarios != null && !scenarios.isEmpty()) {
+                handleScenario((String) scenarios.get(0)); // Placeholder
+            }
+
+            buttonGroup1.clearSelection();
+            startQuestionTimer();
+            index++;
+            maxscore++;
+        } else {
             compbtn.setEnabled(true);
-            return;
+            nxtbtn.setEnabled(false);
+            JOptionPane.showMessageDialog(this, "Quiz Completed!");
         }
-
-        JSONObject currentQuiz = userlist.get(index++);
-        questionUI.setText(currentQuiz.get("question").toString());
-        jLabel2.setText("Category: " + currentQuiz.get("category"));
-        opt1UI.setText(currentQuiz.get("option1").toString());
-        opt2UI.setText(currentQuiz.get("option2").toString());
-        opt3UI.setText(currentQuiz.get("option3").toString());
-        opt4UI.setText(currentQuiz.get("option4").toString());
-        correctanswer = currentQuiz.get("answer").toString();
-        maxscore++;
-
-        buttonGroup1.clearSelection();
     }
 
     private void checkAnswer() {
-        if (opt1UI.isSelected()) {
-            answer_selected = opt1UI.getText();
-        } else if (opt2UI.isSelected()) {
-            answer_selected = opt2UI.getText();
-        } else if (opt3UI.isSelected()) {
-            answer_selected = opt3UI.getText();
-        } else if (opt4UI.isSelected()) {
-            answer_selected = opt4UI.getText();
-        }
-
-        if (answer_selected.equals(correctanswer)) {
+        if (opt1UI.isSelected() && opt1UI.getText().equalsIgnoreCase(correctanswer)) {
+            score++;
+        } else if (opt2UI.isSelected() && opt2UI.getText().equalsIgnoreCase(correctanswer)) {
+            score++;
+        } else if (opt3UI.isSelected() && opt3UI.getText().equalsIgnoreCase(correctanswer)) {
+            score++;
+        } else if (opt4UI.isSelected() && opt4UI.getText().equalsIgnoreCase(correctanswer)) {
             score++;
         }
         Score.setText("Score: " + score);
     }
 
     private void saveResults() throws IOException, ParseException {
-        FileReader reader = new FileReader(FILE_PATH);
+        FileReader reader = new FileReader(FILE_PATH[1]);
         JSONObject root = (JSONObject) new JSONParser().parse(reader);
+        JSONArray standings = (JSONArray) root.get("Standing");
 
-        JSONArray players = (JSONArray) root.get("Players");
-        if (players == null) {
-            players = new JSONArray(); // FIXED: ensure it exists
-            root.put("Players", players);
+        if (standings == null) {
+            standings = new JSONArray();
+            root.put("Standing", standings);
         }
 
-        JSONObject newPlayer = new JSONObject();
-        newPlayer.put("name", PlayerName);
-        newPlayer.put("score", score);
-        newPlayer.put("quizzesdone", maxscore);
-        players.add(newPlayer);
+        JSONObject result = new JSONObject();
+        result.put("name", playerName);
+        result.put("score", score);
+        result.put("quizzesDone", maxscore);
+        result.put("category", selectedCategory);
+        standings.add(result);
 
-        try (FileWriter writer = new FileWriter(FILE_PATH)) {
+        try (FileWriter writer = new FileWriter(FILE_PATH[1])) {
             writer.write(root.toJSONString());
-            writer.flush();
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Quiz().setVisible(true));
+    private void startQuestionTimer() {
+        timeLeft = 300;
+        Timer.setText("Time Left: " + formatTime(timeLeft));
+        questionTimer = new javax.swing.Timer(1000, e -> {
+            timeLeft--;
+            Timer.setText("Time Left: " + formatTime(timeLeft));
+            if (timeLeft <= 0) {
+                questionTimer.stop();
+                JOptionPane.showMessageDialog(this, "Time's up for this question!", "Time Up", JOptionPane.WARNING_MESSAGE);
+                startQuiz();
+            }
+        });
+        questionTimer.start();
+    }
+
+    private String formatTime(int time) {
+        int minutes = time / 60;
+        int seconds = time % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    private void handleScenario(String scenario) {
+        // Placeholder for branching logic
+        System.out.println("Scenario: " + scenario);
+    }
+
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() -> {
+            new Quiz("TestName").setVisible(true); // Replace "TestName" with any string for testing
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

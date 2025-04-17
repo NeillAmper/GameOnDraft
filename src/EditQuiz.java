@@ -15,9 +15,11 @@ public class EditQuiz extends javax.swing.JFrame {
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
     private static final JSONParser jsonParser = new JSONParser();
     private static JSONObject record = new JSONObject();
+    private final String gameMasterName;
 
-    public EditQuiz(String selectedQuizID, EditQuizTable aThis) {
+    public EditQuiz(String selectedQuizID, String gameMasterName) {
         initComponents();
+        this.gameMasterName = gameMasterName;  // Set user name
         QuizID.setText(selectedQuizID);  // Display the Quiz ID in the text field
         loadQuizData(selectedQuizID);    // Load the quiz data into the form fields
     }
@@ -229,7 +231,7 @@ public class EditQuiz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        EditQuizTable e = new EditQuizTable();
+        EditQuizTable e = new EditQuizTable(gameMasterName);
         e.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_BackActionPerformed
@@ -297,6 +299,7 @@ public class EditQuiz extends javax.swing.JFrame {
             Logger.getLogger(EditQuiz.class.getName()).log(Level.SEVERE, "Error loading quiz data", e);
         }
     }
+
     // This method reads from the first file (QuizData.json)
     private void filecheck() throws IOException, ParseException {
         try (FileReader reader = new FileReader(FILE_PATH[0])) {
@@ -413,9 +416,8 @@ public class EditQuiz extends javax.swing.JFrame {
         }
     }
 
-
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new EditQuizTable().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new EditQuizTable("test").setVisible(true));
     }
 
 
