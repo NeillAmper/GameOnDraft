@@ -5,7 +5,6 @@
       "Questions": [
         {
           "questionnumber": "1",
-          "questionid": "1",
           "question": "Is Adriane Pregnant?",
           "answer": "Yes",
           "option3": "Yes",
@@ -16,7 +15,6 @@
         },
         {
           "questionnumber": "2",
-          "questionid": "2",
           "question": "What is a common sign of pregnancy?",
           "answer": "Morning sickness",
           "option3": "Weight gain",
@@ -34,7 +32,6 @@
       "Questions": [
         {
           "questionnumber": "1",
-          "questionid": "1",
           "question": "What gas do plants absorb from the air during photosynthesis?",
           "answer": "Carbon dioxide",
           "option3": "Nitrogen",
@@ -45,7 +42,6 @@
         },
         {
           "questionnumber": "2",
-          "questionid": "2",
           "question": "Which organelle in plant cells is responsible for photosynthesis?",
           "answer": "Chloroplast",
           "option3": "Chloroplast",
@@ -63,7 +59,6 @@
       "Questions": [
         {
           "questionnumber": "1",
-          "questionid": "1",
           "question": "What is 2 + 2?",
           "answer": "4",
           "option3": "3",
@@ -74,7 +69,6 @@
         },
         {
           "questionnumber": "2",
-          "questionid": "2",
           "question": "What is the result of 7 x 3?",
           "answer": "21",
           "option3": "18",
@@ -92,7 +86,6 @@
       "Questions": [
         {
           "questionnumber": "1",
-          "questionid": "1",
           "question": "Who was the first president of the Philippines?",
           "answer": "Emilio Aguinaldo",
           "option3": "Andres Bonifacio",
@@ -103,7 +96,6 @@
         },
         {
           "questionnumber": "2",
-          "questionid": "2",
           "question": "Who was the 16th president of the Philippines?",
           "answer": "Rodrigo Duterte",
           "option3": "Rodrigo Duterte",
@@ -121,7 +113,6 @@
       "Questions": [
         {
           "questionnumber": "1",
-          "questionid": "1",
           "question": "r u okay?",
           "answer": "siguro",
           "option3": "maybe",
@@ -132,7 +123,6 @@
         },
         {
           "questionnumber": "2",
-          "questionid": "2",
           "question": "I am tired?",
           "answer": "shesh",
           "option3": "shesh",
@@ -143,7 +133,6 @@
         },
         {
           "questionnumber": "3",
-          "questionid": "3",
           "question": "good or bad?",
           "answer": "pizza",
           "option3": "good",

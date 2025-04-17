@@ -52,7 +52,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
-                          <Component id="nxtbtn" min="-2" max="-2" attributes="0"/>
+                          <Component id="nextButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="121" max="-2" attributes="0"/>
                           <Component id="compbtn" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -60,24 +60,26 @@
                           <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="Timer" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
-                                  <Component id="Score" min="-2" max="-2" attributes="0"/>
+                                  <Component id="timerLabel" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="98" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="opt1UI" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                  <Component id="previousQuestionButton" min="-2" max="-2" attributes="0"/>
+                                  <Component id="option1" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="opt2UI" min="-2" max="-2" attributes="0"/>
+                                  <Component id="option2" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="opt3UI" min="-2" max="-2" attributes="0"/>
+                                  <Component id="option3" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="opt4UI" min="-2" max="-2" attributes="0"/>
+                                  <Component id="option4" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="categoryLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -87,8 +89,13 @@
               </Group>
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
-                  <Component id="questionUI" min="-2" max="-2" attributes="0"/>
+                  <Component id="questionLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="274" max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="273" max="-2" attributes="0"/>
+                  <Component id="scenarioLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -98,29 +105,29 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                          <Component id="categoryLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="Timer" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="Score" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="timerLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
-                  <Component id="questionUI" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                  <Component id="scenarioLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                  <Component id="questionLabel" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="106" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="opt1UI" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="opt2UI" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="opt3UI" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="opt4UI" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="option1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="option2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="option3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="option4" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="nxtbtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="nextButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="compbtn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="previousQuestionButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="49" max="32767" attributes="0"/>
               </Group>
@@ -128,17 +135,17 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="questionUI">
+        <Component class="javax.swing.JLabel" name="questionLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel1"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel2">
+        <Component class="javax.swing.JLabel" name="categoryLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel2"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="opt1UI">
+        <Component class="javax.swing.JToggleButton" name="option1">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup1"/>
@@ -146,10 +153,10 @@
             <Property name="text" type="java.lang.String" value="jToggleButton1"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="opt1UIActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="option1ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="opt2UI">
+        <Component class="javax.swing.JToggleButton" name="option2">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup1"/>
@@ -157,10 +164,10 @@
             <Property name="text" type="java.lang.String" value="jToggleButton2"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="opt2UIActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="option2ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="opt3UI">
+        <Component class="javax.swing.JToggleButton" name="option3">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup1"/>
@@ -168,10 +175,10 @@
             <Property name="text" type="java.lang.String" value="jToggleButton3"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="opt3UIActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="option3ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JToggleButton" name="opt4UI">
+        <Component class="javax.swing.JToggleButton" name="option4">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup1"/>
@@ -179,15 +186,15 @@
             <Property name="text" type="java.lang.String" value="jToggleButton4"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="opt4UIActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="option4ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="nxtbtn">
+        <Component class="javax.swing.JButton" name="nextButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Next"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nxtbtnActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nextButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="compbtn">
@@ -199,15 +206,23 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="compbtnActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="Timer">
+        <Component class="javax.swing.JLabel" name="timerLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel1"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="Score">
+        <Component class="javax.swing.JLabel" name="scenarioLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="jLabel1"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="previousQuestionButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Previous"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="previousQuestionButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
