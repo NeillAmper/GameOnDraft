@@ -16,9 +16,11 @@ public class EditQuizTable extends javax.swing.JFrame {
 
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
     private final String gameMasterName;
+    private final String usname;
 
-    public EditQuizTable(String gameMasterName) {
+    public EditQuizTable(String gameMasterName, String usname) {
         this.gameMasterName = gameMasterName;
+        this.usname = usname;
         initComponents();
         loadQuizzesByCreator();
         populateCategorySelection(); // Populates category combo box with available categories
@@ -48,7 +50,7 @@ public class EditQuizTable extends javax.swing.JFrame {
                 {null, null, null}
             },
             new String [] {
-                "Category", "Quiz ID", "Question"
+                "Title", "Creator", "Category"
             }
         ));
         QuizTable.addAncestorListener(new javax.swing.event.AncestorListener() {
@@ -145,7 +147,7 @@ public class EditQuizTable extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        new GameMaster(gameMasterName).setVisible(true);
+        new GameMaster(gameMasterName, usname).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
 
@@ -169,7 +171,7 @@ public class EditQuizTable extends javax.swing.JFrame {
 
             for (Object obj : quizzes) {
                 JSONObject quiz = (JSONObject) obj;
-                if (quiz.get("quizid").equals(selectedQuizID)) {
+                if (quiz.get("QuizTitle").equals(selectedQuizID)) {
                     break;
                 }
             }
@@ -177,7 +179,7 @@ public class EditQuizTable extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Failed to read quiz for undo.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        EditQuiz e = new EditQuiz(selectedQuizID, gameMasterName);
+        EditQuiz e = new EditQuiz(selectedQuizID, gameMasterName, usname);
         e.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_EditButtonActionPerformed
@@ -199,7 +201,10 @@ public class EditQuizTable extends javax.swing.JFrame {
 
             for (Object obj : quizzes) {
                 JSONObject quiz = (JSONObject) obj;
-                categories.add(quiz.get("category").toString());
+                Object categoryObj = quiz.get("Category");
+                if (categoryObj != null) {
+                    categories.add(categoryObj.toString());
+                }
             }
 
             CategorySelection.removeAllItems();
@@ -208,10 +213,7 @@ public class EditQuizTable extends javax.swing.JFrame {
                 CategorySelection.addItem(category);
             }
 
-            // Set default selected item to "All"
             CategorySelection.setSelectedItem("All");
-
-            // Load quizzes only after categories are populated
             loadCategoryQuizzes();
 
         } catch (IOException | ParseException e) {
@@ -239,33 +241,30 @@ public class EditQuizTable extends javax.swing.JFrame {
 
             for (Object obj : quizzes) {
                 JSONObject quiz = (JSONObject) obj;
-                String creator = quiz.get("creator").toString();
-                String category = quiz.get("category").toString();
-                String quizid = quiz.get("quizid").toString();
-                String question = quiz.get("question").toString();
+                String title = quiz.get("QuizTitle").toString();
+                String creator = quiz.get("Creator").toString();
+                String category = quiz.get("Category").toString();
 
                 // Convert values to lowercase for case-insensitive matching
                 String categoryLower = category.toLowerCase();
-                String quizidLower = quizid.toLowerCase();
-                String questionLower = question.toLowerCase();
+                String titleLower = title.toLowerCase();
 
                 // Filter by category from dropdown
                 boolean categoryDropdownMatch = selectedCategory.equals("All") || category.equals(selectedCategory);
-
                 // Filter by keyword match in category, quizid, or question
+
                 boolean keywordMatch = keyword.isEmpty()
                         || categoryLower.contains(keyword)
-                        || quizidLower.contains(keyword)
-                        || questionLower.contains(keyword);
+                        || titleLower.contains(keyword);
 
                 // Filter by creator if not admin
                 boolean isCreatorMatch = isAdmin || creator.equals(gameMasterName);
 
                 if (categoryDropdownMatch && keywordMatch && isCreatorMatch) {
                     model.addRow(new Object[]{
-                        category,
-                        quizid,
-                        question
+                        title,
+                        creator,
+                        category
                     });
                 }
             }
@@ -298,7 +297,7 @@ public class EditQuizTable extends javax.swing.JFrame {
     private void loadQuizzesByCreator() {
         try {
             JSONParser parser = new JSONParser();
-            JSONObject data = (JSONObject) parser.parse(new FileReader("data.json"));
+            JSONObject data = (JSONObject) parser.parse(new FileReader("QuizData.json"));
             JSONArray quizzes = (JSONArray) data.get("Quizzes");
 
             DefaultTableModel model = (DefaultTableModel) QuizTable.getModel();
@@ -306,11 +305,11 @@ public class EditQuizTable extends javax.swing.JFrame {
 
             for (Object obj : quizzes) {
                 JSONObject quiz = (JSONObject) obj;
-                if (gameMasterName.equals(quiz.get("creator"))) {
+                if (gameMasterName.equals(quiz.get("Creator"))) {
                     model.addRow(new Object[]{
-                        quiz.get("quizid"),
-                        quiz.get("category"),
-                        quiz.get("question")
+                        quiz.get("QuizTitle"),
+                        quiz.get("Creator"),
+                        quiz.get("Category")
                     });
                 }
             }
@@ -323,26 +322,26 @@ public class EditQuizTable extends javax.swing.JFrame {
         try (FileReader reader = new FileReader(FILE_PATH[1])) {
             JSONParser parser = new JSONParser();
             JSONObject root = (JSONObject) parser.parse(reader);
-            JSONArray accounts = (JSONArray) root.get("Accounts");
+            JSONArray users = (JSONArray) root.get("Accounts");
 
-            for (Object obj : accounts) {
-                JSONObject account = (JSONObject) obj;
-                String username = account.get("username").toString();
-                String usertype = account.get("usertype").toString();
+            for (Object obj : users) {
+                JSONObject user = (JSONObject) obj;
+                Object usernameObj = user.get("username");
+                Object typeObj = user.get("type");
 
-                if (username.equals(gameMasterName)) {
-                    return usertype.equalsIgnoreCase("Administrator");
+                if (usernameObj != null && typeObj != null) {
+                    String username = usernameObj.toString();
+                    String type = typeObj.toString();
+
+                    if (gameMasterName.equals(username)) {
+                        return type.equalsIgnoreCase("Administrator");
+                    }
                 }
             }
-
         } catch (IOException | ParseException e) {
-            JOptionPane.showMessageDialog(this, "Failed to check user type.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error reading user data.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        return false; // Default to false if check fails
-    }
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new EditQuizTable("Test").setVisible(true));
+        return false;
     }
 
 

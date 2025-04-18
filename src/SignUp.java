@@ -15,14 +15,15 @@ import org.json.simple.parser.ParseException;
 public class SignUp extends javax.swing.JFrame {
 
     private static String addname, addpass, addtype;
-
+    private final String usname;
     private static final String FILE_PATH = "src/UserData.json";
     private static final JSONParser jsonParser2 = new JSONParser();
     private static JSONObject record = new JSONObject();
     private static JSONArray userlist = new JSONArray();
 
-    public SignUp() {
+    public SignUp(String usname) {
         initComponents();
+        this.usname = usname;
     }
 
     /**
@@ -132,7 +133,7 @@ public class SignUp extends javax.swing.JFrame {
     private void SignUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignUpButtonActionPerformed
         String password = Password.getText();
         String confirmPassword = ConfirmPassword.getText();
-        String userType = TypeComboBox.getSelectedItem().toString();
+        String userCategory = TypeComboBox.getSelectedItem().toString();
         String username = Username.getText();
         //These lines of code retrieve user input from text fields and remove any spaces, declaring and initializing to store the input.
 
@@ -148,7 +149,7 @@ public class SignUp extends javax.swing.JFrame {
 
         }
 
-        if (userType.equals("Select User Type")) {
+        if (userCategory.equals("Select User Type")) {
             JOptionPane.showMessageDialog(null, "Please select a user type!", "Invalid Selection", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -180,7 +181,7 @@ public class SignUp extends javax.swing.JFrame {
             newUser.put("username", addname);
             newUser.put("password", addpass);
             newUser.put("type", addtype);
-            newUser.put("status", "Accessible") ;
+            newUser.put("status", "Accessible");
             userlist.add(newUser);
             record.put("Accounts", userlist);
 
@@ -198,7 +199,7 @@ public class SignUp extends javax.swing.JFrame {
     }//GEN-LAST:event_SignUpButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SignIn a = new SignIn();
+        SignIn a = new SignIn(usname, "test");
         a.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -209,7 +210,8 @@ public class SignUp extends javax.swing.JFrame {
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if (!"Nimbus".equals(info.getName())) {
+                } else {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -219,7 +221,7 @@ public class SignUp extends javax.swing.JFrame {
         }
 
         java.awt.EventQueue.invokeLater(() -> {
-            new SignUp().setVisible(true);
+            new SignUp("Tets").setVisible(true);
         });
     }
 

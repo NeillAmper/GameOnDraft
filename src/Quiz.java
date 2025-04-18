@@ -20,6 +20,7 @@ public class Quiz extends javax.swing.JFrame {
     public static int score = 0;
     public static int maxscore = 0;
     private final String playerName;
+    private final String usname;
     private final String quizData;
     private String correctanswer;
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
@@ -32,9 +33,10 @@ public class Quiz extends javax.swing.JFrame {
     private final List<String> scenarioPaths = new ArrayList<>();
     private final List<JSONObject> answerLog = new ArrayList<>(); // ✅ log of question answers
 
-    public Quiz(String playerName, String quizData, String selectedQuiz) {
+    public Quiz(String playerName, String quizData, String selectedQuiz, String usname) {
         initComponents();
         this.playerName = playerName;
+        this.usname = usname;
         this.quizData = quizData;
         this.selectedQuiz = selectedQuiz;
         loadQuizData();
@@ -266,7 +268,7 @@ public class Quiz extends javax.swing.JFrame {
         }
         JOptionPane.showMessageDialog(this, "Quiz Completed!");
         this.setVisible(false);
-        new QuizResult(playerName, quizData, score, maxscore, "Player").setVisible(true);
+        new QuizResult(playerName, quizData, score, maxscore, "Player", usname).setVisible(true);
     }//GEN-LAST:event_completeButtonActionPerformed
 
     private void previousQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousQuestionButtonActionPerformed
@@ -442,7 +444,7 @@ public class Quiz extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Quiz("Player1", "Test", "SampleCategory").setVisible(true);
+            new Quiz("Player1", "Test", "SampleCategory", "Testss").setVisible(true);
         });
 }
 

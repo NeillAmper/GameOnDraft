@@ -19,11 +19,13 @@ public final class CreateQuiz extends javax.swing.JFrame {
     private static final JSONParser jsonParser = new JSONParser();
     private static final String FILE_PATH = "src/QuizData.json";
     private final String gameMasterName;
+    private final String usname;
     private final ButtonGroup answerGroup;
 
-    public CreateQuiz(String gameMasterName) {
+    public CreateQuiz(String gameMasterName, String usname) {
         initComponents();
         this.gameMasterName = gameMasterName;
+        this.usname = usname;
         answerGroup = new ButtonGroup();
         answerGroup.add(answer1);
         answerGroup.add(answer2);
@@ -297,7 +299,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
     }//GEN-LAST:event_answer1ActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        GameMaster g = new GameMaster(gameMasterName);
+        GameMaster g = new GameMaster(gameMasterName, usname);
         g.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_BackActionPerformed
@@ -587,7 +589,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new GameMaster("TestName").setVisible(true); // Replace "TestName" with any string for testing
+            new GameMaster("TestName", "tests").setVisible(true); // Replace "TestName" with any string for testing
         });
     }
 

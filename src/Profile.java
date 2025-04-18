@@ -10,10 +10,10 @@ public class Profile extends javax.swing.JFrame {
     private final String gameMasterName;
     private final String playerName;
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
-    private String userType;
+    private String usname;
     private final String userName;
 
-    public Profile(String gameMasterName, String playerName, String userType, String userName) {
+    public Profile(String gameMasterName, String playerName, String usname, String userName) {
         this.gameMasterName = gameMasterName;
         this.playerName = playerName;
 
@@ -26,15 +26,15 @@ public class Profile extends javax.swing.JFrame {
         }
 
         this.userName = userName;
-        this.userType = userType;
+        this.usname = usname;
 
         fetchUserType();
         initComponents();
 
         jLabel1.setText("Edit Profile Information for user " + userName);
 
-        if (userType != null) {
-            TypeComboBox.setSelectedItem(userType.equalsIgnoreCase("GameMaster") ? "Game Master" : "Player");
+        if (usname != null) {
+            TypeComboBox.setSelectedItem(usname.equalsIgnoreCase("GameMaster") ? "Game Master" : "Player");
         }
     }
 
@@ -177,9 +177,9 @@ public class Profile extends javax.swing.JFrame {
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
         if (gameMasterName != null && !gameMasterName.isEmpty()) {
-            new GameMaster(gameMasterName).setVisible(true);
+            new GameMaster(gameMasterName, usname).setVisible(true);
         } else if (playerName != null && !playerName.isEmpty()) {
-            new Player(playerName, "Player", 1, 2, "Player").setVisible(true);
+            new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
@@ -191,7 +191,7 @@ public class Profile extends javax.swing.JFrame {
         String newType = TypeComboBox.getSelectedItem().toString();
 
         if (newUsername.equals("Enter New Username") && newPassword.equals("Enter New Password")
-                && confirmPassword.equals("Confirm New Password") && newType.equalsIgnoreCase(userType)) {
+                && confirmPassword.equals("Confirm New Password") && newType.equalsIgnoreCase(usname)) {
             JOptionPane.showMessageDialog(this, "No changes were made to your profile.", "No Changes", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -280,9 +280,9 @@ public class Profile extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Profile updated successfully!");
 
                 if ("Game Master".equals(newType)) {
-                    new GameMaster(newUsername).setVisible(true);
+                    new GameMaster(newUsername, usname).setVisible(true);
                 } else {
-                    new Player(newUsername, "Player", 1, 2, "Player").setVisible(true);
+                    new Player(newUsername, "Player", 1, 2, "Player", usname).setVisible(true);
                 }
 
                 this.dispose();
@@ -330,7 +330,9 @@ public class Profile extends javax.swing.JFrame {
             // Remove user's quizzes
             JSONObject quizData = (JSONObject) parser.parse(new FileReader(FILE_PATH[0]));
             JSONArray quizzes = (JSONArray) quizData.get("Quizzes");
-            quizzes.removeIf(obj -> ((JSONObject) obj).get("creator").toString().equals(userName));
+            quizzes.removeIf(obj -> {
+                return ((JSONObject) obj).get("creator").toString().equals(userName);
+            });
 
             try (FileWriter writer = new FileWriter(FILE_PATH[0])) {
                 quizData.put("Quizzes", quizzes);
@@ -338,7 +340,7 @@ public class Profile extends javax.swing.JFrame {
             }
 
             JOptionPane.showMessageDialog(this, "Account deleted successfully.");
-            new SignIn().setVisible(true);
+            new SignIn(usname, "test").setVisible(true);
             this.dispose();
 
         } catch (IOException | ParseException e) {
@@ -354,12 +356,12 @@ public class Profile extends javax.swing.JFrame {
             for (Object obj : accounts) {
                 JSONObject user = (JSONObject) obj;
                 if (user.get("username").toString().equals(userName)) {
-                    userType = user.get("type").toString();
+                    usname = user.get("type").toString();
                     break;
                 }
             }
         } catch (IOException | ParseException e) {
-            userType = "Unknown";
+            usname = "Unknown";
         }
     }
 

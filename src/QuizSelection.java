@@ -9,12 +9,14 @@ import org.json.simple.parser.*;
 public class QuizSelection extends javax.swing.JFrame {
 
     private final String playerName;
+    private final String usname;
     private JSONArray quizzesArray;
     private static final String FILE_PATH = "src/QuizData.json"; // Ensure the correct path
     private final String selectedQuiz; // Store the selected quiz data
 
-    public QuizSelection(String playerName, String quizData, String selectedQuiz) {
+    public QuizSelection(String playerName, String quizData, String selectedQuiz, String usname) {
         this.playerName = playerName;
+        this. usname = usname;
         this.selectedQuiz = selectedQuiz;
         initComponents();
         setupLiveSearch(); // 👈 Add this
@@ -146,7 +148,7 @@ public class QuizSelection extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        new Player(playerName, "Player", 1, 2, "Player").setVisible(true);
+        new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_BackActionPerformed
 
@@ -171,7 +173,7 @@ public class QuizSelection extends javax.swing.JFrame {
 
             if (chosenQuiz != null) {
                 // Pass the entire selected quiz JSON object to the Quiz class
-                new Quiz(playerName, selectedQuiz, "Player").setVisible(true); // Pass selectedQuiz directly
+                new Quiz(playerName, selectedQuiz, "Player", usname).setVisible(true); // Pass selectedQuiz directly
             } else {
                 JOptionPane.showMessageDialog(this, "Quiz not found.");
             }
@@ -296,7 +298,7 @@ public class QuizSelection extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new QuizSelection("TestPlayer", "Testsss", "Tetss").setVisible(true); // Pass only the player name
+            new QuizSelection("TestPlayer", "Testsss", "Tetss", "testing").setVisible(true); // Pass only the player name
         });
     }
 

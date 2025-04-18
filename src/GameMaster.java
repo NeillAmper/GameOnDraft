@@ -2,9 +2,11 @@
 public class GameMaster extends javax.swing.JFrame {
 
     private final String gameMasterName;
+    private final String usname;
 
-    public GameMaster(String gameMasterName) {
+    public GameMaster(String gameMasterName, String usname) {
         this.gameMasterName = gameMasterName;
+        this.usname = usname;
         initComponents();
         WelcomeMessage.setText("Welcome, Game Master" + gameMasterName + "!"); // ✅ Fixed from usernameLabel
     }
@@ -135,34 +137,35 @@ public class GameMaster extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
-        SignIn b = new SignIn();
+        SignIn b = new SignIn(usname, "pass");
         b.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_LogoutActionPerformed
 
     private void CreateQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateQuizActionPerformed
         this.setVisible(false);
-        new CreateQuiz(gameMasterName).setVisible(true);
+        new CreateQuiz(gameMasterName, usname).setVisible(true);
     }//GEN-LAST:event_CreateQuizActionPerformed
 
     private void DeleteQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteQuizActionPerformed
         this.setVisible(false);
-        new DeleteQuiz(gameMasterName).setVisible(true);
+        new DeleteQuiz(gameMasterName, usname).setVisible(true);
     }//GEN-LAST:event_DeleteQuizActionPerformed
 
     private void EditQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditQuizActionPerformed
         this.setVisible(false);
-        new EditQuizTable(gameMasterName).setVisible(true); // ✅ Fixed here
+        new EditQuizTable(gameMasterName, usname).setVisible(true); // ✅ Fixed here
     }//GEN-LAST:event_EditQuizActionPerformed
 
     private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
+        String gameMasterName = usname;
         this.setVisible(false);
-        new Leaderboard(gameMasterName, "GameMaster", "GameMaster").setVisible(true); // ✅ Fixed by adding "GameMaster"
+        new Leaderboard(gameMasterName, usname, "GameMaster", "GameMaster").setVisible(true); // ✅ Fixed by adding "GameMaster"
     }//GEN-LAST:event_LeaderboardActionPerformed
 
     private void HistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistoryActionPerformed
         this.setVisible(false);
-        new History(gameMasterName, "GameMaster").setVisible(true);
+        new History(gameMasterName, usname, "GameMaster", "GameMaster").setVisible(true);
     }//GEN-LAST:event_HistoryActionPerformed
 
     private void ProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileButtonActionPerformed
@@ -172,7 +175,7 @@ public class GameMaster extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new GameMaster("TestName").setVisible(true); // Replace "TestName" with any string for testing
+            new GameMaster("TestName", "Testss").setVisible(true); // Replace "TestName" with any string for testing
         });
     }
 

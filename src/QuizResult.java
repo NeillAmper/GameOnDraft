@@ -3,14 +3,16 @@
 public final class QuizResult extends javax.swing.JFrame {
 
     private final String playerName;
+    private final String usname;
     private final String category;
     private final int maxScore;
     private final int finalScore;
     private final String quizData;
 
-    public QuizResult(String playerName, String quizData, int finalScore, int maxScore, String category) {
+    public QuizResult(String playerName, String quizData, int finalScore, int maxScore, String category, String usname) {
         this.quizData = quizData;
         this.playerName = playerName;
+        this.usname = usname;
         this.finalScore = finalScore;
         this.maxScore = maxScore;
         this.category = category;
@@ -145,23 +147,23 @@ public final class QuizResult extends javax.swing.JFrame {
 
     private void RetryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RetryButtonActionPerformed
         this.setVisible(false);
-        new QuizSelection(playerName, "Player", "Player").setVisible(true);
+        new QuizSelection(playerName, "Player", "Player", usname).setVisible(true);
     }//GEN-LAST:event_RetryButtonActionPerformed
 
     private void LeaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardButtonActionPerformed
         this.setVisible(false);
-        new Leaderboard(playerName, quizData, "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
+        new Leaderboard(playerName, quizData, "Player", "GameMaster").setVisible(true); // ✅ Fixed by adding "GameMaster"
     }//GEN-LAST:event_LeaderboardButtonActionPerformed
 
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed
-        Player p = new Player(playerName, "Player", 1, 2, "Player");
+        Player p = new Player(playerName, "Player", 1, 2, "Player", usname);
         p.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_MenuButtonActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new QuizResult("DefaultPlayer", "Science", 1, 2, "Test").setVisible(true); // Example
+            new QuizResult("DefaultPlayer", "Science", 1, 2, "Test", "Testss").setVisible(true); // Example
         });
     }
 

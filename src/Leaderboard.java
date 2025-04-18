@@ -15,19 +15,21 @@ public class Leaderboard extends javax.swing.JFrame {
     private final String adminName;
     private final String gameMasterName;
     private final String playerName;
+    private final String usname;
     private final DefaultTableModel tableModel;
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
     private boolean isLoadingCategories = false;
 
-    public Leaderboard(String adminName, String gameMasterName, String playerName) {
+    public Leaderboard(String adminName, String gameMasterName, String playerName, String usname) {
         this.adminName = adminName;
         this.gameMasterName = gameMasterName;
         this.playerName = playerName;
+        this.usname = usname;
         initComponents();
         tableModel = (DefaultTableModel) LeaderboardTable.getModel();
-        loadCategories();               // Placeholder method
-        loadAllLeaderboardData();       // Placeholder method
-        addSearchListener();            // Placeholder method
+        loadCategories();
+        loadAllLeaderboardData();
+        addSearchListener();
     }
 
     @SuppressWarnings("unchecked")
@@ -146,16 +148,13 @@ public class Leaderboard extends javax.swing.JFrame {
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
         if (adminName != null && !adminName.isEmpty()) {
-            // If the user is logged in as an admin, go back to the Administrator JFrame
-            new Administrator(adminName).setVisible(true);
+            new Administrator(adminName, usname).setVisible(true);
         } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
-            // If the user is a Game Master, go back to the GameMaster JFrame
-            new GameMaster(gameMasterName).setVisible(true);
+            new GameMaster(gameMasterName, usname).setVisible(true);
         } else if (playerName != null && !playerName.isEmpty()) {
-            // If the user is a Player, go back to the Player JFrame
-            new Player(playerName, "Player", 1, 2, "Player").setVisible(true);
+            new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
         }
-        this.dispose(); // Close the current Leaderboard frame
+        this.dispose();
     }//GEN-LAST:event_BackActionPerformed
 
     private void CategorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategorySelectionActionPerformed
@@ -403,7 +402,7 @@ public class Leaderboard extends javax.swing.JFrame {
     // Main method for testing
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Leaderboard("Player", "GameMaster", "Admin").setVisible(true);
+            new Leaderboard("Player", "GameMaster", "Admin", "Test").setVisible(true);
         });
     }
 

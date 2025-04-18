@@ -2,9 +2,11 @@
 public class Player extends javax.swing.JFrame {
 
     private final String playerName;
+    private final String usname;
 
-    public Player(String playerName, String player, int par, int par1, String player1) {
+    public Player(String playerName, String player, int par, int par1, String player1, String usname) {
         this.playerName = playerName; // ✅ Store it for later use
+        this.usname = usname;
         initComponents();
         jLabel1.setText("Welcome, Player " + playerName + "!"); // DYNAMIC GREETING
     }
@@ -119,24 +121,24 @@ public class Player extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
-        SignIn b = new SignIn();
+        SignIn b = new SignIn(usname, "test");
         b.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_LogoutActionPerformed
 
     private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
         this.setVisible(false);
-        new Leaderboard(playerName, "Player", "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
+        new Leaderboard(playerName, "Player", "Player", "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
     }//GEN-LAST:event_LeaderboardActionPerformed
 
     private void HistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistoryActionPerformed
         this.setVisible(false);
-        new History(playerName, "Player").setVisible(true);
+        new History(playerName, usname, "Player", "GameMaster").setVisible(true);
     }//GEN-LAST:event_HistoryActionPerformed
 
     private void StartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartGameActionPerformed
         this.setVisible(false);
-        new QuizSelection(playerName, "Player", "Player").setVisible(true);
+        new QuizSelection(playerName, "Player", "Player", usname).setVisible(true);
     }//GEN-LAST:event_StartGameActionPerformed
 
     private void ProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileActionPerformed
@@ -146,7 +148,7 @@ public class Player extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Player("TestName", "Player", 1, 2, "Player").setVisible(true);
+            new Player("TestName", "Player", 1, 2, "Player", "Player").setVisible(true);
         });
     }
 

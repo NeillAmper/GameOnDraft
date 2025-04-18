@@ -16,13 +16,17 @@ import javax.swing.event.DocumentEvent;
 
 public class History extends javax.swing.JFrame {
 
+    private final String adminName;
     private final String gameMasterName;
     private final String playerName;
+    private final String usname;
     private static final String FILE_PATH = "src/UserData.json"; // Correct file path
 
-    public History(String gameMasterName, String playerName) {
+    public History(String adminName, String gameMasterName, String playerName, String usname) {
+        this.adminName = adminName;
         this.gameMasterName = gameMasterName;
         this.playerName = playerName;
+        this.usname = usname;
         initComponents();
         populateCategorySelection(); // Populate the combo box
         loadHistory(); // Load history data
@@ -143,9 +147,9 @@ public class History extends javax.swing.JFrame {
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
         if (gameMasterName != null && !gameMasterName.isEmpty()) {
-            new GameMaster(gameMasterName).setVisible(true);
+            new GameMaster(gameMasterName, usname).setVisible(true);
         } else if (playerName != null && !playerName.isEmpty()) {
-            new Player(playerName, "Player", 1, 2, "Player").setVisible(true);
+            new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
@@ -339,7 +343,7 @@ public class History extends javax.swing.JFrame {
     // Main method for testing
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new History("Player", "GameMaster").setVisible(true);
+            new History("Player", "GameMaster", "testsss", "testests").setVisible(true);
         });
     }
 

@@ -16,10 +16,12 @@ public class EditQuiz extends javax.swing.JFrame {
     private static final JSONParser jsonParser = new JSONParser();
     private static JSONObject record = new JSONObject();
     private final String gameMasterName;
+    private final String usname;
 
-    public EditQuiz(String selectedQuizID, String gameMasterName) {
+    public EditQuiz(String selectedQuizID, String gameMasterName, String usname) {
         initComponents();
         this.gameMasterName = gameMasterName;  // Set user name
+        this.usname = usname;
         QuizID.setText(selectedQuizID);  // Display the Quiz ID in the text field
         loadQuizData(selectedQuizID);    // Load the quiz data into the form fields
     }
@@ -231,7 +233,7 @@ public class EditQuiz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        EditQuizTable e = new EditQuizTable(gameMasterName);
+        EditQuizTable e = new EditQuizTable(gameMasterName, usname);
         e.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_BackActionPerformed
@@ -417,7 +419,7 @@ public class EditQuiz extends javax.swing.JFrame {
     }
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new EditQuizTable("test").setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new EditQuizTable("test", "Testss").setVisible(true));
     }
 
 

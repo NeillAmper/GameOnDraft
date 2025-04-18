@@ -14,14 +14,16 @@ import org.json.simple.parser.ParseException;
 
 public class SignIn extends javax.swing.JFrame {
 
-    private static String usname, pass;
+    private static String usname;
+    private static String pass;
     private static final String FILE_PATH = "src/UserData.json";
     private static final JSONParser jsonParser = new JSONParser();
     private static JSONObject record = new JSONObject();
     private static JSONArray userlist = new JSONArray();
 
-    public SignIn() {
+    public SignIn(String usname, String pass) {
         initComponents();
+        this.usname = usname;
     }
 
     /**
@@ -181,17 +183,17 @@ public class SignIn extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "This account has been disabled. Please contact an administrator.", "Access Denied", JOptionPane.ERROR_MESSAGE);
             } else {
                 if ("Game Master".equalsIgnoreCase(foundType)) {
-                    GameMaster g = new GameMaster(usname);
+                    GameMaster g = new GameMaster(usname, usname);
                     g.setVisible(true);
                     setVisible(false);
                 } else if ("Player".equalsIgnoreCase(foundType)) {
-                    Player p = new Player(usname, "Player", 1, 2, "Player");
+                    Player p = new Player(usname, "Player", 1, 2, "Player", usname);
                     p.setVisible(true);
                     setVisible(false);
                 } else if ("Administrator".equalsIgnoreCase(foundType)) {
                     // ✅ REDIRECT TO ADMINISTRATOR FRAME
-                    Administrator admin = new Administrator(usname);
-                    admin.setVisible(true);
+                    Administrator a = new Administrator(usname);
+                    a.setVisible(true);
                     setVisible(false);
                 }
             }
@@ -203,7 +205,7 @@ public class SignIn extends javax.swing.JFrame {
     }//GEN-LAST:event_SignInActionPerformed
 
     private void SignUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignUpButtonActionPerformed
-        SignUp a = new SignUp();
+        SignUp a = new SignUp(usname);
         a.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_SignUpButtonActionPerformed
@@ -243,11 +245,11 @@ public class SignIn extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
             Logger.getLogger(SignIn.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(() -> new SignIn().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new SignIn("Test","Testss").setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
