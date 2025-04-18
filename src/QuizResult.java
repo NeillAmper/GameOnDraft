@@ -145,12 +145,12 @@ public final class QuizResult extends javax.swing.JFrame {
 
     private void RetryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RetryButtonActionPerformed
         this.setVisible(false);
-        new QuizSelection(playerName, quizData).setVisible(true);
+        new QuizSelection(playerName, "Player", "Player").setVisible(true);
     }//GEN-LAST:event_RetryButtonActionPerformed
 
     private void LeaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardButtonActionPerformed
         this.setVisible(false);
-        new Leaderboard(playerName, quizData).setVisible(true); // ✅ Fixed by adding "GameMaster"
+        new Leaderboard(playerName, quizData, "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
     }//GEN-LAST:event_LeaderboardButtonActionPerformed
 
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed

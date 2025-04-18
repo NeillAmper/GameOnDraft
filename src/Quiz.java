@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+
 public class Quiz extends javax.swing.JFrame {
 
     public static int score = 0;
@@ -23,21 +24,19 @@ public class Quiz extends javax.swing.JFrame {
     private String correctanswer;
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
     private int index = 0;
-    private String selectedCategory;
+    private final String selectedQuiz;
     private javax.swing.Timer questionTimer;
     private int timeLeft = 300;  // 5-minute timer per question
     private final List<JSONObject> scenarioList = new ArrayList<>();
     private final List<String> scenarioHistory = new ArrayList<>();
     private final List<String> scenarioPaths = new ArrayList<>();
+    private final List<JSONObject> answerLog = new ArrayList<>(); // ✅ log of question answers
 
-    public Quiz(String playerName, String quizData) {
+    public Quiz(String playerName, String quizData, String selectedQuiz) {
         initComponents();
         this.playerName = playerName;
         this.quizData = quizData;
-        selectedCategory = QuizSelection.getCategorySelection_selected();
-        if (selectedCategory == null || selectedCategory.isEmpty()) {
-            selectedCategory = "Default";
-        }
+        this.selectedQuiz = selectedQuiz;
         loadQuizData();
         loadNextQuestion();
     }
@@ -267,7 +266,7 @@ public class Quiz extends javax.swing.JFrame {
         }
         JOptionPane.showMessageDialog(this, "Quiz Completed!");
         this.setVisible(false);
-        new QuizResult(playerName, quizData, 1, 2, "Player").setVisible(true);
+        new QuizResult(playerName, quizData, score, maxscore, "Player").setVisible(true);
     }//GEN-LAST:event_completeButtonActionPerformed
 
     private void previousQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousQuestionButtonActionPerformed
@@ -278,29 +277,25 @@ public class Quiz extends javax.swing.JFrame {
     }//GEN-LAST:event_previousQuestionButtonActionPerformed
 
     private void loadQuizData() {
-        try (FileReader reader = new FileReader(FILE_PATH[0])) {
-            JSONParser jsonParser = new JSONParser();
-            JSONObject quizData = (JSONObject) jsonParser.parse(reader); // Fix the missing variable assignment
-            JSONArray quizzes = (JSONArray) quizData.get("Quizzes");
+        try {
+            // Load the quiz data from the QuizData.json
+            FileReader reader = new FileReader(FILE_PATH[0]);
+            JSONParser parser = new JSONParser();
+            JSONArray quizzes = (JSONArray) parser.parse(reader);
 
+            // Loop through the quizzes and find the selected quiz
             for (Object obj : quizzes) {
-                JSONObject quiz = (JSONObject) obj;
-                String category = quiz.get("category").toString();
+                JSONObject quizEntry = (JSONObject) obj;  // Renamed variable to quizEntry
+                if (quizEntry.get("title").equals(selectedQuiz)) {  // Match the selected quiz title
+                    JSONArray questions = (JSONArray) quizEntry.get("questions");  // Get the questions array
 
-                if (category.equalsIgnoreCase(selectedCategory)) {
-                    JSONArray questions = (JSONArray) quiz.get("questions");
-                    for (Object qObj : questions) {
-                        JSONObject question = (JSONObject) qObj;
-                        JSONObject scenarioQuestion = new JSONObject();
-                        scenarioQuestion.put("question", question.get("question"));
-                        scenarioQuestion.put("option1", question.get("option1"));
-                        scenarioQuestion.put("option2", question.get("option2"));
-                        scenarioQuestion.put("option3", question.get("option3"));
-                        scenarioQuestion.put("option4", question.get("option4"));
-                        scenarioQuestion.put("answer", question.get("answer"));
-                        scenarioQuestion.put("nextScenario", question.getOrDefault("nextScenario", ""));
-                        scenarioList.add(scenarioQuestion);
+                    // Add questions to the scenarioList and set maxscore
+                    for (Object questionObj : questions) {
+                        JSONObject questionData = (JSONObject) questionObj;
+                        scenarioList.add(questionData);
+                        maxscore++;  // Increment the score count
                     }
+                    break;  // Exit after finding the selected quiz
                 }
             }
         } catch (IOException | ParseException e) {
@@ -309,147 +304,147 @@ public class Quiz extends javax.swing.JFrame {
     }
 
     private void loadNextQuestion() {
-        if (index >= scenarioList.size()) {
-            completeButton.setEnabled(true);
-            nextButton.setEnabled(false);
+        if (index < scenarioList.size()) {
             if (questionTimer != null) {
                 questionTimer.stop();
             }
-            return;
+
+            JSONObject currentScenario = scenarioList.get(index);
+            questionLabel.setText((String) currentScenario.get("question"));
+            option1.setText((String) currentScenario.get("option1"));
+            option2.setText((String) currentScenario.get("option2"));
+            option3.setText((String) currentScenario.get("option3"));
+            option4.setText((String) currentScenario.get("option4"));
+            correctanswer = (String) currentScenario.get("answer");
+
+            String scenario = (String) currentScenario.get("scenario");
+            scenarioLabel.setText(scenario != null ? scenario : "");
+
+            scenarioHistory.add((String) currentScenario.get("scenario"));
+            scenarioPaths.add((String) currentScenario.get("path"));
+
+            JOptionPane.showMessageDialog(this, "Scenario: " + scenario);
+
+            timeLeft = 300;
+            startTimer();
+
+            index++;
+        } else {
+            completeButton.setEnabled(true);
+            nextButton.setEnabled(false);
+            JOptionPane.showMessageDialog(this, "You have completed the quiz!", "Complete", JOptionPane.INFORMATION_MESSAGE);
         }
-
-        JSONObject currentScenario = scenarioList.get(index);
-
-        // Add question to scenarioHistory only if it's not already there
-        if (!scenarioHistory.contains(currentScenario.get("question").toString())) {
-            scenarioHistory.add(currentScenario.get("question").toString());
-        }
-
-        questionLabel.setText(currentScenario.get("question").toString());
-        scenarioLabel.setText(currentScenario.getOrDefault("scenario", "Scenario").toString());
-        option1.setText(currentScenario.get("option1").toString());
-        option2.setText(currentScenario.get("option2").toString());
-        option3.setText(currentScenario.get("option3").toString());
-        option4.setText(currentScenario.get("option4").toString());
-        correctanswer = currentScenario.get("answer").toString();
-
-        maxscore++;
-        buttonGroup1.clearSelection();
-        startTimer();
-        index++;
-    }
-
-    private void loadPreviousQuestion() {
-        if (index < 0 || index >= scenarioList.size()) {
-            return;
-        }
-        JSONObject previousScenario = scenarioList.get(index);
-        questionLabel.setText(previousScenario.get("question").toString());
-        scenarioLabel.setText(previousScenario.getOrDefault("scenario", "Scenario").toString());
-        option1.setText(previousScenario.get("option1").toString());
-        option2.setText(previousScenario.get("option2").toString());
-        option3.setText(previousScenario.get("option3").toString());
-        option4.setText(previousScenario.get("option4").toString());
-        correctanswer = previousScenario.get("answer").toString();
-    }
-
-    private void checkAnswer(String selected) {
-        if (selected.equals(correctanswer)) {
-            score += 10;
-        }
-
-        JSONObject currentScenario = scenarioList.get(index - 1);
-        String nextScenario = (String) currentScenario.get("nextScenario");
-
-        // Add nextScenario to scenarioPaths only if it's not already there
-        if (nextScenario != null && !nextScenario.isEmpty() && !scenarioPaths.contains(nextScenario)) {
-            scenarioPaths.add(nextScenario);
-            index = findNextQuestion(nextScenario);
-        }
-    }
-
-    private int findNextQuestion(String nextScenario) {
-        for (int i = 0; i < scenarioList.size(); i++) {
-            JSONObject scenario = scenarioList.get(i);
-            if (scenario.get("question").equals(nextScenario)) {
-                return i;
-            }
-        }
-        return index;
     }
 
     private void startTimer() {
+        timeLeft = 300;
+
         if (questionTimer != null) {
             questionTimer.stop();
         }
 
-        timeLeft = 300; // Reset to 5 minutes
-        timerLabel.setText("Time Left: " + formatTime(timeLeft));
-
         questionTimer = new javax.swing.Timer(1000, e -> {
-            timeLeft--;
-            timerLabel.setText("Time Left: " + formatTime(timeLeft));
-
-            if (timeLeft <= 0) {
-                questionTimer.stop();
-                nextButtonActionPerformed(null);  // Automatically move to next question
+            if (timeLeft > 0) {
+                timeLeft--;
+                LocalDateTime time = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a");
+                String formattedDate = time.format(formatter);
+                timerLabel.setText(formattedDate + " | Time Left: " + timeLeft + "s");
+            } else {
+                JOptionPane.showMessageDialog(this, "Time's up!");
+                loadNextQuestion();
             }
         });
         questionTimer.start();
     }
 
+    private void checkAnswer(String selectedAnswer) {
+        boolean correct = selectedAnswer.equals(correctanswer);
+        if (correct) {
+            score++;
+        }
+
+        JSONObject answerEntry = new JSONObject();
+        answerEntry.put("question", questionLabel.getText());
+        answerEntry.put("selectedAnswer", selectedAnswer);
+        answerEntry.put("correctAnswer", correctanswer);
+        answerEntry.put("isCorrect", correct);
+        answerLog.add(answerEntry);
+
+        String feedbackMessage = correct ? "Correct!" : "Incorrect. The correct answer is: " + correctanswer;
+        JOptionPane.showMessageDialog(this, feedbackMessage);
+    }
+
     private void saveQuizResults() throws IOException, ParseException {
+        JSONObject historyData = new JSONObject();
+        historyData.put("player", playerName);
+        historyData.put("score", score + "/" + maxscore);
+        historyData.put("category", selectedQuiz);
+        historyData.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a")));
+        historyData.put("status", score == maxscore ? "pass" : "fail");
+
+        JSONArray answers = new JSONArray();
+        answers.addAll(answerLog);
+        historyData.put("answers", answers);
+
         FileReader reader = new FileReader(FILE_PATH[1]);
-        JSONParser jsonParser = new JSONParser();
-        JSONObject userData = (JSONObject) jsonParser.parse(reader);
+        JSONParser parser = new JSONParser();
+        JSONObject userData = (JSONObject) parser.parse(reader);
         JSONArray historyArray = (JSONArray) userData.get("History");
+        historyArray.add(historyData);
+
         JSONArray standingArray = (JSONArray) userData.get("Standing");
+        boolean playerUpdated = false;
+        for (Object standingObj : standingArray) {
+            JSONObject standingEntry = (JSONObject) standingObj;
+            String standingCategory = (String) standingEntry.get("category");
+            String standingPlayer = (String) standingEntry.get("player");
 
-        JSONObject history = new JSONObject();
-        history.put("player", playerName);
-        history.put("score", score + "/" + maxscore);
-        history.put("category", selectedCategory);
-        history.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        history.put("status", score >= (maxscore / 2) ? "Passed" : "Failed");
-
-        historyArray.add(history);
-
-        boolean updated = false;
-        for (Object obj : standingArray) {
-            JSONObject standing = (JSONObject) obj;
-            if (standing.get("player").equals(playerName) && standing.get("category").equals(selectedCategory)) {
-                long quizzesDone = (long) standing.get("quizzesDone");
-                standing.put("quizzesDone", quizzesDone + 1);
-                updated = true;
+            if (standingPlayer.equals(playerName) && standingCategory.equals(selectedQuiz)) {
+                if (score == maxscore) {
+                    int quizzesDone = ((Long) standingEntry.get("quizzesDone")).intValue();
+                    standingEntry.put("quizzesDone", quizzesDone + 1);
+                    standingEntry.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a")));
+                    playerUpdated = true;
+                }
                 break;
             }
         }
 
-        if (!updated) {
-            JSONObject newStanding = new JSONObject();
-            newStanding.put("player", playerName);
-            newStanding.put("category", selectedCategory);
-            newStanding.put("quizzesDone", 1L);
-            standingArray.add(newStanding);
+        if (!playerUpdated && score == maxscore) {
+            JSONObject newStandingEntry = new JSONObject();
+            newStandingEntry.put("player", playerName);
+            newStandingEntry.put("category", selectedQuiz);
+            newStandingEntry.put("quizzesDone", 1);
+            newStandingEntry.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a")));
+            standingArray.add(newStandingEntry);
         }
 
         try (FileWriter writer = new FileWriter(FILE_PATH[1])) {
             writer.write(userData.toJSONString());
-            writer.flush();
         }
+
+        JOptionPane.showMessageDialog(this, "Quiz Results Saved!");
     }
 
-    private String formatTime(int seconds) {
-        int minutes = seconds / 60;
-        int remainingSeconds = seconds % 60;
-        return String.format("%02d:%02d", minutes, remainingSeconds);
+    private void loadPreviousQuestion() {
+        if (index > 0) {
+            index--;
+            JSONObject previousScenario = scenarioList.get(index);
+            questionLabel.setText((String) previousScenario.get("question"));
+            option1.setText((String) previousScenario.get("option1"));
+            option2.setText((String) previousScenario.get("option2"));
+            option3.setText((String) previousScenario.get("option3"));
+            option4.setText((String) previousScenario.get("option4"));
+            correctanswer = (String) previousScenario.get("answer");
+        }
     }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Quiz("Player1", "Test").setVisible(true);
+            new Quiz("Player1", "Test", "SampleCategory").setVisible(true);
         });
-    }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

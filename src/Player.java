@@ -126,7 +126,7 @@ public class Player extends javax.swing.JFrame {
 
     private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
         this.setVisible(false);
-        new Leaderboard(playerName, "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
+        new Leaderboard(playerName, "Player", "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
     }//GEN-LAST:event_LeaderboardActionPerformed
 
     private void HistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistoryActionPerformed
@@ -136,12 +136,12 @@ public class Player extends javax.swing.JFrame {
 
     private void StartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartGameActionPerformed
         this.setVisible(false);
-        new QuizSelection(playerName, "Player").setVisible(true);
+        new QuizSelection(playerName, "Player", "Player").setVisible(true);
     }//GEN-LAST:event_StartGameActionPerformed
 
     private void ProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileActionPerformed
         this.setVisible(false);
-        new Profile(null, playerName, "Player", playerName).setVisible(true);
+        new Profile(playerName, "Player", "Player", "Player").setVisible(true);
     }//GEN-LAST:event_ProfileActionPerformed
 
     public static void main(String args[]) {

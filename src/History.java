@@ -18,7 +18,7 @@ public class History extends javax.swing.JFrame {
 
     private final String gameMasterName;
     private final String playerName;
-    private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
+    private static final String FILE_PATH = "src/UserData.json"; // Correct file path
 
     public History(String gameMasterName, String playerName) {
         this.gameMasterName = gameMasterName;
@@ -47,13 +47,13 @@ public class History extends javax.swing.JFrame {
 
         HistoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Player", "Date", "Category", "Score"
+                "Player", "Category", "Score", "Result", "Timestamp"
             }
         ));
         HistoryTable.addAncestorListener(new javax.swing.event.AncestorListener() {
@@ -93,22 +93,19 @@ public class History extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(BackButton)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(49, 49, 49)
-                                .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(BackButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(22, 22, 22))
-                            .addComponent(jLabel1))))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(49, 49, 49)
+                            .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,14 +116,14 @@ public class History extends javax.swing.JFrame {
                     .addComponent(BackButton))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -184,27 +181,40 @@ public class History extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) HistoryTable.getModel();
         model.setRowCount(0);
 
-        try (FileReader reader = new FileReader(FILE_PATH[0])) {
+        try (FileReader reader = new FileReader(FILE_PATH)) {
             JSONParser parser = new JSONParser();
             JSONObject root = (JSONObject) parser.parse(reader);
-            JSONArray tries = (JSONArray) root.get("Tries");
+            JSONArray history = (JSONArray) root.get("History");
 
-            if (tries == null) {
+            if (history == null) {
                 JOptionPane.showMessageDialog(this, "Tries data is missing or empty.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             ArrayList<JSONObject> entries = new ArrayList<>();
-            for (Object obj : tries) {
+            for (Object obj : history) {
                 JSONObject entry = (JSONObject) obj;
                 String category = (String) entry.get("category");
+                String player = (String) entry.get("player");
 
-                if (selectedCategory.equals("All") || selectedCategory.equals(category)) {
+                // Only add entries:
+                // 1. If Administrator, allow all
+                // 2. If Game Master, allow only game master's entries
+                // 3. If Player, allow only that player's entries
+                boolean canView = false;
+                if ("Administrator".equals(playerName)) {
+                    canView = true;
+                } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+                    canView = gameMasterName.equals(player);
+                } else if (playerName != null && !playerName.isEmpty()) {
+                    canView = playerName.equals(player);
+                }
+
+                if (canView && (selectedCategory.equals("All") || selectedCategory.equals(category))) {
                     entries.add(entry);
                 }
             }
 
-            // FIXED: parse "x/y" score and sort by x descending
             Collections.sort(entries, (JSONObject o1, JSONObject o2) -> {
                 String scoreStr1 = (String) o1.get("score");
                 String scoreStr2 = (String) o2.get("score");
@@ -218,9 +228,10 @@ public class History extends javax.swing.JFrame {
             for (JSONObject entry : entries) {
                 model.addRow(new Object[]{
                     entry.get("player"),
-                    entry.get("date"),
                     entry.get("category"),
-                    entry.get("score")
+                    entry.get("score"),
+                    entry.get("result"),
+                    entry.get("timestamp")
                 });
             }
 
@@ -230,29 +241,25 @@ public class History extends javax.swing.JFrame {
     }
 
     private void populateCategorySelection() {
-        try (FileReader reader = new FileReader(FILE_PATH[0])) {
+        try (FileReader reader = new FileReader(FILE_PATH)) { // Fixed file path issue
             JSONParser parser = new JSONParser();
             JSONObject root = (JSONObject) parser.parse(reader);
-            JSONArray quizzes = (JSONArray) root.get("Quizzes");
+            JSONArray history = (JSONArray) root.get("History");
 
             Set<String> categories = new HashSet<>();
-            for (Object obj : quizzes) {
-                JSONObject quiz = (JSONObject) obj;
-                categories.add((String) quiz.get("category"));
+            for (Object obj : history) {
+                JSONObject entry = (JSONObject) obj;
+                categories.add((String) entry.get("category"));
             }
 
+            // Add categories to the selection box
             CategorySelection.removeAllItems();
             CategorySelection.addItem("All");
             for (String category : categories) {
                 CategorySelection.addItem(category);
             }
-
-            if (CategorySelection.getItemCount() > 0) {
-                CategorySelection.setSelectedIndex(0);
-            }
-
         } catch (IOException | ParseException e) {
-            JOptionPane.showMessageDialog(this, "Error loading categories.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error populating categories.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -260,26 +267,17 @@ public class History extends javax.swing.JFrame {
         SearchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                handleSearch();
+                searchHistory(SearchField.getText().trim());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                handleSearch();
+                searchHistory(SearchField.getText().trim());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                handleSearch();
-            }
-
-            private void handleSearch() {
-                String keyword = SearchField.getText().trim();
-                if (!keyword.isEmpty()) {
-                    searchHistory(keyword);
-                } else {
-                    loadHistory();
-                }
+                searchHistory(SearchField.getText().trim());
             }
         });
     }
@@ -293,48 +291,48 @@ public class History extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) HistoryTable.getModel();
         model.setRowCount(0);
 
-        try (FileReader reader = new FileReader(FILE_PATH[0])) {
+        try (FileReader reader = new FileReader(FILE_PATH)) {
             JSONParser parser = new JSONParser();
             JSONObject root = (JSONObject) parser.parse(reader);
-            JSONArray tries = (JSONArray) root.get("Tries");
+            JSONArray history = (JSONArray) root.get("History");
 
-            ArrayList<JSONObject> entries = new ArrayList<>();
-            for (Object obj : tries) {
+            for (Object obj : history) {
                 JSONObject entry = (JSONObject) obj;
                 String player = (String) entry.get("player");
                 String category = (String) entry.get("category");
-                String date = (String) entry.get("date");
                 String score = (String) entry.get("score");
+                String result = (String) entry.get("result");
+                String timestamp = (String) entry.get("timestamp");
 
-                if (player == null || category == null || date == null || score == null) {
+                // Check access permission
+                boolean canView = false;
+                if ("Administrator".equals(playerName)) {
+                    canView = true;
+                } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+                    canView = gameMasterName.equals(player);
+                } else if (playerName != null && !playerName.isEmpty()) {
+                    canView = playerName.equals(player);
+                }
+
+                if (!canView) {
                     continue;
                 }
 
-                boolean matchesKeyword = player.contains(keyword) || category.contains(keyword) || date.contains(keyword) || score.contains(keyword);
-                boolean matchesCategory = selectedCategory.equals("All") || category.equals(selectedCategory);
+                // Match keyword against any relevant field
+                boolean matchesKeyword = player.toLowerCase().contains(keyword.toLowerCase())
+                        || category.toLowerCase().contains(keyword.toLowerCase())
+                        || score.toLowerCase().contains(keyword.toLowerCase())
+                        || result.toLowerCase().contains(keyword.toLowerCase())
+                        || timestamp.toLowerCase().contains(keyword.toLowerCase());
+
+                boolean matchesCategory = selectedCategory.equals("All") || selectedCategory.equals(category);
 
                 if (matchesKeyword && matchesCategory) {
-                    entries.add(entry);
+                    model.addRow(new Object[]{player, category, score, result, timestamp});
                 }
             }
-
-            Collections.sort(entries, (JSONObject o1, JSONObject o2) -> {
-                int score1 = Integer.parseInt(((String) o1.get("score")).split("/")[0].trim());
-                int score2 = Integer.parseInt(((String) o2.get("score")).split("/")[0].trim());
-                return Integer.compare(score2, score1);
-            });
-
-            for (JSONObject entry : entries) {
-                model.addRow(new Object[]{
-                    entry.get("player"),
-                    entry.get("date"),
-                    entry.get("category"),
-                    entry.get("score")
-                });
-            }
-
-        } catch (IOException | ParseException | NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Failed to search history!", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException | ParseException e) {
+            JOptionPane.showMessageDialog(this, "Error searching history!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

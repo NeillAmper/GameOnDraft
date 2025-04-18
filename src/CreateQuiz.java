@@ -318,6 +318,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
     private void AddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddButtonActionPerformed
         try {
+            // Get the input values
             category = (String) CategorySelection.getSelectedItem();
             question = questionUI.getText();
             opt1 = opt1UI.getText();
@@ -325,12 +326,13 @@ public final class CreateQuiz extends javax.swing.JFrame {
             opt3 = opt3UI.getText();
             opt4 = opt4UI.getText();
 
+            // Validate the inputs
             if (question.isEmpty() || opt1.isEmpty() || opt2.isEmpty() || opt3.isEmpty() || opt4.isEmpty() || answerGroup.getSelection() == null) {
                 JOptionPane.showMessageDialog(null, "Please complete all fields and select the correct answer.");
                 return;
             }
 
-            // Identify selected answer
+            // Identify the selected correct answer
             if (answer1.isSelected()) {
                 correctanswer = opt1;
             } else if (answer2.isSelected()) {
@@ -341,6 +343,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
                 correctanswer = opt4;
             }
 
+            // Create a JSONObject for the current question
             JSONObject questionObject = new JSONObject();
             questionObject.put("questionnumber", String.valueOf(questionCounter + 1));
             questionObject.put("question", question);
@@ -349,23 +352,49 @@ public final class CreateQuiz extends javax.swing.JFrame {
             questionObject.put("option2", opt2);
             questionObject.put("option3", opt3);
             questionObject.put("option4", opt4);
-            questionObject.put("scenarios", Arrays.asList("correct", "wrong"));
 
+            // Create the scenarios for correct and wrong answers
+            JSONArray scenarios = new JSONArray();
+
+            // Scenario for correct answer
+            JSONObject correctScenario = new JSONObject();
+            correctScenario.put("condition", "correct");
+            correctScenario.put("action", "Go to next question");
+            correctScenario.put("next", questionCounter + 2); // Move to next question
+
+            // Scenario for wrong answer
+            JSONObject wrongScenario = new JSONObject();
+            wrongScenario.put("condition", "wrong");
+            wrongScenario.put("action", "Trigger wrong end scenario");
+            wrongScenario.put("next", "end"); // End the quiz scenario if wrong
+
+            // Add both scenarios to the scenarios array
+            scenarios.add(correctScenario);
+            scenarios.add(wrongScenario);
+
+            // Add the scenarios and current question index to the questionObject
+            questionObject.put("scenarioIndex", questionCounter);
+            questionObject.put("scenarios", scenarios);
+
+            // If this is not the first question, link the previous question's "next_if_correct" and "next_if_wrong"
             if (questionCounter > 0) {
                 JSONObject previousQuestion = (JSONObject) newQuizArray.get(questionCounter - 1);
-                previousQuestion.put("next_if_correct", String.valueOf(questionCounter + 1));
-                previousQuestion.put("next_if_wrong", String.valueOf(questionCounter + 2));
+                previousQuestion.put("next_if_correct", String.valueOf(questionCounter + 1)); // Move to next question on correct answer
+                previousQuestion.put("next_if_wrong", String.valueOf(questionCounter + 2)); // Move to next question or end on wrong answer
             }
 
+            // Add the current question to the quiz array
             newQuizArray.add(questionObject);
             questionCounter++;
 
+            // If we've added the required number of questions, save the quiz and reset fields
             if (questionCounter == numberOfQuizToEnter) {
                 saveQuizToFile(); // Will enable CreateAgain button
                 resetInputFields(); // Reset input fields only (not full form)
-                toggleInputMode(false); // ❌ Disable question UI
-                toggleStartFields(true); // ✅ Enable title/category input again
+                toggleInputMode(false); // Disable question UI
+                toggleStartFields(true); // Enable title/category input again
             } else {
+                // If more questions are left, clear the fields for the next question and prompt for next
                 clearFields(); // Ready for next question
                 labelquestioncounter.setText("Question #" + (questionCounter + 1));
                 JOptionPane.showMessageDialog(null, "Question saved. Enter the next one.");

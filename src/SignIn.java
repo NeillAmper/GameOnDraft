@@ -15,7 +15,6 @@ import org.json.simple.parser.ParseException;
 public class SignIn extends javax.swing.JFrame {
 
     private static String usname, pass;
-    private final String quizData = null;
     private static final String FILE_PATH = "src/UserData.json";
     private static final JSONParser jsonParser = new JSONParser();
     private static JSONObject record = new JSONObject();
@@ -131,84 +130,75 @@ public class SignIn extends javax.swing.JFrame {
     private void SignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignInActionPerformed
         String username = Username.getText().trim();
         String password = Password.getText().trim();
-// These lines of code retrieve user input from text fields and remove any spaces, declaring and initializing to store the input.
 
-        if (username.equals("Username") && password.equals("Password") || username.isEmpty() && password.isEmpty()) {
+        if ((username.equals("Username") && password.equals("Password")) || (username.isEmpty() && password.isEmpty())) {
             JOptionPane.showMessageDialog(null, "Please enter an existing Username and Password.", "Input needed", JOptionPane.WARNING_MESSAGE);
             return;
-            // These lines of code prompt and check if both username and password are empty and also set to their default values.
         }
 
         if (username.isEmpty() || username.equals("Username")) {
             JOptionPane.showMessageDialog(null, "Please enter an existing Username", "Input Information", JOptionPane.WARNING_MESSAGE);
             return;
-            // This checks if the username is either empty or the default value, prompting the user to enter a valid username.
         }
 
         if (password.isEmpty() || password.equals("Password")) {
             JOptionPane.showMessageDialog(null, "Please enter your Password", "Input Information", JOptionPane.WARNING_MESSAGE);
             return;
-            // This checks if the password is either empty or the default value, prompting the user to enter a valid password.
-        }
-
-        if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter an existing Username.", "Input needed", JOptionPane.ERROR_MESSAGE);
-            return;
-            // This checks if the username is empty, prompting the user to enter a valid username.
-        }
-
-        if (password.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter a Password.", "Input needed", JOptionPane.ERROR_MESSAGE);
-            return;
-            // This checks if the password is empty, prompting the user to enter a valid password.
         }
 
         try {
-            usname = Username.getText();
-            pass = Password.getText();
-            // These lines of code retrieves the entered username and password from the text fields.
+            usname = username;
+            pass = password;
 
-            filecheck(); //Calls the filecheck method to read the data in the json file.
+            filecheck(); // Load accounts from JSON file
 
-            boolean userFound = false; //This checks if there is an existing user data that matches in the json file.
-            String foundType = null; //This variable is used to store the type found in the json file(Admin or Member).
+            boolean userFound = false;
+            boolean accountAccessible = false;
+            String foundType = null;
 
             for (Object obj : userlist) {
                 JSONObject userobject = (JSONObject) obj;
                 String foundusname = (String) userobject.get("username");
                 String foundpass = (String) userobject.get("password");
+                String status = (String) userobject.get("status");
                 foundType = (String) userobject.get("type");
-                //These lines of code gets the stored data in the json file.
 
                 if (usname.equals(foundusname) && pass.equals(foundpass)) {
-                    userFound = true;
+                    if ("Accessible".equalsIgnoreCase(status)) {
+                        userFound = true;
+                        accountAccessible = true;
+                    } else {
+                        userFound = true;
+                        accountAccessible = false;
+                    }
                     break;
-                    // These lines of code compares input username and password with the stored data and sets to true if it matches.
                 }
             }
 
             if (!userFound) {
                 JOptionPane.showMessageDialog(null, "No user found!", "Login Failed", JOptionPane.ERROR_MESSAGE);
-                //If nothing was found, it will prompt and error message.
+            } else if (!accountAccessible) {
+                JOptionPane.showMessageDialog(null, "This account has been disabled. Please contact an administrator.", "Access Denied", JOptionPane.ERROR_MESSAGE);
             } else {
-                if (foundType != null && foundType.equalsIgnoreCase("Game Master")) {
+                if ("Game Master".equalsIgnoreCase(foundType)) {
                     GameMaster g = new GameMaster(usname);
                     g.setVisible(true);
                     setVisible(false);
-                    //If the user has an Admin type, it will open the Admin JFrame then it will close the Login JFrame.
-
-                } else if (foundType != null && foundType.equalsIgnoreCase("Player")) {
+                } else if ("Player".equalsIgnoreCase(foundType)) {
                     Player p = new Player(usname, "Player", 1, 2, "Player");
                     p.setVisible(true);
                     setVisible(false);
-                    //If the user has a Member type, it will open the Member JFrame then it will close the Login JFrame.
+                } else if ("Administrator".equalsIgnoreCase(foundType)) {
+                    // ✅ REDIRECT TO ADMINISTRATOR FRAME
+                    Administrator admin = new Administrator(usname);
+                    admin.setVisible(true);
+                    setVisible(false);
                 }
             }
 
         } catch (HeadlessException | IOException | ParseException e) {
             Logger.getLogger(SignIn.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(null, "An error occurred while logging in.", "Error!", JOptionPane.ERROR_MESSAGE);
-            // These lines of code catches any errors that happen during the login process and shows an error message.
         }
     }//GEN-LAST:event_SignInActionPerformed
 
@@ -217,23 +207,6 @@ public class SignIn extends javax.swing.JFrame {
         a.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_SignUpButtonActionPerformed
-
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SignIn.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        java.awt.EventQueue.invokeLater(() -> {
-            new SignIn().setVisible(true);
-        });
-    }
 
     public void filecheck() throws FileNotFoundException, IOException, ParseException {
         FileReader reader = new FileReader(FILE_PATH);
@@ -250,16 +223,31 @@ public class SignIn extends javax.swing.JFrame {
             if (!line.toString().isEmpty()) {
                 try (FileReader reader2 = new FileReader(FILE_PATH)) {
                     record = (JSONObject) jsonParser.parse(reader2);
-                    userlist = (JSONArray) record.get("Accounts"); // ✅ corrected key
+                    userlist = (JSONArray) record.get("Accounts");
 
                     if (userlist == null) {
-                        userlist = new JSONArray(); // ✅ prevent null crashes
+                        userlist = new JSONArray(); // Avoid null pointer exceptions
                     }
                 } catch (IOException e) {
                     System.out.println("Error reading file again: " + e.getMessage());
                 }
             }
         }
+    }
+
+    public static void main(String args[]) {
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(SignIn.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        java.awt.EventQueue.invokeLater(() -> new SignIn().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

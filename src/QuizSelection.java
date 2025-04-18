@@ -8,17 +8,19 @@ import org.json.simple.parser.*;
 
 public class QuizSelection extends javax.swing.JFrame {
 
-    private final String quizData;
     private final String playerName;
     private JSONArray quizzesArray;
+    private static final String FILE_PATH = "src/QuizData.json"; // Ensure the correct path
+    private final String selectedQuiz; // Store the selected quiz data
 
-    public QuizSelection(String playerName, String quizData) {
+    public QuizSelection(String playerName, String quizData, String selectedQuiz) {
         this.playerName = playerName;
-        this.quizData = quizData;
+        this.selectedQuiz = selectedQuiz;
         initComponents();
+        setupLiveSearch(); // 👈 Add this
         loadQuizData();
         populateTable(quizzesArray);
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -73,7 +75,6 @@ public class QuizSelection extends javax.swing.JFrame {
             }
         });
 
-        searchField.setText("            ");
         searchField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchFieldActionPerformed(evt);
@@ -100,7 +101,7 @@ public class QuizSelection extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(53, 53, 53)
-                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(categorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(56, Short.MAX_VALUE))
@@ -150,42 +151,37 @@ public class QuizSelection extends javax.swing.JFrame {
     }//GEN-LAST:event_BackActionPerformed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        int row = quizTable.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a quiz from the table.");
-            return;
-        }
+        // Get the selected quiz from the table
+        int selectedRow = quizTable.getSelectedRow();
+        if (selectedRow != -1) {
+            // Correctly retrieve the JSON object for the selected quiz
+            DefaultTableModel model = (DefaultTableModel) quizTable.getModel();
+            String selectedQuizTitle = (String) model.getValueAt(selectedRow, 0); // Get quiz title from table
+            JSONObject chosenQuiz = null;
 
-        String selectedTitle = (String) quizTable.getValueAt(row, 0);
-        for (Object o : quizzesArray) {
-            JSONObject quiz = (JSONObject) o;
-            if (quiz.get("QuizTitle").equals(selectedTitle)) {
-                Quiz quizFrame = new Quiz(playerName, quizData); // You'll need this constructor
-                quizFrame.setVisible(true);
-                this.dispose();
-                return;
+            // Find the corresponding JSON object from the loaded quizzes
+            for (Object o : quizzesArray) {
+                JSONObject quiz = (JSONObject) o;
+                String title = (String) quiz.get("QuizTitle");  // Match the key from your JSON file
+                if (title.equals(selectedQuizTitle)) {
+                    chosenQuiz = quiz;
+                    break;
+                }
             }
-        }
 
-        JOptionPane.showMessageDialog(this, "Selected quiz data not found.");
+            if (chosenQuiz != null) {
+                // Pass the entire selected quiz JSON object to the Quiz class
+                new Quiz(playerName, selectedQuiz, "Player").setVisible(true); // Pass selectedQuiz directly
+            } else {
+                JOptionPane.showMessageDialog(this, "Quiz not found.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a quiz.");
+        }
     }//GEN-LAST:event_startButtonActionPerformed
 
     private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
-        String text = searchField.getText().trim().toLowerCase();
-        JSONArray filtered = new JSONArray();
-
-        for (Object o : quizzesArray) {
-            JSONObject quiz = (JSONObject) o;
-            String title = ((String) quiz.get("QuizTitle")).toLowerCase();
-            String creator = ((String) quiz.get("Creator")).toLowerCase();
-            String category = ((String) quiz.get("Category")).toLowerCase();
-
-            if (title.contains(text) || creator.contains(text) || category.contains(text)) {
-                filtered.add(quiz);
-            }
-        }
-
-        populateTable(filtered);
+    ////
     }//GEN-LAST:event_searchFieldActionPerformed
 
     private void categorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySelectionActionPerformed
@@ -207,17 +203,16 @@ public class QuizSelection extends javax.swing.JFrame {
         populateTable(filtered);
     }//GEN-LAST:event_categorySelectionActionPerformed
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new QuizSelection("Test", "Tests").setVisible(true);
-        });
-    }
-
     private void loadQuizData() {
         try {
             JSONParser parser = new JSONParser();
-            JSONObject obj = (JSONObject) parser.parse(new FileReader("QuizData.json"));
+            JSONObject obj = (JSONObject) parser.parse(new FileReader(FILE_PATH)); // Use FILE_PATH constant
             quizzesArray = (JSONArray) obj.get("Quizzes");
+
+            if (quizzesArray == null) {
+                JOptionPane.showMessageDialog(this, "No quizzes found in the file.");
+                quizzesArray = new JSONArray();
+            }
         } catch (IOException | ParseException e) {
             JOptionPane.showMessageDialog(this, "Failed to load quiz data.");
             quizzesArray = new JSONArray();
@@ -235,8 +230,75 @@ public class QuizSelection extends javax.swing.JFrame {
             String category = (String) quiz.get("Category");
             model.addRow(new Object[]{title, creator, category});
         }
+
+        if (array.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No quizzes found.");
+        }
     }
 
+    private void searchQuizzes(String keyword) {
+        try (FileReader reader = new FileReader(FILE_PATH)) {
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(reader);
+            JSONArray quizArray = (JSONArray) jsonObject.get("Quizzes");
+
+            JSONArray filtered = new JSONArray(); // Use JSONArray instead of List
+            String keywordLower = keyword.toLowerCase();
+
+            for (Object obj : quizArray) {
+                JSONObject quiz = (JSONObject) obj;
+
+                String title = (String) quiz.get("QuizTitle");
+                String creator = (String) quiz.get("Creator");
+                String category = (String) quiz.get("Category");
+
+                if ((title != null && title.toLowerCase().contains(keywordLower))
+                        || (creator != null && creator.toLowerCase().contains(keywordLower))
+                        || (category != null && category.toLowerCase().contains(keywordLower))) {
+                    filtered.add(quiz); // Add directly to JSONArray
+                }
+            }
+
+            populateTable(filtered); // Now it's a proper JSONArray
+
+        } catch (IOException | ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Error loading search results: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void setupLiveSearch() {
+        searchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                performSearch();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                performSearch();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                performSearch();
+            }
+
+            private void performSearch() {
+                String keyword = searchField.getText().trim();
+                if (!keyword.isEmpty()) {
+                    searchQuizzes(keyword);
+                } else {
+                    populateTable(quizzesArray);
+                }
+            }
+        });
+    }
+
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() -> {
+            new QuizSelection("TestPlayer", "Testsss", "Tetss").setVisible(true); // Pass only the player name
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Back;

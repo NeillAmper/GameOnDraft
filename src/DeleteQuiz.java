@@ -1,5 +1,9 @@
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -21,10 +25,10 @@ public class DeleteQuiz extends javax.swing.JFrame {
     public DeleteQuiz(String gameMasterName) {
         this.gameMasterName = gameMasterName;
         initComponents();
-        loadQuizzesByCreator();
-        populateCategorySelection(); // Populates category combo box with available categories
-        loadCategoryQuizzes(); // Loads quizzes based on the selected category
-        addSearchListener(); // Adds listener to search field for live updates
+        initializeListeners();
+        populateCategorySelection();
+        loadCategoryQuizzes();
+        addSearchListener(); // ✅ ADDED SEARCH LISTENER
     }
 
     @SuppressWarnings("unchecked")
@@ -244,12 +248,6 @@ public class DeleteQuiz extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_UndoButtonActionPerformed
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> {
-            new DeleteQuiz("Test").setVisible(true);
-        });
-    }
-
     private void populateCategorySelection() {
         try (FileReader reader = new FileReader(FILE_PATH)) {
             JSONParser parser = new JSONParser();
@@ -279,9 +277,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
 
     private void loadCategoryQuizzes() {
         String selectedCategory = (String) CategorySelection.getSelectedItem();
-        if (selectedCategory == null) {
-            return;
-        }
+        String searchText = SearchField.getText().trim().toLowerCase();
 
         DefaultTableModel model = (DefaultTableModel) QuizTable.getModel();
         model.setRowCount(0);
@@ -293,51 +289,27 @@ public class DeleteQuiz extends javax.swing.JFrame {
 
             for (Object obj : quizzes) {
                 JSONObject quiz = (JSONObject) obj;
+                String title = (String) quiz.get("QuizTitle");
+                String creator = (String) quiz.get("Creator");
                 String category = (String) quiz.get("Category");
 
-                String creator = (String) quiz.get("Creator");
+                // Only show quizzes created by the logged-in game master
+                if (!creator.equals(gameMasterName)) {
+                    continue;
+                }
 
-                if ((selectedCategory.equals("All") || selectedCategory.equals(category))
-                        && gameMasterName.equals(creator)) {
-                    model.addRow(new Object[]{
-                        quiz.get("QuizTitle"),
-                        creator,
-                        category
-                    });
+                boolean matchesCategory = selectedCategory.equals("All") || category.equalsIgnoreCase(selectedCategory);
+                boolean matchesSearch = title.toLowerCase().contains(searchText)
+                        || creator.toLowerCase().contains(searchText)
+                        || category.toLowerCase().contains(searchText);
+
+                if (matchesCategory && matchesSearch) {
+                    model.addRow(new Object[]{title, creator, category});
                 }
             }
-
         } catch (IOException | ParseException e) {
             JOptionPane.showMessageDialog(this, "Error loading quizzes.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    private void addSearchListener() {
-        SearchField.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) {
-                handleSearch();
-            }
-
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) {
-                handleSearch();
-            }
-
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) {
-                handleSearch();
-            }
-
-            private void handleSearch() {
-                String keyword = SearchField.getText().trim();
-                if (!keyword.isEmpty()) {
-                    searchQuizzes(keyword);
-                } else {
-                    loadCategoryQuizzes();
-                }
-            }
-        });
     }
 
 // SEARCH FUNCTION THAT FILTERS QUIZZES BY CATEGORY, TITLE, OR CREATOR
@@ -373,27 +345,96 @@ public class DeleteQuiz extends javax.swing.JFrame {
         }
     }
 
-    private void loadQuizzesByCreator() {
-        try {
-            JSONParser parser = new JSONParser();
-            JSONObject data = (JSONObject) parser.parse(new FileReader("data.json"));
-            JSONArray quizzes = (JSONArray) data.get("Quizzes");
+    private void addSearchListener() {
+        SearchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                loadCategoryQuizzes();
+            }
 
-            DefaultTableModel model = (DefaultTableModel) QuizTable.getModel();
-            model.setRowCount(0);
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                loadCategoryQuizzes();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                loadCategoryQuizzes();
+            }
+        });
+    }
+
+    // ✅ ADDED METHOD: Filters quiz table based on search query
+    private void filterTable() {
+        String selectedCategory = (String) CategorySelection.getSelectedItem();
+        String searchText = SearchField.getText().toLowerCase();
+
+        DefaultTableModel model = (DefaultTableModel) QuizTable.getModel();
+        model.setRowCount(0); // Clear existing table data
+
+        try (FileReader reader = new FileReader(FILE_PATH)) {
+            JSONParser parser = new JSONParser();
+            JSONObject root = (JSONObject) parser.parse(reader);
+            JSONArray quizzes = (JSONArray) root.get("Quizzes");
 
             for (Object obj : quizzes) {
                 JSONObject quiz = (JSONObject) obj;
-                if (gameMasterName.equals(quiz.get("creator"))) {
-                    model.addRow(new Object[]{
-                        quiz.get("quizid"),
-                        quiz.get("category"),
-                        quiz.get("question")
-                    });
+                String title = ((String) quiz.get("QuizTitle")).toLowerCase();
+                String creator = (String) quiz.get("Creator");
+                String category = ((String) quiz.get("Category")).toLowerCase();
+
+                // Only show quizzes created by the current game master
+                if (creator != null && creator.equals(gameMasterName)) {
+                    boolean categoryMatches = selectedCategory.equals("All") || selectedCategory.equalsIgnoreCase(category);
+                    boolean searchMatches = title.contains(searchText) || category.contains(searchText);
+
+                    if (categoryMatches && searchMatches) {
+                        model.addRow(new Object[]{
+                            quiz.get("QuizTitle"),
+                            quiz.get("Creator"),
+                            quiz.get("Category")
+                        });
+                    }
                 }
             }
+
         } catch (IOException | ParseException e) {
+            JOptionPane.showMessageDialog(this, "Error filtering quizzes.", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private void initializeListeners() {
+        BackButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                BackButtonActionPerformed(evt);
+            }
+        });
+
+        CategorySelection.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                CategorySelectionActionPerformed(evt);
+            }
+        });
+
+        DeleteButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                DeleteButtonActionPerformed(evt);
+            }
+        });
+
+        UndoButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                UndoButtonActionPerformed(evt);
+            }
+        });
+
+        addSearchListener(); // You already added this, so just keep it here
+    }
+
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() -> {
+            new DeleteQuiz("Test").setVisible(true);
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

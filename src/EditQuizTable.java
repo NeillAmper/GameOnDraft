@@ -235,9 +235,11 @@ public class EditQuizTable extends javax.swing.JFrame {
 
             String selectedCategory = selectedItem.toString();
             String keyword = SearchField.getText().toLowerCase();
+            boolean isAdmin = isAdminUser();
 
             for (Object obj : quizzes) {
                 JSONObject quiz = (JSONObject) obj;
+                String creator = quiz.get("creator").toString();
                 String category = quiz.get("category").toString();
                 String quizid = quiz.get("quizid").toString();
                 String question = quiz.get("question").toString();
@@ -256,7 +258,10 @@ public class EditQuizTable extends javax.swing.JFrame {
                         || quizidLower.contains(keyword)
                         || questionLower.contains(keyword);
 
-                if (categoryDropdownMatch && keywordMatch) {
+                // Filter by creator if not admin
+                boolean isCreatorMatch = isAdmin || creator.equals(gameMasterName);
+
+                if (categoryDropdownMatch && keywordMatch && isCreatorMatch) {
                     model.addRow(new Object[]{
                         category,
                         quizid,
@@ -311,6 +316,29 @@ public class EditQuizTable extends javax.swing.JFrame {
             }
         } catch (IOException | ParseException e) {
         }
+    }
+
+    // ✅ CHECK IF USER IS ADMINISTRATOR
+    private boolean isAdminUser() {
+        try (FileReader reader = new FileReader(FILE_PATH[1])) {
+            JSONParser parser = new JSONParser();
+            JSONObject root = (JSONObject) parser.parse(reader);
+            JSONArray accounts = (JSONArray) root.get("Accounts");
+
+            for (Object obj : accounts) {
+                JSONObject account = (JSONObject) obj;
+                String username = account.get("username").toString();
+                String usertype = account.get("usertype").toString();
+
+                if (username.equals(gameMasterName)) {
+                    return usertype.equalsIgnoreCase("Administrator");
+                }
+            }
+
+        } catch (IOException | ParseException e) {
+            JOptionPane.showMessageDialog(this, "Failed to check user type.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false; // Default to false if check fails
     }
 
     public static void main(String args[]) {

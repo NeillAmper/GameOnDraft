@@ -157,7 +157,7 @@ public class GameMaster extends javax.swing.JFrame {
 
     private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
         this.setVisible(false);
-        new Leaderboard(gameMasterName, "GameMaster").setVisible(true); // ✅ Fixed by adding "GameMaster"
+        new Leaderboard(gameMasterName, "GameMaster", "GameMaster").setVisible(true); // ✅ Fixed by adding "GameMaster"
     }//GEN-LAST:event_LeaderboardActionPerformed
 
     private void HistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistoryActionPerformed

@@ -180,8 +180,9 @@ public class SignUp extends javax.swing.JFrame {
             newUser.put("username", addname);
             newUser.put("password", addpass);
             newUser.put("type", addtype);
+            newUser.put("status", "Accessible") ;
             userlist.add(newUser);
-            record.put("users", userlist);
+            record.put("Accounts", userlist);
 
             try {
                 save();
@@ -237,7 +238,7 @@ public class SignUp extends javax.swing.JFrame {
                 reader.close();
                 try (FileReader reader2 = new FileReader(FILE_PATH)) {
                     record = (JSONObject) jsonParser2.parse(reader2);
-                    userlist = (JSONArray) record.get("users");
+                    userlist = (JSONArray) record.get("Accounts");
                 } catch (IOException a) {
                     System.out.println("error");
                 }
