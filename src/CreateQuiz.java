@@ -32,7 +32,6 @@ public final class CreateQuiz extends javax.swing.JFrame {
         answerGroup.add(answer3);
         answerGroup.add(answer4);
         loadCreateQuiz();
-        CreateAgain.setEnabled(false); // ❌ Not allowed until quiz is saved
     }
 
     @SuppressWarnings("unchecked")
@@ -61,7 +60,6 @@ public final class CreateQuiz extends javax.swing.JFrame {
         InputButton = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         QuizTitle = new javax.swing.JTextField();
-        CreateAgain = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -161,13 +159,6 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
         jLabel4.setText("Quiz Title: ");
 
-        CreateAgain.setText("Create More");
-        CreateAgain.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CreateAgainActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -218,18 +209,15 @@ public final class CreateQuiz extends javax.swing.JFrame {
                             .addGap(22, 22, 22))))
                 .addGap(14, 14, 14))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(178, 178, 178)
-                        .addComponent(AddButton)
-                        .addGap(64, 64, 64)
-                        .addComponent(CreateAgain))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(110, 110, 110)
-                        .addComponent(jLabel4)
-                        .addGap(18, 18, 18)
-                        .addComponent(QuizTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addGap(110, 110, 110)
+                .addComponent(jLabel4)
+                .addGap(18, 18, 18)
+                .addComponent(QuizTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(106, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(AddButton)
+                .addGap(74, 74, 74))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,11 +257,9 @@ public final class CreateQuiz extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(opt4UI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(answer4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(AddButton)
-                    .addComponent(CreateAgain))
-                .addGap(52, 52, 52))
+                .addGap(26, 26, 26)
+                .addComponent(AddButton)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -299,6 +285,31 @@ public final class CreateQuiz extends javax.swing.JFrame {
     }//GEN-LAST:event_answer1ActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
+        // Reset fields to initial state
+        QuizTitle.setText("");
+        QuizTitle.setEnabled(true);
+        CategorySelection.setEnabled(true);
+        QuestionAmount.setEnabled(true);
+        InputButton.setEnabled(true);
+
+        // Reset question-related fields
+        questionUI.setText("");
+        opt1UI.setText("");
+        opt2UI.setText("");
+        opt3UI.setText("");
+        opt4UI.setText("");
+        answerGroup.clearSelection();
+
+        // Reset question counter and labels
+        labelquestioncounter.setText("Question #1");
+        numberofquiz = null;
+        questionCounter = 0;
+        numberOfQuizToEnter = 0;
+
+        // Disable question input fields
+        toggleInputMode(false);
+
+        // Navigate back to the GameMaster screen
         GameMaster g = new GameMaster(gameMasterName, usname);
         g.setVisible(true);
         setVisible(false);
@@ -456,49 +467,6 @@ public final class CreateQuiz extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_opt1UIActionPerformed
 
-    private void CreateAgainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAgainActionPerformed
-        title = "";
-        numberofquiz = null;
-        questionCounter = 0;
-        numberOfQuizToEnter = 0;
-        newQuizArray.clear();
-
-        // Reset all UI elements
-        QuizTitle.setText("");
-        QuizTitle.setEnabled(true);
-        CategorySelection.setEnabled(true);
-        QuestionAmount.setEnabled(true);
-        InputButton.setEnabled(true);
-        QuestionAmount.setSelectedIndex(0);
-
-        labelquestioncounter.setText("Question #1:");
-        labelquestioncounter.setEnabled(false);
-
-        questionUI.setText("");
-        questionUI.setEnabled(false);
-        opt1UI.setText("");
-        opt1UI.setEnabled(false);
-        opt2UI.setText("");
-        opt2UI.setEnabled(false);
-        opt3UI.setText("");
-        opt3UI.setEnabled(false);
-        opt4UI.setText("");
-        opt4UI.setEnabled(false);
-
-        answer1.setEnabled(false);
-        answer2.setEnabled(false);
-        answer3.setEnabled(false);
-        answer4.setEnabled(false);
-        answerGroup.clearSelection();
-
-        AddButton.setEnabled(false);
-        CreateAgain.setEnabled(false); // ❌ Disable until new quiz is saved again
-
-        SelectedItem.setText("# of Questions");
-
-        JOptionPane.showMessageDialog(null, "You can now create a new quiz set.");
-    }//GEN-LAST:event_CreateAgainActionPerformed
-
     private void clearFields() {
         questionUI.setText("");
         opt1UI.setText("");
@@ -548,7 +516,6 @@ public final class CreateQuiz extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Quiz saved successfully!");
             questionCounter = 0;
             newQuizArray.clear();
-            CreateAgain.setEnabled(true); // ✅ Allow creating another quiz
 
         } catch (IOException | ParseException e) {
             Logger.getLogger(CreateQuiz.class.getName()).log(Level.SEVERE, null, e);
@@ -597,7 +564,6 @@ public final class CreateQuiz extends javax.swing.JFrame {
     private javax.swing.JButton AddButton;
     private javax.swing.JButton Back;
     private javax.swing.JComboBox<String> CategorySelection;
-    private javax.swing.JButton CreateAgain;
     private javax.swing.JButton InputButton;
     private javax.swing.JComboBox<String> QuestionAmount;
     private javax.swing.JTextField QuizTitle;

@@ -32,7 +32,7 @@ public final class QuizResult extends javax.swing.JFrame {
         MenuButton = new javax.swing.JButton();
         LeaderboardButton = new javax.swing.JButton();
         RetryButton = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
+        quizIdLabel = new javax.swing.JLabel();
         categoryUI = new javax.swing.JLabel();
         scoreUI = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -66,7 +66,7 @@ public final class QuizResult extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setText("Category:");
+        quizIdLabel.setText("Quiz Details");
 
         jLabel5.setText("jLabel5");
 
@@ -79,7 +79,7 @@ public final class QuizResult extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
+                            .addComponent(quizIdLabel)
                             .addComponent(MenuButton))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -113,7 +113,7 @@ public final class QuizResult extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(categoryUI, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(quizIdLabel))
                 .addGap(31, 31, 31)
                 .addComponent(jLabel2)
                 .addGap(15, 15, 15)
@@ -184,9 +184,9 @@ public final class QuizResult extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel quizIdLabel;
     private javax.swing.JLabel scoreUI;
     // End of variables declaration//GEN-END:variables
 }

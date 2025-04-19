@@ -11,13 +11,12 @@ public class QuizSelection extends javax.swing.JFrame {
     private final String playerName;
     private final String usname;
     private JSONArray quizzesArray;
-    private static final String FILE_PATH = "src/QuizData.json"; // Ensure the correct path
-    private final String selectedQuiz; // Store the selected quiz data
+    private static final String FILE_PATH = "src/QuizData.json";
+
 
     public QuizSelection(String playerName, String quizData, String selectedQuiz, String usname) {
         this.playerName = playerName;
         this.usname = usname;
-        this.selectedQuiz = selectedQuiz;
         initComponents();
         setupLiveSearch(); // 👈 Add this
         loadQuizData();
