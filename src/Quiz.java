@@ -49,7 +49,7 @@ public class Quiz extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         questionLabel = new javax.swing.JLabel();
-        categoryLabel = new javax.swing.JLabel();
+        quizIdLabel = new javax.swing.JLabel();
         option1 = new javax.swing.JToggleButton();
         option2 = new javax.swing.JToggleButton();
         option3 = new javax.swing.JToggleButton();
@@ -57,14 +57,14 @@ public class Quiz extends javax.swing.JFrame {
         nextButton = new javax.swing.JButton();
         completeButton = new javax.swing.JButton();
         timerLabel = new javax.swing.JLabel();
-        scenarioLabel = new javax.swing.JLabel();
         previousQuestionButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         questionLabel.setText("jLabel1");
 
-        categoryLabel.setText("jLabel2");
+        quizIdLabel.setText("jLabel2");
 
         buttonGroup1.add(option1);
         option1.setText("jToggleButton1");
@@ -115,12 +115,17 @@ public class Quiz extends javax.swing.JFrame {
 
         timerLabel.setText("jLabel1");
 
-        scenarioLabel.setText("jLabel1");
-
         previousQuestionButton.setText("Previous");
         previousQuestionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 previousQuestionButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
             }
         });
 
@@ -136,51 +141,41 @@ public class Quiz extends javax.swing.JFrame {
                         .addGap(121, 121, 121)
                         .addComponent(completeButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
+                        .addGap(285, 285, 285)
+                        .addComponent(questionLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(109, 109, 109)
+                        .addComponent(timerLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(23, 23, 23)
+                        .addComponent(cancelButton))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(69, 69, 69)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(quizIdLabel)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(timerLabel)
-                                .addGap(98, 98, 98))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(previousQuestionButton)
-                                .addComponent(option1)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(previousQuestionButton)
+                                    .addComponent(option1))
                                 .addComponent(option2)
                                 .addGap(18, 18, 18)
                                 .addComponent(option3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(option4))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(categoryLabel)
-                                .addGap(5, 5, 5)))))
-                .addContainerGap(32, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(questionLabel)
-                .addGap(274, 274, 274))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(273, 273, 273)
-                .addComponent(scenarioLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(option4)))))
+                .addGap(46, 123, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(categoryLabel))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(timerLabel)))
-                .addGap(7, 7, 7)
-                .addComponent(scenarioLabel)
-                .addGap(44, 44, 44)
+                .addGap(19, 19, 19)
+                .addComponent(cancelButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(quizIdLabel)
+                .addGap(17, 17, 17)
+                .addComponent(timerLabel)
+                .addGap(59, 59, 59)
                 .addComponent(questionLabel)
-                .addGap(106, 106, 106)
+                .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(option1)
                     .addComponent(option2)
@@ -191,22 +186,18 @@ public class Quiz extends javax.swing.JFrame {
                     .addComponent(nextButton)
                     .addComponent(completeButton)
                     .addComponent(previousQuestionButton))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -277,9 +268,41 @@ public class Quiz extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_previousQuestionButtonActionPerformed
 
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        // Display a confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to cancel the current quiz? Your progress will not be saved.",
+                "Cancel Quiz",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        // If the user confirms, cancel the quiz
+        if (confirm == JOptionPane.YES_OPTION) {
+            // Stop the timer if it is running
+            if (questionTimer != null) {
+                questionTimer.stop();
+            }
+
+            // Reset progress variables
+            score = 0;
+            maxscore = 0;
+            index = 0;
+            scenarioList.clear();
+            answerLog.clear();
+
+            // Close the current quiz window
+            this.dispose();
+
+            // Navigate back to the QuizSelection screen with the correct arguments
+            new QuizSelection(playerName, quizData, selectedQuiz, usname).setVisible(true);
+        }
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
     private void loadQuizData() {
         try {
-            // Load the quiz data from the QuizData.json
+            // Load the quiz data from QuizData.json
             JSONParser parser = new JSONParser();
             FileReader reader = new FileReader(FILE_PATH[0]);
             JSONObject root = (JSONObject) parser.parse(reader); // Parse the root JSON object
@@ -291,7 +314,16 @@ public class Quiz extends javax.swing.JFrame {
             for (Object obj : quizzes) {
                 JSONObject quizEntry = (JSONObject) obj;
                 if (quizEntry.get("QuizTitle").equals(selectedQuiz)) { // Match the selected quiz title
-                    JSONArray questions = (JSONArray) quizEntry.get("Questions"); // Get the questions array
+                    // Extract the QuizTitle, Creator, and Category
+                    String quizTitle = (String) quizEntry.get("QuizTitle");
+                    String creator = (String) quizEntry.get("Creator");
+                    String category = (String) quizEntry.get("Category");
+
+                    // Set the information in the quizIdLabel
+                    quizIdLabel.setText("Title: " + quizTitle + " | Creator: " + creator + " | Category: " + category);
+
+                    // Extract the Questions array
+                    JSONArray questions = (JSONArray) quizEntry.get("Questions");
 
                     // Add questions to the scenarioList and set maxscore
                     for (Object questionObj : questions) {
@@ -320,14 +352,6 @@ public class Quiz extends javax.swing.JFrame {
             option3.setText((String) currentScenario.get("option3"));
             option4.setText((String) currentScenario.get("option4"));
             correctanswer = (String) currentScenario.get("answer");
-
-            // Handle the "scenarios" field properly
-            JSONArray scenarios = (JSONArray) currentScenario.get("scenarios");
-            if (scenarios != null && !scenarios.isEmpty()) {
-                scenarioLabel.setText((String) scenarios.get(0)); // Default to the first scenario
-            } else {
-                scenarioLabel.setText("No scenario available.");
-            }
 
             timeLeft = 300;
             startTimer();
@@ -375,69 +399,69 @@ public class Quiz extends javax.swing.JFrame {
         answerEntry.put("isCorrect", correct);
         answerLog.add(answerEntry);
 
-        // Update the scenario label based on correctness
-        JSONArray scenarios = (JSONArray) scenarioList.get(index - 1).get("scenarios");
-        if (scenarios != null && scenarios.size() >= 2) {
-            String updatedScenario = correct ? (String) scenarios.get(0) : (String) scenarios.get(1); // Correct or wrong scenario
-            scenarioLabel.setText(updatedScenario);
-        } else {
-            scenarioLabel.setText("No scenario available.");
-        }
 
         String feedbackMessage = correct ? "Correct!" : "Incorrect. The correct answer is: " + correctanswer;
         JOptionPane.showMessageDialog(this, feedbackMessage);
     }
 
     private void saveQuizResults() throws IOException, ParseException {
+        // Create the history entry
         JSONObject historyData = new JSONObject();
-        historyData.put("player", playerName);
-        historyData.put("score", score + "/" + maxscore);
-        historyData.put("category", selectedQuiz);
-        historyData.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a")));
-        historyData.put("status", score == maxscore ? "pass" : "fail");
+        historyData.put("player", playerName); // Player name
+        historyData.put("score", score + "/" + maxscore); // Score in the format x/y
+        historyData.put("category", selectedQuiz); // Quiz category (subject)
+        historyData.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a"))); // Timestamp
+        historyData.put("result", score == maxscore ? "pass" : "fail"); // Result: pass or fail
+        historyData.put("creator", getQuizCreator(selectedQuiz)); // Creator of the quiz
+        historyData.put("quizTitle", selectedQuiz); // Title of the quiz
 
+        // Add the answers to the history entry
         JSONArray answers = new JSONArray();
-        answers.addAll(answerLog);
+        answers.addAll(answerLog); // Add all logged answers
         historyData.put("answers", answers);
 
-        FileReader reader = new FileReader(FILE_PATH[1]);
+        // Load existing user data from UserData.json
         JSONParser parser = new JSONParser();
+        FileReader reader = new FileReader(FILE_PATH[1]);
         JSONObject userData = (JSONObject) parser.parse(reader);
+
+        // Add the history entry to the "History" array
         JSONArray historyArray = (JSONArray) userData.get("History");
+        if (historyArray == null) {
+            historyArray = new JSONArray();
+            userData.put("History", historyArray); // Initialize if it doesn't exist
+        }
         historyArray.add(historyData);
 
-        JSONArray standingArray = (JSONArray) userData.get("Standing");
-        boolean playerUpdated = false;
-        for (Object standingObj : standingArray) {
-            JSONObject standingEntry = (JSONObject) standingObj;
-            String standingCategory = (String) standingEntry.get("category");
-            String standingPlayer = (String) standingEntry.get("player");
-
-            if (standingPlayer.equals(playerName) && standingCategory.equals(selectedQuiz)) {
-                if (score == maxscore) {
-                    int quizzesDone = ((Long) standingEntry.get("quizzesDone")).intValue();
-                    standingEntry.put("quizzesDone", quizzesDone + 1);
-                    standingEntry.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a")));
-                    playerUpdated = true;
-                }
-                break;
-            }
-        }
-
-        if (!playerUpdated && score == maxscore) {
-            JSONObject newStandingEntry = new JSONObject();
-            newStandingEntry.put("player", playerName);
-            newStandingEntry.put("category", selectedQuiz);
-            newStandingEntry.put("quizzesDone", 1);
-            newStandingEntry.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a")));
-            standingArray.add(newStandingEntry);
-        }
-
+        // Save the updated user data back to UserData.json
         try (FileWriter writer = new FileWriter(FILE_PATH[1])) {
             writer.write(userData.toJSONString());
         }
 
         JOptionPane.showMessageDialog(this, "Quiz Results Saved!");
+    }
+
+    private String getQuizCreator(String quizTitle) {
+        try {
+            // Load the quiz data from QuizData.json
+            JSONParser parser = new JSONParser();
+            FileReader reader = new FileReader(FILE_PATH[0]);
+            JSONObject root = (JSONObject) parser.parse(reader);
+
+            // Extract the "Quizzes" array
+            JSONArray quizzes = (JSONArray) root.get("Quizzes");
+
+            // Find the quiz with the matching title
+            for (Object obj : quizzes) {
+                JSONObject quiz = (JSONObject) obj;
+                if (quiz.get("QuizTitle").equals(quizTitle)) {
+                    return (String) quiz.get("Creator"); // Return the creator
+                }
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(Quiz.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return "Unknown"; // Default value if creator not found
     }
 
     private void loadPreviousQuestion() {
@@ -461,7 +485,7 @@ public class Quiz extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JLabel categoryLabel;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JButton completeButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton nextButton;
@@ -471,7 +495,7 @@ public class Quiz extends javax.swing.JFrame {
     private javax.swing.JToggleButton option4;
     private javax.swing.JButton previousQuestionButton;
     private javax.swing.JLabel questionLabel;
-    private javax.swing.JLabel scenarioLabel;
+    private javax.swing.JLabel quizIdLabel;
     private javax.swing.JLabel timerLabel;
     // End of variables declaration//GEN-END:variables
 }

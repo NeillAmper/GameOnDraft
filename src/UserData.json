@@ -1,1 +1,306 @@
-{"Standing":[{"category":"Science","quizzesDone":6,"player":"JohnDoe","timestamp":"2025-04-15, 02:30 PM"},{"category":"Science","quizzesDone":4,"player":"JaneSmith","timestamp":"2025-04-15, 03:45 PM"},{"category":"Math","quizzesDone":7,"player":"JaneSmith","timestamp":"2025-04-15, 03:45 PM"},{"category":"Math","quizzesDone":4,"player":"JohnDoe","timestamp":"2025-04-15, 03:45 PM"},{"category":"History","quizzesDone":9,"player":"Neill","timestamp":"2025-04-15, 03:45 PM"},{"category":"English","quizzesDone":4,"player":"JohnDoe","timestamp":"2025-04-16, 09:15 AM"},{"category":"Math","quizzesDone":1,"player":"Enter player name","timestamp":"2025-04-15, 10:00 AM"},{"category":"Science","quizzesDone":1,"player":"ahsdiahd","timestamp":"2025-04-15, 10:05 AM"},{"category":"Math","quizzesDone":1,"player":"Hello","timestamp":"2025-04-15, 10:10 AM"},{"category":"Science","quizzesDone":1,"player":"Neil","timestamp":"2025-04-15, 10:15 AM"},{"category":"English","quizzesDone":1,"player":"jex","timestamp":"2025-04-15, 10:20 AM"},{"category":"Math","quizzesDone":1,"player":"Eduardo II L. Millondaga","timestamp":"2025-04-15, 10:25 AM"},{"category":"English","quizzesDone":1,"player":"Enter player name","timestamp":"2025-04-15, 10:30 AM"},{"category":"Math","quizzesDone":1,"player":"James","timestamp":"2025-04-17, 03:00 PM"},{"category":"Science","quizzesDone":1,"player":"James","timestamp":"2025-04-17, 01:00 PM"},{"category":"Math","quizzesDone":1,"player":"Justin","timestamp":"2025-04-15, 10:45 AM"},{"category":"Photosynthesis Quiz","quizzesDone":1,"player":"James","timestamp":"2025-04-19, 11:15 PM"}],"History":[{"result":"pass","score":"8\/10","creator":"Neill","category":"Science","quizTitle":"Science Quiz 1","player":"JohnDoe","timestamp":"2025-04-15, 02:30 PM"},{"result":"pass","score":"7\/10","creator":"Neill","category":"Science","quizTitle":"Science Quiz 1","player":"JaneSmith","timestamp":"2025-04-15, 03:45 PM"},{"result":"pass","score":"5\/10","creator":"test1","category":"Math","quizTitle":"Math Quiz 1","player":"JaneSmith","timestamp":"2025-04-15, 03:45 PM"},{"result":"pass","score":"6\/10","creator":"test1","category":"Math","quizTitle":"Math Quiz 1","player":"JohnDoe","timestamp":"2025-04-15, 03:45 PM"},{"result":"fail","score":"3\/10","creator":"test3","category":"History","quizTitle":"History Quiz 1","player":"Neill","timestamp":"2025-04-15, 03:45 PM"},{"result":"pass","score":"7\/10","creator":"test3","category":"English","quizTitle":"English Quiz 1","player":"JohnDoe","timestamp":"2025-04-16, 09:15 AM"},{"result":"fail","score":"3\/10","creator":"test10","category":"Math","quizTitle":"Math Quiz 2","player":"Enter player name","timestamp":"2025-04-15, 10:00 AM"},{"result":"fail","score":"3\/10","creator":"test1","category":"Science","quizTitle":"Science Quiz 2","player":"ahsdiahd","timestamp":"2025-04-15, 10:05 AM"},{"result":"fail","score":"3\/10","creator":"test3","category":"Math","quizTitle":"Math Quiz 2","player":"Hello","timestamp":"2025-04-15, 10:10 AM"},{"result":"fail","score":"3\/10","creator":"test1","category":"Science","quizTitle":"Science Quiz 2","player":"Neil","timestamp":"2025-04-15, 10:15 AM"},{"result":"fail","score":"3\/10","creator":"test10","category":"English","quizTitle":"English Quiz 2","player":"jex","timestamp":"2025-04-15, 10:20 AM"},{"result":"fail","score":"3\/10","creator":"test1","category":"Math","quizTitle":"Math Quiz 3","player":"Eduardo II L. Millondaga","timestamp":"2025-04-15, 10:25 AM"},{"result":"fail","score":"3\/10","creator":"Neill","category":"English","quizTitle":"English Quiz 2","player":"Enter player name","timestamp":"2025-04-15, 10:30 AM"},{"result":"fail","score":"3\/10","creator":"Neill","category":"Math","quizTitle":"Math Quiz 3","player":"Enter player name","timestamp":"2025-04-15, 10:35 AM"},{"result":"fail","score":"3\/10","creator":"test3","category":"Math","quizTitle":"Math Quiz 3","player":"Enter player name","timestamp":"2025-04-15, 10:40 AM"},{"result":"fail","score":"3\/10","creator":"Neill","category":"Math","quizTitle":"Math Quiz 3","player":"Justin","timestamp":"2025-04-15, 10:45 AM"},{"result":"pass","score":"9\/10","creator":"test3","category":"Science","quizTitle":"Science Quiz 3","player":"James","timestamp":"2025-04-17, 01:00 PM"},{"result":"fail","score":"2\/10","creator":"test1","category":"History","quizTitle":"History Quiz 1","player":"James","timestamp":"2025-04-17, 02:00 PM"},{"result":"pass","score":"10\/10","creator":"Neill","category":"Math","quizTitle":"Math Quiz 1","player":"James","timestamp":"2025-04-17, 03:00 PM"},{"score":"2\/2","answers":[{"question":"What gas do plants absorb from the air during photosynthesis?","selectedAnswer":"Carbon dioxide","correctAnswer":"Carbon dioxide","isCorrect":true},{"question":"Which organelle in plant cells is responsible for photosynthesis?","selectedAnswer":"Chloroplast","correctAnswer":"Chloroplast","isCorrect":true}],"category":"Photosynthesis Quiz","player":"James","timestamp":"2025-04-19, 11:15 PM","status":"pass"}],"Accounts":[{"password":"password1","type":"Game Master","username":"user1","status":"Disabled"},{"password":"password2","type":"Player","username":"user2","status":"Disabled"},{"password":"test1","type":"Game Master","username":"test1","status":"Accessible"},{"password":"test2","type":"Player","username":"test2","status":"Accessible"},{"password":"test3","type":"Game Master","username":"test3","status":"Accessible"},{"password":"test10","type":"Game Master","username":"test10","status":"Accessible"},{"password":"neill","type":"Game Master","username":"Neill","status":"Accessible"},{"password":"admin","type":"Administrator","username":"admin","status":"Accessible"},{"password":"james","type":"Player","username":"James","status":"Accessible"}]}
+{
+    "Standing": [{
+            "category": "Science",
+            "quizzesDone": 6,
+            "player": "JohnDoe",
+            "timestamp": "2025-04-15, 02:30 PM"
+        }, {
+            "category": "Science",
+            "quizzesDone": 4,
+            "player": "JaneSmith",
+            "timestamp": "2025-04-15, 03:45 PM"
+        }, {
+            "category": "Math",
+            "quizzesDone": 7,
+            "player": "JaneSmith",
+            "timestamp": "2025-04-15, 03:45 PM"
+        }, {
+            "category": "Math",
+            "quizzesDone": 4,
+            "player": "JohnDoe",
+            "timestamp": "2025-04-15, 03:45 PM"
+        }, {
+            "category": "History",
+            "quizzesDone": 9,
+            "player": "Neill",
+            "timestamp": "2025-04-15, 03:45 PM"
+        }, {
+            "category": "English",
+            "quizzesDone": 4,
+            "player": "JohnDoe",
+            "timestamp": "2025-04-16, 09:15 AM"
+        }, {
+            "category": "Math",
+            "quizzesDone": 1,
+            "player": "Enter player name",
+            "timestamp": "2025-04-15, 10:00 AM"
+        }, {
+            "category": "Science",
+            "quizzesDone": 1,
+            "player": "ahsdiahd",
+            "timestamp": "2025-04-15, 10:05 AM"
+        }, {
+            "category": "Math",
+            "quizzesDone": 1,
+            "player": "Hello",
+            "timestamp": "2025-04-15, 10:10 AM"
+        }, {
+            "category": "Science",
+            "quizzesDone": 1,
+            "player": "Neil",
+            "timestamp": "2025-04-15, 10:15 AM"
+        }, {
+            "category": "English",
+            "quizzesDone": 1,
+            "player": "jex",
+            "timestamp": "2025-04-15, 10:20 AM"
+        }, {
+            "category": "Math",
+            "quizzesDone": 1,
+            "player": "Eduardo II L. Millondaga",
+            "timestamp": "2025-04-15, 10:25 AM"
+        }, {
+            "category": "English",
+            "quizzesDone": 1,
+            "player": "Enter player name",
+            "timestamp": "2025-04-15, 10:30 AM"
+        }, {
+            "category": "Math",
+            "quizzesDone": 1,
+            "player": "James",
+            "timestamp": "2025-04-17, 03:00 PM"
+        }, {
+            "category": "Science",
+            "quizzesDone": 1,
+            "player": "James",
+            "timestamp": "2025-04-17, 01:00 PM"
+        }, {
+            "category": "Math",
+            "quizzesDone": 1,
+            "player": "Justin",
+            "timestamp": "2025-04-15, 10:45 AM"
+        }, {
+            "category": "Photosynthesis Quiz",
+            "quizzesDone": 1,
+            "player": "James",
+            "timestamp": "2025-04-19, 11:15 PM"
+        }],
+    "History": [{
+            "result": "pass",
+            "score": "8\/10",
+            "creator": "Neill",
+            "category": "Science",
+            "quizTitle": "Science Quiz 1",
+            "player": "JohnDoe",
+            "timestamp": "2025-04-15, 02:30 PM"
+        }, {
+            "result": "pass",
+            "score": "7\/10",
+            "creator": "Neill",
+            "category": "Science",
+            "quizTitle": "Science Quiz 1",
+            "player": "JaneSmith",
+            "timestamp": "2025-04-15, 03:45 PM"
+        }, {
+            "result": "pass",
+            "score": "5\/10",
+            "creator": "test1",
+            "category": "Math",
+            "quizTitle": "Math Quiz 1",
+            "player": "JaneSmith",
+            "timestamp": "2025-04-15, 03:45 PM"
+        }, {
+            "result": "pass",
+            "score": "6\/10",
+            "creator": "test1",
+            "category": "Math",
+            "quizTitle": "Math Quiz 1",
+            "player": "JohnDoe",
+            "timestamp": "2025-04-15, 03:45 PM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "test3",
+            "category": "History",
+            "quizTitle": "History Quiz 1",
+            "player": "Neill",
+            "timestamp": "2025-04-15, 03:45 PM"
+        }, {
+            "result": "pass",
+            "score": "7\/10",
+            "creator": "test3",
+            "category": "English",
+            "quizTitle": "English Quiz 1",
+            "player": "JohnDoe",
+            "timestamp": "2025-04-16, 09:15 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "test10",
+            "category": "Math",
+            "quizTitle": "Math Quiz 2",
+            "player": "Enter player name",
+            "timestamp": "2025-04-15, 10:00 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "test1",
+            "category": "Science",
+            "quizTitle": "Science Quiz 2",
+            "player": "ahsdiahd",
+            "timestamp": "2025-04-15, 10:05 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "test3",
+            "category": "Math",
+            "quizTitle": "Math Quiz 2",
+            "player": "Hello",
+            "timestamp": "2025-04-15, 10:10 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "test1",
+            "category": "Science",
+            "quizTitle": "Science Quiz 2",
+            "player": "Neil",
+            "timestamp": "2025-04-15, 10:15 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "test10",
+            "category": "English",
+            "quizTitle": "English Quiz 2",
+            "player": "jex",
+            "timestamp": "2025-04-15, 10:20 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "test1",
+            "category": "Math",
+            "quizTitle": "Math Quiz 3",
+            "player": "Eduardo II L. Millondaga",
+            "timestamp": "2025-04-15, 10:25 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "Neill",
+            "category": "English",
+            "quizTitle": "English Quiz 2",
+            "player": "Enter player name",
+            "timestamp": "2025-04-15, 10:30 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "Neill",
+            "category": "Math",
+            "quizTitle": "Math Quiz 3",
+            "player": "Enter player name",
+            "timestamp": "2025-04-15, 10:35 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "test3",
+            "category": "Math",
+            "quizTitle": "Math Quiz 3",
+            "player": "Enter player name",
+            "timestamp": "2025-04-15, 10:40 AM"
+        }, {
+            "result": "fail",
+            "score": "3\/10",
+            "creator": "Neill",
+            "category": "Math",
+            "quizTitle": "Math Quiz 3",
+            "player": "Justin",
+            "timestamp": "2025-04-15, 10:45 AM"
+        }, {
+            "result": "pass",
+            "score": "9\/10",
+            "creator": "test3",
+            "category": "Science",
+            "quizTitle": "Science Quiz 3",
+            "player": "James",
+            "timestamp": "2025-04-17, 01:00 PM"
+        }, {
+            "result": "fail",
+            "score": "2\/10",
+            "creator": "test1",
+            "category": "History",
+            "quizTitle": "History Quiz 1",
+            "player": "James",
+            "timestamp": "2025-04-17, 02:00 PM"
+        }, {
+            "result": "pass",
+            "score": "10\/10",
+            "creator": "Neill",
+            "category": "Math",
+            "quizTitle": "Math Quiz 1",
+            "player": "James",
+            "timestamp": "2025-04-17, 03:00 PM"
+        }, {
+            "score": "2\/2",
+            "answers": [{
+                    "question": "What gas do plants absorb from the air during photosynthesis?",
+                    "selectedAnswer": "Carbon dioxide",
+                    "correctAnswer": "Carbon dioxide",
+                    "isCorrect": true
+                }, {
+                    "question": "Which organelle in plant cells is responsible for photosynthesis?",
+                    "selectedAnswer": "Chloroplast",
+                    "correctAnswer": "Chloroplast",
+                    "isCorrect": true
+                }],
+            "category": "Science",
+            "player": "James",
+            "timestamp": "2025-04-19, 11:15 PM",
+            "result": "pass",
+            "creator": "test1",
+            "quizTitle": "Photosythesis Quiz"
+        }],
+    "Accounts": [{
+            "password": "password1",
+            "type": "Game Master",
+            "username": "user1",
+            "status": "Disabled"
+        }, {
+            "password": "password2",
+            "type": "Player",
+            "username": "user2",
+            "status": "Disabled"
+        }, {
+            "password": "test1",
+            "type": "Game Master",
+            "username": "test1",
+            "status": "Accessible"
+        }, {
+            "password": "test2",
+            "type": "Player",
+            "username": "test2",
+            "status": "Accessible"
+        }, {
+            "password": "test3",
+            "type": "Game Master",
+            "username": "test3",
+            "status": "Accessible"
+        }, {
+            "password": "test10",
+            "type": "Game Master",
+            "username": "test10",
+            "status": "Accessible"
+        }, {
+            "password": "neill",
+            "type": "Game Master",
+            "username": "Neill",
+            "status": "Accessible"
+        }, {
+            "password": "admin",
+            "type": "Administrator",
+            "username": "admin",
+            "status": "Accessible"
+        }, {
+            "password": "james",
+            "type": "Player",
+            "username": "James",
+            "status": "Accessible"
+        }]
+}
