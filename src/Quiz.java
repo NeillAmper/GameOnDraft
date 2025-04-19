@@ -58,7 +58,6 @@ public class Quiz extends javax.swing.JFrame {
         nextButton = new javax.swing.JButton();
         completeButton = new javax.swing.JButton();
         timerLabel = new javax.swing.JLabel();
-        previousQuestionButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -116,13 +115,6 @@ public class Quiz extends javax.swing.JFrame {
 
         timerLabel.setText("Timer");
 
-        previousQuestionButton.setText("Previous");
-        previousQuestionButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                previousQuestionButtonActionPerformed(evt);
-            }
-        });
-
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,28 +145,23 @@ public class Quiz extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(69, 69, 69)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(previousQuestionButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(option1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
-                                .addComponent(option2)
-                                .addGap(61, 61, 61))))
+                        .addComponent(option1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                        .addComponent(option2)
+                        .addGap(61, 61, 61))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(177, 177, 177)
+                        .addGap(172, 172, 172)
                         .addComponent(nextButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(option3)
                         .addGap(45, 45, 45)
-                        .addComponent(option4)
-                        .addGap(125, 125, 125))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(completeButton)
-                        .addGap(159, 159, 159))))
+                        .addComponent(option4))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(completeButton)))
+                .addGap(125, 125, 125))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,18 +174,21 @@ public class Quiz extends javax.swing.JFrame {
                     .addComponent(quizIdLabel))
                 .addGap(59, 59, 59)
                 .addComponent(questionLabel)
-                .addGap(50, 50, 50)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(option1)
-                    .addComponent(option2)
-                    .addComponent(option3)
-                    .addComponent(option4))
-                .addGap(45, 45, 45)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nextButton)
-                    .addComponent(previousQuestionButton)
-                    .addComponent(completeButton))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(option1)
+                            .addComponent(option2)
+                            .addComponent(option3)
+                            .addComponent(option4))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nextButton)
+                            .addComponent(completeButton))
+                        .addGap(56, 56, 56))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -272,24 +262,39 @@ public class Quiz extends javax.swing.JFrame {
 
     private void completeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completeButtonActionPerformed
         try {
-            saveQuizResults(); // Save quiz results when completed
+            // Save quiz results when completed
+            saveQuizResults();
+
+            // Prepare data to pass to QuizResult
+            JSONArray answers = new JSONArray();
+            for (JSONObject answer : answerLog) {
+                JSONObject formattedAnswer = new JSONObject();
+                formattedAnswer.put("question", answer.get("question"));
+                formattedAnswer.put("selectedAnswer", answer.get("selectedAnswer"));
+                formattedAnswer.put("correctAnswer", answer.get("correctAnswer"));
+
+                // Add evaluation (correct/incorrect)
+                boolean isCorrect = (boolean) answer.get("isCorrect");
+                formattedAnswer.put("result", isCorrect ? "correct" : "incorrect");
+
+                answers.add(formattedAnswer);
+            }
+
+            String quizTitle = selectedQuiz; // Use the selected quiz title
+            String creator = getQuizCreator(quizTitle); // Fetch the quiz creator
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a"));
+
+            JOptionPane.showMessageDialog(this, "Quiz Completed!");
+
+            // Navigate to QuizResult screen
+            this.setVisible(false);
+            new QuizResult(playerName, quizData, score, maxscore, selectedQuiz, usname, answers, quizTitle, creator, timestamp).setVisible(true);
+
         } catch (IOException | ParseException e) {
             Logger.getLogger(Quiz.class.getName()).log(Level.SEVERE, "Error saving quiz results", e);
             JOptionPane.showMessageDialog(this, "Failed to save quiz results.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        JOptionPane.showMessageDialog(this, "Quiz Completed!");
-        this.setVisible(false);
-        // Navigate to QuizResult screen
-        new QuizResult(playerName, quizData, score, maxscore, "Player", usname).setVisible(true);
     }//GEN-LAST:event_completeButtonActionPerformed
-
-    private void previousQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousQuestionButtonActionPerformed
-        if (index > 0) {
-            index--;
-            loadPreviousQuestion();
-        }
-    }//GEN-LAST:event_previousQuestionButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // Display a confirmation dialog
@@ -382,6 +387,9 @@ public class Quiz extends javax.swing.JFrame {
             option3.setText((String) currentScenario.get("option3"));
             option4.setText((String) currentScenario.get("option4"));
 
+            // Clear toggle button selection
+            buttonGroup1.clearSelection();
+
             // Ensure correctanswer is assigned
             correctanswer = (String) currentScenario.get("answer");
             if (correctanswer == null) {
@@ -431,7 +439,18 @@ public class Quiz extends javax.swing.JFrame {
             // Handle empty or null scenarios array
             if (scenariosArray == null || scenariosArray.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No scenarios available in the quiz data.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+
+            // Randomize the order of scenarios
+            List<Object> tempList = new ArrayList<>();
+            for (Object scenario : scenariosArray) {
+                tempList.add(scenario);
+            }
+            Collections.shuffle(tempList); // Shuffle the list to randomize scenarios
+            scenariosArray = new JSONArray();
+            scenariosArray.addAll(tempList); // Add the shuffled scenarios back to scenariosArray
+
         } catch (IOException | ParseException e) {
             Logger.getLogger(Quiz.class.getName()).log(Level.SEVERE, "Error loading scenarios", e);
             JOptionPane.showMessageDialog(this, "Failed to load scenarios. Check QuizData.json file.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -485,17 +504,28 @@ public class Quiz extends javax.swing.JFrame {
     private void saveQuizResults() throws IOException, ParseException {
         // Create the history entry
         JSONObject historyData = new JSONObject();
-        historyData.put("player", playerName); // Player name
+        historyData.put("evaluation", score == maxscore ? "pass" : "fail"); // Result: pass or fail
         historyData.put("score", score + "/" + maxscore); // Score in the format x/y
-        historyData.put("category", selectedQuiz); // Quiz category (subject)
-        historyData.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a"))); // Timestamp
-        historyData.put("result", score == maxscore ? "pass" : "fail"); // Result: pass or fail
         historyData.put("creator", getQuizCreator(selectedQuiz)); // Creator of the quiz
+        historyData.put("category", selectedQuiz); // Quiz category (subject)
         historyData.put("quizTitle", selectedQuiz); // Title of the quiz
+        historyData.put("player", playerName); // Player name
+        historyData.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a"))); // Timestamp
 
         // Add the answers to the history entry
         JSONArray answers = new JSONArray();
-        answers.addAll(answerLog); // Add all logged answers
+        for (JSONObject answer : answerLog) {
+            JSONObject formattedAnswer = new JSONObject();
+            formattedAnswer.put("question", answer.get("question"));
+            formattedAnswer.put("selectedAnswer", answer.get("selectedAnswer"));
+            formattedAnswer.put("correctAnswer", answer.get("correctAnswer"));
+
+            // Add evaluation (correct/incorrect)
+            boolean isCorrect = (boolean) answer.get("isCorrect");
+            formattedAnswer.put("result", isCorrect ? "correct" : "incorrect");
+
+            answers.add(formattedAnswer);
+        }
         historyData.put("answers", answers);
 
         // Load existing user data from UserData.json
@@ -511,12 +541,28 @@ public class Quiz extends javax.swing.JFrame {
         }
         historyArray.add(historyData);
 
+        // Update the "Standing" category
+        JSONArray standingArray = (JSONArray) userData.get("Standing");
+        if (standingArray == null) {
+            standingArray = new JSONArray();
+            userData.put("Standing", standingArray); // Initialize if it doesn't exist
+        }
+        updateStanding(standingArray);
+
         // Save the updated user data back to UserData.json
         try (FileWriter writer = new FileWriter(FILE_PATH[1])) {
             writer.write(userData.toJSONString());
         }
 
         JOptionPane.showMessageDialog(this, "Quiz Results Saved!");
+
+        // Navigate to QuizResult and pass the results
+        String quizTitle = selectedQuiz;
+        String creator = getQuizCreator(quizTitle);
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a"));
+
+        this.setVisible(false);
+        new QuizResult(playerName, quizData, score, maxscore, selectedQuiz, usname, answers, quizTitle, creator, timestamp).setVisible(true);
     }
 
     private String getQuizCreator(String quizTitle) {
@@ -542,21 +588,31 @@ public class Quiz extends javax.swing.JFrame {
         return "Unknown"; // Default value if creator not found
     }
 
-    private void loadPreviousQuestion() {
-        if (index > 0) {
-            index--;
-            JSONObject previousScenario = scenarioList.get(index);
-            questionLabel.setText((String) previousScenario.get("question"));
-            option1.setText((String) previousScenario.get("option1"));
-            option2.setText((String) previousScenario.get("option2"));
-            option3.setText((String) previousScenario.get("option3"));
-            option4.setText((String) previousScenario.get("option4"));
+    private void updateStanding(JSONArray standingArray) {
+        boolean updated = false;
+        String currentCategory = selectedQuiz;
 
-            // Ensure correctanswer is assigned
-            correctanswer = (String) previousScenario.get("answer");
-            if (correctanswer == null) {
-                correctanswer = ""; // Prevent null pointer issues
+        // Iterate through the "Standing" array to find the player and category
+        for (Object obj : standingArray) {
+            JSONObject standingEntry = (JSONObject) obj;
+            if (standingEntry.get("player").equals(playerName) && standingEntry.get("category").equals(currentCategory)) {
+                // Update the quizzesDone count and timestamp
+                int quizzesDone = ((Long) standingEntry.get("quizzesDone")).intValue();
+                standingEntry.put("quizzesDone", quizzesDone + 1);
+                standingEntry.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a")));
+                updated = true;
+                break;
             }
+        }
+
+        // If no matching entry is found, add a new entry
+        if (!updated) {
+            JSONObject newStandingEntry = new JSONObject();
+            newStandingEntry.put("category", currentCategory);
+            newStandingEntry.put("quizzesDone", 1);
+            newStandingEntry.put("player", playerName);
+            newStandingEntry.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a")));
+            standingArray.add(newStandingEntry);
         }
     }
 
@@ -577,7 +633,6 @@ public class Quiz extends javax.swing.JFrame {
     private javax.swing.JToggleButton option2;
     private javax.swing.JToggleButton option3;
     private javax.swing.JToggleButton option4;
-    private javax.swing.JButton previousQuestionButton;
     private javax.swing.JLabel questionLabel;
     private javax.swing.JLabel quizIdLabel;
     private javax.swing.JLabel timerLabel;

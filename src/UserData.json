@@ -34,78 +34,117 @@
             "quizzesDone": 1,
             "player": "James",
             "timestamp": "2025-04-19, 11:15 PM"
+        }, {
+            "category": "Philippine Presidents Quiz",
+            "quizzesDone": 1,
+            "player": "test2",
+            "timestamp": "2025-04-20, 02:39 AM"
+        }, {
+            "category": "Random English Quiz",
+            "quizzesDone": 2,
+            "player": "test2",
+            "timestamp": "2025-04-20, 03:04 AM"
+        }, {
+            "category": "Basic Math Quiz",
+            "quizzesDone": 1,
+            "player": "test2",
+            "timestamp": "2025-04-20, 03:14 AM"
         }],
     "History": [{
-            "result": "pass",
+            "evaluation": "pass",
             "score": "2\/2",
             "creator": "Neill",
             "answers": [{
+                    "result": "correct",
                     "question": "Is Adriane Pregnant?",
                     "selectedAnswer": "Yes",
-                    "correctAnswer": "Yes",
-                    "isCorrect": true
+                    "correctAnswer": "Yes"
                 }, {
+                    "result": "correct",
                     "question": "What is a common sign of pregnancy?",
                     "selectedAnswer": "Morning sickness",
-                    "correctAnswer": "Morning sickness",
-                    "isCorrect": true
+                    "correctAnswer": "Morning sickness"
                 }],
             "category": "Science",
             "quizTitle": "Pregnancy Quiz",
             "player": "JohnDoe",
             "timestamp": "2025-04-15, 02:30 PM"
         }, {
-            "result": "pass",
+            "evaluation": "pass",
             "score": "2\/2",
             "creator": "test1",
             "answers": [{
+                    "result": "correct",
                     "question": "What gas do plants absorb from the air during photosynthesis?",
                     "selectedAnswer": "Carbon dioxide",
-                    "correctAnswer": "Carbon dioxide",
-                    "isCorrect": true
+                    "correctAnswer": "Carbon dioxide"
                 }, {
+                    "result": "correct",
                     "question": "Which organelle in plant cells is responsible for photosynthesis?",
                     "selectedAnswer": "Chloroplast",
-                    "correctAnswer": "Chloroplast",
-                    "isCorrect": true
+                    "correctAnswer": "Chloroplast"
                 }],
             "category": "Science",
             "quizTitle": "Photosynthesis Quiz",
             "player": "James",
             "timestamp": "2025-04-19, 11:15 PM"
         }, {
-            "result": "pass",
+            "evaluation": "pass",
             "score": "3\/3",
             "creator": "Neill",
             "answers": [{
+                    "result": "correct",
                     "question": "r u okay?",
                     "selectedAnswer": "siguro",
-                    "correctAnswer": "siguro",
-                    "isCorrect": true
+                    "correctAnswer": "siguro"
                 }, {
+                    "result": "correct",
                     "question": "I am tired?",
                     "selectedAnswer": "shesh",
-                    "correctAnswer": "shesh",
-                    "isCorrect": true
+                    "correctAnswer": "shesh"
                 }, {
+                    "result": "correct",
                     "question": "good or bad?",
                     "selectedAnswer": "pizza",
-                    "correctAnswer": "pizza",
-                    "isCorrect": true
+                    "correctAnswer": "pizza"
                 }],
             "category": "English",
             "quizTitle": "Random English Quiz",
             "player": "JohnDoe",
             "timestamp": "2025-04-19, 04:19 PM"
         }, {
-            "result": "fail",
+            "evaluation": "fail",
             "score": "1\/3",
             "creator": "Neill",
-            "answers": [],
-            "category": "Random English Quiz",
+            "answers": [{
+                    "result": "incorrect",
+                    "question": "What is the capital of France?",
+                    "selectedAnswer": "Berlin",
+                    "correctAnswer": "Paris"
+                }, {
+                    "result": "correct",
+                    "question": "What is 2 + 2?",
+                    "selectedAnswer": "4",
+                    "correctAnswer": "4"
+                }, {
+                    "result": "incorrect",
+                    "question": "What is the boiling point of water?",
+                    "selectedAnswer": "80 degrees",
+                    "correctAnswer": "100 degrees"
+                }],
+            "category": "General Knowledge",
             "quizTitle": "Random English Quiz",
             "player": "James",
             "timestamp": "2025-04-20, 01:19 AM"
+        }, {
+            "evaluation": "pass",
+            "score": "2\/2",
+            "creator": "Neill",
+            "answers": [],
+            "category": "Basic Math Quiz",
+            "quizTitle": "Basic Math Quiz",
+            "player": "test2",
+            "timestamp": "2025-04-20, 03:14 AM"
         }],
     "Accounts": [{
             "password": "password1",

@@ -1,4 +1,8 @@
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public final class QuizResult extends javax.swing.JFrame {
 
@@ -8,17 +12,26 @@ public final class QuizResult extends javax.swing.JFrame {
     private final int maxScore;
     private final int finalScore;
     private final String quizData;
+    private final JSONArray answers; // Store the answers passed from Quiz.java
+    private final String quizTitle; // Quiz Title
+    private final String creator; // Quiz Creator
+    private final String timestamp; // Timestamp for the quiz
 
-    public QuizResult(String playerName, String quizData, int finalScore, int maxScore, String category, String usname) {
-        this.quizData = quizData;
-        this.playerName = playerName;
-        this.usname = usname;
-        this.finalScore = finalScore;
-        this.maxScore = maxScore;
-        this.category = category;
+    public QuizResult(String playerName, String quizData, int finalScore, int maxScore, String category, String usname, JSONArray answers, String quizTitle, String creator, String timestamp) {
+    // Initialize fields and UI components
+    this.quizData = quizData;
+    this.playerName = playerName;
+    this.usname = usname;
+    this.finalScore = finalScore;
+    this.maxScore = maxScore;
+    this.category = category;
+    this.answers = answers;
+    this.quizTitle = quizTitle;
+    this.creator = creator;
+    this.timestamp = timestamp;
 
-        initComponents();
-        displayResults(); // Show the passed data in UI
+    initComponents();
+    displayResults(); // Populate the results table
     }
 
     @SuppressWarnings("unchecked")
@@ -27,7 +40,7 @@ public final class QuizResult extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        scoreLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         MenuButton = new javax.swing.JButton();
         LeaderboardButton = new javax.swing.JButton();
@@ -35,13 +48,15 @@ public final class QuizResult extends javax.swing.JFrame {
         quizIdLabel = new javax.swing.JLabel();
         categoryUI = new javax.swing.JLabel();
         scoreUI = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        timestampLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        resultTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("QUIZ DONE!");
 
-        jLabel2.setText("Score:");
+        scoreLabel.setText("Score:");
 
         jLabel3.setText("Good Job!");
 
@@ -68,73 +83,89 @@ public final class QuizResult extends javax.swing.JFrame {
 
         quizIdLabel.setText("Quiz Details");
 
-        jLabel5.setText("jLabel5");
+        timestampLabel.setText("Timestamp");
+
+        resultTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Question", "Selected Answer", "Correct Answer", "Result"
+            }
+        ));
+        jScrollPane1.setViewportView(resultTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(quizIdLabel)
+                .addGap(83, 83, 83)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(categoryUI, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(scoreLabel)
+                        .addComponent(scoreUI, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(timestampLabel)
+                .addGap(101, 101, 101))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(quizIdLabel)
-                            .addComponent(MenuButton))
+                        .addGap(274, 274, 274)
+                        .addComponent(jLabel3))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(39, 39, 39)
+                                .addComponent(MenuButton)
+                                .addGap(146, 146, 146)
                                 .addComponent(LeaderboardButton)
-                                .addGap(34, 34, 34)
-                                .addComponent(RetryButton))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(51, 51, 51)
-                                .addComponent(jLabel1))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(scoreUI, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(categoryUI, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(152, 152, 152)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(148, 148, 148)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel3))))
-                .addContainerGap(30, Short.MAX_VALUE))
+                                .addGap(95, 95, 95)
+                                .addComponent(RetryButton)))))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addGap(17, 17, 17)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(categoryUI, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(quizIdLabel))
-                .addGap(31, 31, 31)
-                .addComponent(jLabel2)
-                .addGap(15, 15, 15)
-                .addComponent(scoreUI, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(33, 33, 33)
+                .addComponent(categoryUI, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(quizIdLabel)
+                    .addComponent(timestampLabel)
+                    .addComponent(scoreLabel))
+                .addGap(30, 30, 30)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addGap(24, 24, 24)
+                .addComponent(scoreUI, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(MenuButton)
                     .addComponent(LeaderboardButton)
                     .addComponent(RetryButton))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,7 +183,7 @@ public final class QuizResult extends javax.swing.JFrame {
 
     private void LeaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardButtonActionPerformed
         this.setVisible(false);
-        new Leaderboard(playerName, quizData, "Player", "GameMaster").setVisible(true); // ✅ Fixed by adding "GameMaster"
+        new Leaderboard(playerName, quizData, "Player", "GameMaster").setVisible(true);
     }//GEN-LAST:event_LeaderboardButtonActionPerformed
 
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed
@@ -163,16 +194,61 @@ public final class QuizResult extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new QuizResult("DefaultPlayer", "Science", 1, 2, "Test", "Testss").setVisible(true); // Example
+            String playerName = "JohnDoe";
+            String quizData = "Science";
+            int finalScore = 2;
+            int maxScore = 3;
+            String category = "Science";
+            String usname = "testUser";
+            String quizTitle = "General Science Quiz";
+            String creator = "QuizMaster";
+            String timestamp = "2025-04-19, 07:25 PM";
+
+            JSONArray answers = new JSONArray();
+            JSONObject answer1 = new JSONObject();
+            answer1.put("question", "What is the capital of France?");
+            answer1.put("selectedAnswer", "Paris");
+            answer1.put("correctAnswer", "Paris");
+            answer1.put("result", "correct");
+            answers.add(answer1);
+
+            JSONObject answer2 = new JSONObject();
+            answer2.put("question", "What is 2 + 2?");
+            answer2.put("selectedAnswer", "4");
+            answer2.put("correctAnswer", "4");
+            answer2.put("result", "correct");
+            answers.add(answer2);
+
+            JSONObject answer3 = new JSONObject();
+            answer3.put("question", "What is the boiling point of water?");
+            answer3.put("selectedAnswer", "80 degrees");
+            answer3.put("correctAnswer", "100 degrees");
+            answer3.put("result", "incorrect");
+            answers.add(answer3);
+
+            new QuizResult(playerName, quizData, finalScore, maxScore, category, usname, answers, quizTitle, creator, timestamp).setVisible(true);
         });
     }
 
     private void displayResults() {
-        categoryUI.setText(category != null ? category : "N/A");
-        scoreUI.setText(finalScore + " / " + maxScore);
-    }
-    public void entryTime() {
-        // Reserved for future enhancements
+        // Set dynamic labels
+        quizIdLabel.setText("Title: " + quizTitle + " | Creator: " + creator + " | Category: " + category);
+        scoreUI.setText("Score: " + finalScore + " / " + maxScore);
+        timestampLabel.setText("Timestamp: " + (timestamp != null ? timestamp : "N/A"));
+
+        // Populate the resultTable
+        DefaultTableModel model = (DefaultTableModel) resultTable.getModel();
+        model.setRowCount(0); // Clear existing rows
+
+        for (Object answerObj : answers) {
+            JSONObject answer = (JSONObject) answerObj;
+            String question = (String) answer.get("question");
+            String selectedAnswer = (String) answer.get("selectedAnswer");
+            String correctAnswer = (String) answer.get("correctAnswer");
+            String result = (String) answer.get("result");
+
+            model.addRow(new Object[]{question, selectedAnswer, correctAnswer, result});
+        }
     }
 
 
@@ -182,11 +258,13 @@ public final class QuizResult extends javax.swing.JFrame {
     private javax.swing.JButton RetryButton;
     private javax.swing.JLabel categoryUI;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel quizIdLabel;
+    private javax.swing.JTable resultTable;
+    private javax.swing.JLabel scoreLabel;
     private javax.swing.JLabel scoreUI;
+    private javax.swing.JLabel timestampLabel;
     // End of variables declaration//GEN-END:variables
 }

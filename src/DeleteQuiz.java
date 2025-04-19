@@ -49,7 +49,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
         QuizTable = new javax.swing.JTable();
         DeleteButton = new javax.swing.JButton();
         UndoButton = new javax.swing.JButton();
-        SearchField = new javax.swing.JTextField();
+        searchField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -115,7 +115,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(150, 150, 150)
                         .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,7 +139,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
                 .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -288,7 +288,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
             return; // prevent null pointer crash
         }
 
-        String searchText = SearchField.getText().trim().toLowerCase();
+        String searchText = searchField.getText().trim().toLowerCase();
         DefaultTableModel model = (DefaultTableModel) QuizTable.getModel();
         model.setRowCount(0);
 
@@ -308,7 +308,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
                 }
 
                 boolean matchesCategory = "All".equals(selectedCategory) || category.equalsIgnoreCase(selectedCategory);
-                boolean matchesSearch = title.toLowerCase().contains(searchText);
+                boolean matchesSearch = title.toLowerCase().contains(searchText) || category.toLowerCase().contains(searchText);
 
                 if (matchesCategory && matchesSearch) {
                     model.addRow(new Object[]{title, creator, category});
@@ -321,7 +321,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
     }
 
     private void addSearchListener() {
-        SearchField.getDocument().addDocumentListener(new DocumentListener() {
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 loadCategoryQuizzes();
@@ -371,10 +371,10 @@ public class DeleteQuiz extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> CategorySelection;
     private javax.swing.JButton DeleteButton;
     private javax.swing.JTable QuizTable;
-    private javax.swing.JTextField SearchField;
     private javax.swing.JButton UndoButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField searchField;
     // End of variables declaration//GEN-END:variables
 }

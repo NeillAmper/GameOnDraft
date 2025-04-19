@@ -42,7 +42,7 @@
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
-                          <Component id="SearchField" min="-2" pref="102" max="-2" attributes="0"/>
+                          <Component id="searchField" min="-2" pref="102" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="CategorySelection" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -72,7 +72,7 @@
                   <Component id="BackButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="SearchField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="searchField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="CategorySelection" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -130,9 +130,9 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JTextField" name="SearchField">
+        <Component class="javax.swing.JTextField" name="searchField">
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="SearchFieldActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="searchFieldActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="CategorySelection">

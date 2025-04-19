@@ -501,14 +501,29 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
             // Build new quiz structure that matches your required format
             JSONObject quizObject = new JSONObject();
-            quizObject.put("QuizTitle", title);          // ✅ Correct key
-            quizObject.put("Creator", gameMasterName);   // ✅ Automatically use signed-in username
-            quizObject.put("Category", category);        // ✅ Category
-            quizObject.put("Questions", newQuizArray);   // ✅ Questions array
+            quizObject.put("QuizTitle", title);          // Quiz title
+            quizObject.put("Creator", gameMasterName);   // Creator's name
+            quizObject.put("Category", category);        // Quiz category
 
-            quizArray.add(quizObject);
-            root.put("Quizzes", quizArray);              // ✅ Maintain key casing
+            // Format each question in the correct structure
+            for (Object obj : newQuizArray) {
+                JSONObject questionObject = (JSONObject) obj;
 
+                // Ensure the scenarios field is a simple array of "correct" and "wrong"
+                JSONArray scenarios = new JSONArray();
+                scenarios.add("correct");
+                scenarios.add("wrong");
+                questionObject.put("scenarios", scenarios);
+
+                // Remove unnecessary fields if present
+                questionObject.remove("scenarioIndex");
+            }
+
+            quizObject.put("Questions", newQuizArray);   // Add the formatted questions
+            quizArray.add(quizObject);                   // Add the quiz to the array
+            root.put("Quizzes", quizArray);              // Add back to the root object
+
+            // Save the updated JSON to file
             try (FileWriter writer = new FileWriter(FILE_PATH)) {
                 writer.write(root.toJSONString());
             }

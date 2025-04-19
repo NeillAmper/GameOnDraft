@@ -35,7 +35,7 @@ public class EditQuizTable extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         QuizTable = new javax.swing.JTable();
-        SearchField = new javax.swing.JTextField();
+        searchField = new javax.swing.JTextField();
         CategorySelection = new javax.swing.JComboBox<>();
         EditButton = new javax.swing.JButton();
         BackButton = new javax.swing.JButton();
@@ -64,9 +64,9 @@ public class EditQuizTable extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(QuizTable);
 
-        SearchField.addActionListener(new java.awt.event.ActionListener() {
+        searchField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchFieldActionPerformed(evt);
+                searchFieldActionPerformed(evt);
             }
         });
 
@@ -99,7 +99,7 @@ public class EditQuizTable extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(51, 51, 51)
-                        .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -122,7 +122,7 @@ public class EditQuizTable extends javax.swing.JFrame {
                 .addComponent(BackButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -184,9 +184,9 @@ public class EditQuizTable extends javax.swing.JFrame {
         setVisible(false);
     }//GEN-LAST:event_EditButtonActionPerformed
 
-    private void SearchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchFieldActionPerformed
+    private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
         // Optional: Handle search field enter key
-    }//GEN-LAST:event_SearchFieldActionPerformed
+    }//GEN-LAST:event_searchFieldActionPerformed
 
     private void QuizTableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_QuizTableAncestorAdded
         // Optional: Handle table ancestor events
@@ -236,7 +236,7 @@ public class EditQuizTable extends javax.swing.JFrame {
             }
 
             String selectedCategory = selectedItem.toString();
-            String keyword = SearchField.getText().toLowerCase();
+            String keyword = searchField.getText().toLowerCase();
             boolean isAdmin = isAdminUser();
 
             for (Object obj : quizzes) {
@@ -248,14 +248,16 @@ public class EditQuizTable extends javax.swing.JFrame {
                 // Convert values to lowercase for case-insensitive matching
                 String categoryLower = category.toLowerCase();
                 String titleLower = title.toLowerCase();
+                String creatorLower = creator.toLowerCase();
 
                 // Filter by category from dropdown
                 boolean categoryDropdownMatch = selectedCategory.equals("All") || category.equals(selectedCategory);
-                // Filter by keyword match in category, quizid, or question
 
+                // Filter by keyword match in category, quiz title, or creator
                 boolean keywordMatch = keyword.isEmpty()
                         || categoryLower.contains(keyword)
-                        || titleLower.contains(keyword);
+                        || titleLower.contains(keyword)
+                        || creatorLower.contains(keyword);
 
                 // Filter by creator if not admin
                 boolean isCreatorMatch = isAdmin || creator.equals(gameMasterName);
@@ -276,7 +278,7 @@ public class EditQuizTable extends javax.swing.JFrame {
 
     // ADDED SEARCH LISTENER
     private void addSearchListener() {
-        SearchField.getDocument().addDocumentListener(new DocumentListener() {
+        searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 loadCategoryQuizzes();
@@ -350,9 +352,9 @@ public class EditQuizTable extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> CategorySelection;
     private javax.swing.JButton EditButton;
     private javax.swing.JTable QuizTable;
-    private javax.swing.JTextField SearchField;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField searchField;
     // End of variables declaration//GEN-END:variables
 
 }

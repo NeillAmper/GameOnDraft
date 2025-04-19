@@ -49,7 +49,7 @@
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="SearchField" min="-2" pref="106" max="-2" attributes="0"/>
+                          <Component id="searchField" min="-2" pref="106" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="150" max="-2" attributes="0"/>
                           <Component id="CategorySelection" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -82,7 +82,7 @@
                   <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="CategorySelection" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="SearchField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="searchField" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="18" max="32767" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="174" max="-2" attributes="0"/>
@@ -187,7 +187,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="UndoButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="SearchField">
+        <Component class="javax.swing.JTextField" name="searchField">
         </Component>
       </SubComponents>
     </Container>
