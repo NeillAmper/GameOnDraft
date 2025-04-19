@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 public class Quiz extends javax.swing.JFrame {
 
     public static int score = 0;
@@ -281,23 +280,26 @@ public class Quiz extends javax.swing.JFrame {
     private void loadQuizData() {
         try {
             // Load the quiz data from the QuizData.json
-            FileReader reader = new FileReader(FILE_PATH[0]);
             JSONParser parser = new JSONParser();
-            JSONArray quizzes = (JSONArray) parser.parse(reader);
+            FileReader reader = new FileReader(FILE_PATH[0]);
+            JSONObject root = (JSONObject) parser.parse(reader); // Parse the root JSON object
+
+            // Extract the "Quizzes" array
+            JSONArray quizzes = (JSONArray) root.get("Quizzes");
 
             // Loop through the quizzes and find the selected quiz
             for (Object obj : quizzes) {
-                JSONObject quizEntry = (JSONObject) obj;  // Renamed variable to quizEntry
-                if (quizEntry.get("title").equals(selectedQuiz)) {  // Match the selected quiz title
-                    JSONArray questions = (JSONArray) quizEntry.get("questions");  // Get the questions array
+                JSONObject quizEntry = (JSONObject) obj;
+                if (quizEntry.get("QuizTitle").equals(selectedQuiz)) { // Match the selected quiz title
+                    JSONArray questions = (JSONArray) quizEntry.get("Questions"); // Get the questions array
 
                     // Add questions to the scenarioList and set maxscore
                     for (Object questionObj : questions) {
                         JSONObject questionData = (JSONObject) questionObj;
                         scenarioList.add(questionData);
-                        maxscore++;  // Increment the score count
+                        maxscore++; // Increment the score count
                     }
-                    break;  // Exit after finding the selected quiz
+                    break; // Exit after finding the selected quiz
                 }
             }
         } catch (IOException | ParseException e) {
@@ -319,13 +321,13 @@ public class Quiz extends javax.swing.JFrame {
             option4.setText((String) currentScenario.get("option4"));
             correctanswer = (String) currentScenario.get("answer");
 
-            String scenario = (String) currentScenario.get("scenario");
-            scenarioLabel.setText(scenario != null ? scenario : "");
-
-            scenarioHistory.add((String) currentScenario.get("scenario"));
-            scenarioPaths.add((String) currentScenario.get("path"));
-
-            JOptionPane.showMessageDialog(this, "Scenario: " + scenario);
+            // Handle the "scenarios" field properly
+            JSONArray scenarios = (JSONArray) currentScenario.get("scenarios");
+            if (scenarios != null && !scenarios.isEmpty()) {
+                scenarioLabel.setText((String) scenarios.get(0)); // Default to the first scenario
+            } else {
+                scenarioLabel.setText("No scenario available.");
+            }
 
             timeLeft = 300;
             startTimer();
@@ -372,6 +374,15 @@ public class Quiz extends javax.swing.JFrame {
         answerEntry.put("correctAnswer", correctanswer);
         answerEntry.put("isCorrect", correct);
         answerLog.add(answerEntry);
+
+        // Update the scenario label based on correctness
+        JSONArray scenarios = (JSONArray) scenarioList.get(index - 1).get("scenarios");
+        if (scenarios != null && scenarios.size() >= 2) {
+            String updatedScenario = correct ? (String) scenarios.get(0) : (String) scenarios.get(1); // Correct or wrong scenario
+            scenarioLabel.setText(updatedScenario);
+        } else {
+            scenarioLabel.setText("No scenario available.");
+        }
 
         String feedbackMessage = correct ? "Correct!" : "Incorrect. The correct answer is: " + correctanswer;
         JOptionPane.showMessageDialog(this, feedbackMessage);
@@ -446,7 +457,7 @@ public class Quiz extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new Quiz("Player1", "Test", "SampleCategory", "Testss").setVisible(true);
         });
-}
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

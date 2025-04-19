@@ -170,8 +170,9 @@ public class GameMaster extends javax.swing.JFrame {
     }//GEN-LAST:event_HistoryActionPerformed
 
     private void ProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileButtonActionPerformed
-        this.setVisible(false);
-        new Profile(gameMasterName, null, "Game Master", gameMasterName).setVisible(true);
+        this.dispose();
+        // Pass the correct username to the Profile constructor
+        new Profile(null, gameMasterName, usname).setVisible(true);
     }//GEN-LAST:event_ProfileButtonActionPerformed
 
     public static void main(String args[]) {

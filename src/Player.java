@@ -144,7 +144,8 @@ public class Player extends javax.swing.JFrame {
 
     private void ProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileActionPerformed
         this.dispose();
-        new Profile(playerName, "Player", "Player", "Player").setVisible(true);
+        // Pass the correct username to the Profile constructor
+        new Profile(null, playerName, usname).setVisible(true);
     }//GEN-LAST:event_ProfileActionPerformed
 
     public static void main(String args[]) {

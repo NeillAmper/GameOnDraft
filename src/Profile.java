@@ -1,4 +1,5 @@
 
+import java.awt.HeadlessException;
 import javax.swing.*;
 import java.io.*;
 import org.json.simple.JSONArray;
@@ -10,31 +11,22 @@ public class Profile extends javax.swing.JFrame {
     private final String gameMasterName;
     private final String playerName;
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
-    private String usname;
-    private final String userName;
+    private final String usname; // Mark as final to ensure consistency
 
-    public Profile(String gameMasterName, String playerName, String usname, String userName) {
+    public Profile(String gameMasterName, String playerName, String usname) {
         this.gameMasterName = gameMasterName;
         this.playerName = playerName;
+        this.usname = usname; // Use the usname passed directly
 
-        if (gameMasterName != null && !gameMasterName.isEmpty()) {
-            userName = gameMasterName;
-        } else if (playerName != null && !playerName.isEmpty()) {
-            userName = playerName;
-        } else {
-            userName = "Unknown";
-        }
-
-        this.userName = userName;
-        this.usname = usname;
-
-        fetchUserType();
+        fetchUserType(); // Fetch type if needed
         initComponents();
 
-        jLabel1.setText("Edit Profile Information for user " + userName);
+        // Correctly set the label to display the username
+        jLabel1.setText("Edit Profile Information for " + this.usname);
 
-        if (usname != null) {
-            TypeComboBox.setSelectedItem(usname.equalsIgnoreCase("GameMaster") ? "Game Master" : "Player");
+        // Set the TypeComboBox based on the fetched user type
+        if (this.usname != null) {
+            TypeComboBox.setSelectedItem(fetchUserType().equalsIgnoreCase("GameMaster") ? "Game Master" : "Player");
         }
     }
 
@@ -176,10 +168,17 @@ public class Profile extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        if (gameMasterName != null && !gameMasterName.isEmpty()) {
-            new GameMaster(gameMasterName, usname).setVisible(true);
-        } else if (playerName != null && !playerName.isEmpty()) {
-            new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
+        try {
+            if (gameMasterName != null && !gameMasterName.isEmpty()) {
+                new GameMaster(gameMasterName, usname).setVisible(true);
+            } else if (playerName != null && !playerName.isEmpty()) {
+                new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Unable to determine the user role. Returning to the login page.");
+                new SignIn(usname, "test").setVisible(true);
+            }
+        } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(this, "Error navigating back: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
@@ -210,11 +209,11 @@ public class Profile extends javax.swing.JFrame {
 
             for (Object obj : users) {
                 JSONObject user = (JSONObject) obj;
-                if (user.get("username").toString().equals(userName)) {
+                if (user.get("username").toString().equals(usname)) {
                     if (!newUsername.isBlank() && !newUsername.equals("Enter New Username")) {
                         user.put("username", newUsername);
                     } else {
-                        newUsername = userName;
+                        newUsername = usname;
                     }
 
                     if (!newPassword.isBlank() && !newPassword.equals("Enter New Password")) {
@@ -240,7 +239,8 @@ public class Profile extends javax.swing.JFrame {
                 JSONArray quizzes = (JSONArray) quizData.get("Quizzes");
                 for (Object obj : quizzes) {
                     JSONObject quiz = (JSONObject) obj;
-                    if (quiz.get("creator").toString().equals(userName)) {
+                    if (!quiz.get("creator").toString().equals(usname)) {
+                    } else {
                         quiz.put("creator", newUsername);
                     }
                 }
@@ -254,7 +254,7 @@ public class Profile extends javax.swing.JFrame {
                 if (history != null) {
                     for (Object obj : history) {
                         JSONObject entry = (JSONObject) obj;
-                        if (entry.get("player").toString().equals(userName)) {
+                        if (entry.get("player").toString().equals(usname)) {
                             entry.put("player", newUsername);
                         }
                     }
@@ -264,7 +264,7 @@ public class Profile extends javax.swing.JFrame {
                 if (standing != null) {
                     for (Object obj : standing) {
                         JSONObject entry = (JSONObject) obj;
-                        if (entry.get("player").toString().equals(userName)) {
+                        if (entry.get("player").toString().equals(usname)) {
                             entry.put("player", newUsername);
                         }
                     }
@@ -312,12 +312,12 @@ public class Profile extends javax.swing.JFrame {
             JSONArray history = (JSONArray) userData.get("History");
             JSONArray standing = (JSONArray) userData.get("Standing");
 
-            accounts.removeIf(obj -> ((JSONObject) obj).get("username").toString().equals(userName));
+            accounts.removeIf(obj -> ((JSONObject) obj).get("username").toString().equals(usname));
             if (history != null) {
-                history.removeIf(obj -> ((JSONObject) obj).get("player").toString().equals(userName));
+                history.removeIf(obj -> ((JSONObject) obj).get("player").toString().equals(usname));
             }
             if (standing != null) {
-                standing.removeIf(obj -> ((JSONObject) obj).get("player").toString().equals(userName));
+                standing.removeIf(obj -> ((JSONObject) obj).get("player").toString().equals(usname));
             }
 
             try (FileWriter writer = new FileWriter(FILE_PATH[1])) {
@@ -331,7 +331,7 @@ public class Profile extends javax.swing.JFrame {
             JSONObject quizData = (JSONObject) parser.parse(new FileReader(FILE_PATH[0]));
             JSONArray quizzes = (JSONArray) quizData.get("Quizzes");
             quizzes.removeIf(obj -> {
-                return ((JSONObject) obj).get("creator").toString().equals(userName);
+                return ((JSONObject) obj).get("creator").toString().equals(usname);
             });
 
             try (FileWriter writer = new FileWriter(FILE_PATH[0])) {
@@ -348,26 +348,26 @@ public class Profile extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_DeleteButtonActionPerformed
 
-    private void fetchUserType() {
+    private String fetchUserType() {
         try {
             JSONParser parser = new JSONParser();
             JSONObject userData = (JSONObject) parser.parse(new FileReader(FILE_PATH[1]));
             JSONArray accounts = (JSONArray) userData.get("Accounts");
             for (Object obj : accounts) {
                 JSONObject user = (JSONObject) obj;
-                if (user.get("username").toString().equals(userName)) {
-                    usname = user.get("type").toString();
-                    break;
+                if (user.get("username").toString().equals(usname)) {
+                    return user.get("type").toString(); // Return the user type
                 }
             }
         } catch (IOException | ParseException e) {
-            usname = "Unknown";
+            return "Unknown"; // Return "Unknown" in case of an error
         }
+        return "Unknown"; // Default return value if user not found
     }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Profile("Player", "GameMaster", "Username", "UserType").setVisible(true);
+            new Profile("Player", "GameMaster", "Admin").setVisible(true);
         });
     }
 

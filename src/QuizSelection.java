@@ -16,7 +16,7 @@ public class QuizSelection extends javax.swing.JFrame {
 
     public QuizSelection(String playerName, String quizData, String selectedQuiz, String usname) {
         this.playerName = playerName;
-        this. usname = usname;
+        this.usname = usname;
         this.selectedQuiz = selectedQuiz;
         initComponents();
         setupLiveSearch(); // 👈 Add this
@@ -153,18 +153,18 @@ public class QuizSelection extends javax.swing.JFrame {
     }//GEN-LAST:event_BackActionPerformed
 
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-        // Get the selected quiz from the table
-        int selectedRow = quizTable.getSelectedRow();
+        int selectedRow = quizTable.getSelectedRow(); // Get the selected row from the table
         if (selectedRow != -1) {
-            // Correctly retrieve the JSON object for the selected quiz
+            // Retrieve the quiz title from the selected row
             DefaultTableModel model = (DefaultTableModel) quizTable.getModel();
-            String selectedQuizTitle = (String) model.getValueAt(selectedRow, 0); // Get quiz title from table
+            String selectedQuizTitle = (String) model.getValueAt(selectedRow, 0);
+
             JSONObject chosenQuiz = null;
 
             // Find the corresponding JSON object from the loaded quizzes
             for (Object o : quizzesArray) {
                 JSONObject quiz = (JSONObject) o;
-                String title = (String) quiz.get("QuizTitle");  // Match the key from your JSON file
+                String title = (String) quiz.get("QuizTitle"); // Match the key from your JSON file
                 if (title.equals(selectedQuizTitle)) {
                     chosenQuiz = quiz;
                     break;
@@ -172,8 +172,9 @@ public class QuizSelection extends javax.swing.JFrame {
             }
 
             if (chosenQuiz != null) {
-                // Pass the entire selected quiz JSON object to the Quiz class
-                new Quiz(playerName, selectedQuiz, "Player", usname).setVisible(true); // Pass selectedQuiz directly
+                // Pass the quiz title and quiz data to the Quiz class
+                new Quiz(playerName, chosenQuiz.toJSONString(), selectedQuizTitle, usname).setVisible(true);
+                this.dispose(); // Close the current frame
             } else {
                 JOptionPane.showMessageDialog(this, "Quiz not found.");
             }
@@ -208,16 +209,26 @@ public class QuizSelection extends javax.swing.JFrame {
     private void loadQuizData() {
         try {
             JSONParser parser = new JSONParser();
-            JSONObject obj = (JSONObject) parser.parse(new FileReader(FILE_PATH)); // Use FILE_PATH constant
-            quizzesArray = (JSONArray) obj.get("Quizzes");
+            // Parse the JSON file
+            JSONObject obj = (JSONObject) parser.parse(new FileReader(FILE_PATH));
 
-            if (quizzesArray == null) {
+            // Ensure "Quizzes" is correctly parsed as a JSONArray
+            Object quizzes = obj.get("Quizzes");
+            if (quizzes instanceof JSONArray jSONArray) {
+                quizzesArray = jSONArray; // Cast safely to JSONArray
+            } else {
+                throw new ClassCastException("'Quizzes' is not a JSONArray in the JSON file.");
+            }
+
+            if (quizzesArray.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No quizzes found in the file.");
-                quizzesArray = new JSONArray();
             }
         } catch (IOException | ParseException e) {
-            JOptionPane.showMessageDialog(this, "Failed to load quiz data.");
-            quizzesArray = new JSONArray();
+            JOptionPane.showMessageDialog(this, "Failed to load quiz data: " + e.getMessage());
+            quizzesArray = new JSONArray(); // Default to an empty array on error
+        } catch (ClassCastException e) {
+            JOptionPane.showMessageDialog(this, "Error: 'Quizzes' is not a valid JSONArray. Please check the JSON file structure.");
+            quizzesArray = new JSONArray(); // Handle invalid structure
         }
     }
 
