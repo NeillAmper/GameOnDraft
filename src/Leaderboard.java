@@ -147,12 +147,16 @@ public class Leaderboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        if (adminName != null && !adminName.isEmpty()) {
-            new Administrator(adminName, usname).setVisible(true);
-        } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
-            new GameMaster(gameMasterName, usname).setVisible(true);
-        } else if (playerName != null && !playerName.isEmpty()) {
-            new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
+        try {
+            if (adminName != null && !adminName.isEmpty()) {
+                new Administrator(adminName, usname).setVisible(true);
+            } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+                new GameMaster(gameMasterName, usname).setVisible(true);
+            } else if (playerName != null && !playerName.isEmpty()) {
+                new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error navigating back: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         this.dispose();
     }//GEN-LAST:event_BackActionPerformed
@@ -198,39 +202,26 @@ public class Leaderboard extends javax.swing.JFrame {
             for (Object obj : standing) {
                 JSONObject entry = (JSONObject) obj;
                 String category = (String) entry.get("category");
-                if (selectedCategory.equals("All") || selectedCategory.equals(category)) {
+                if (selectedCategory.equals("All") || selectedCategory.equalsIgnoreCase(category)) {
                     filtered.add(entry);
                 }
             }
 
+            // Load all data into the leaderboard table
             loadLeaderBoard(filtered);
         } catch (IOException | ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Error loading leaderboard: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     public void loadLeaderBoard(List<JSONObject> dataList) {
         tableModel.setRowCount(0);
-        Map<String, JSONObject> bestScores = new HashMap<>();
 
-        for (JSONObject obj : dataList) {
-            String player = (String) obj.get("player");
-            Object quizzesDoneObj = obj.get("quizzesDone");
-
-            if (player == null || quizzesDoneObj == null) {
-                continue;
-            }
-
-            long quizzesDone = (long) quizzesDoneObj;
-            if (!bestScores.containsKey(player) || quizzesDone > (long) bestScores.get(player).get("quizzesDone")) {
-                bestScores.put(player, obj);
-            }
-        }
-
-        List<JSONObject> sorted = new ArrayList<>(bestScores.values());
-        sorted.sort((a, b) -> Long.compare((long) b.get("quizzesDone"), (long) a.get("quizzesDone")));
+        // Sort the data by quizzesDone in descending order
+        dataList.sort((a, b) -> Long.compare((long) b.get("quizzesDone"), (long) a.get("quizzesDone")));
 
         int rank = 1;
-        for (JSONObject obj : sorted) {
+        for (JSONObject obj : dataList) {
             // Determining rank titles
             String title = switch (rank) {
                 case 1 ->
@@ -244,19 +235,17 @@ public class Leaderboard extends javax.swing.JFrame {
             };
 
             Object quizzesDoneObj = obj.get("quizzesDone");
-
             long quizzesDone = (quizzesDoneObj instanceof Number) ? ((Number) quizzesDoneObj).longValue() : 0L;
-
-            long quizzesText = quizzesDone;
 
             Object player = obj.get("player");
             Object category = obj.get("category");
 
+            // Add all entries to the leaderboard table
             tableModel.addRow(new Object[]{
                 rank, // Rank column
                 title, // Title column
                 player != null ? player.toString() : "", // Player name
-                quizzesText, // Number of quizzes done
+                quizzesDone, // Number of quizzes done
                 category != null ? category.toString() : "" // Category column
             });
 

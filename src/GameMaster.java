@@ -8,7 +8,7 @@ public class GameMaster extends javax.swing.JFrame {
         this.gameMasterName = gameMasterName;
         this.usname = usname;
         initComponents();
-        WelcomeMessage.setText("Welcome, Game Master" + gameMasterName + "!"); // ✅ Fixed from usernameLabel
+        WelcomeMessage.setText("Welcome, Game Master " + gameMasterName + "!"); // ✅ Fixed from usernameLabel
     }
 
     @SuppressWarnings("unchecked")
@@ -158,14 +158,15 @@ public class GameMaster extends javax.swing.JFrame {
     }//GEN-LAST:event_EditQuizActionPerformed
 
     private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
-        String gameMasterName = usname;
         this.setVisible(false);
-        new Leaderboard(gameMasterName, usname, "GameMaster", "GameMaster").setVisible(true); // ✅ Fixed by adding "GameMaster"
+        // Navigate to the Leaderboard with the Game Master's details
+        new Leaderboard(null, gameMasterName, null, usname).setVisible(true);
     }//GEN-LAST:event_LeaderboardActionPerformed
 
     private void HistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistoryActionPerformed
         this.setVisible(false);
-        new History(gameMasterName, usname, "GameMaster", "GameMaster").setVisible(true);
+        // Corrected the argument order and roles passed to the History class
+        new History(null, gameMasterName, null, usname).setVisible(true);
     }//GEN-LAST:event_HistoryActionPerformed
 
     private void ProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileButtonActionPerformed

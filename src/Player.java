@@ -123,26 +123,27 @@ public class Player extends javax.swing.JFrame {
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
         SignIn b = new SignIn(usname, "test");
         b.setVisible(true);
-        setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_LogoutActionPerformed
 
     private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
-        this.setVisible(false);
-        new Leaderboard(playerName, "Player", "Player", "Player").setVisible(true); // ✅ Fixed by adding "GameMaster"
+        this.dispose();
+        // Navigate to the Leaderboard with the player's details
+        new Leaderboard(null, null, playerName, usname).setVisible(true);
     }//GEN-LAST:event_LeaderboardActionPerformed
 
     private void HistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistoryActionPerformed
-        this.setVisible(false);
-        new History(playerName, usname, "Player", "GameMaster").setVisible(true);
+        this.dispose();
+        new History(null, null, playerName, usname).setVisible(true);
     }//GEN-LAST:event_HistoryActionPerformed
 
     private void StartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartGameActionPerformed
-        this.setVisible(false);
+        this.dispose();
         new QuizSelection(playerName, "Player", "Player", usname).setVisible(true);
     }//GEN-LAST:event_StartGameActionPerformed
 
     private void ProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileActionPerformed
-        this.setVisible(false);
+        this.dispose();
         new Profile(playerName, "Player", "Player", "Player").setVisible(true);
     }//GEN-LAST:event_ProfileActionPerformed
 

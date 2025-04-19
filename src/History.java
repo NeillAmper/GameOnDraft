@@ -51,13 +51,13 @@ public class History extends javax.swing.JFrame {
 
         HistoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Player", "Category", "Score", "Result", "Timestamp"
+                "Player", "Title", "Category", "Score", "Result", "Timestamp"
             }
         ));
         HistoryTable.addAncestorListener(new javax.swing.event.AncestorListener() {
@@ -146,7 +146,9 @@ public class History extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        if (gameMasterName != null && !gameMasterName.isEmpty()) {
+        if (adminName != null && !adminName.isEmpty()) {
+            new Administrator(adminName, usname).setVisible(true);
+        } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
             new GameMaster(gameMasterName, usname).setVisible(true);
         } else if (playerName != null && !playerName.isEmpty()) {
             new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
@@ -191,47 +193,47 @@ public class History extends javax.swing.JFrame {
             JSONArray history = (JSONArray) root.get("History");
 
             if (history == null) {
-                JOptionPane.showMessageDialog(this, "Tries data is missing or empty.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             ArrayList<JSONObject> entries = new ArrayList<>();
+
             for (Object obj : history) {
                 JSONObject entry = (JSONObject) obj;
-                String category = (String) entry.get("category");
-                String player = (String) entry.get("player");
 
-                // Only add entries:
-                // 1. If Administrator, allow all
-                // 2. If Game Master, allow only game master's entries
-                // 3. If Player, allow only that player's entries
+                String player = (String) entry.getOrDefault("player", "");
+                String category = (String) entry.getOrDefault("category", "");
+                String creator = (String) entry.getOrDefault("creator", "");
+
                 boolean canView = false;
-                if ("Administrator".equals(playerName)) {
-                    canView = true;
+
+                // Determine which role is active
+                if (adminName != null && !adminName.isEmpty()) {
+                    canView = true; // Admins see everything
                 } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
-                    canView = gameMasterName.equals(player);
+                    canView = gameMasterName.equalsIgnoreCase(creator); // Game Masters see their quizzes only
                 } else if (playerName != null && !playerName.isEmpty()) {
-                    canView = playerName.equals(player);
+                    canView = playerName.equalsIgnoreCase(player); // Players see their own quiz attempts
                 }
 
-                if (canView && (selectedCategory.equals("All") || selectedCategory.equals(category))) {
+                // Category filter + visibility filter
+                if (canView && (selectedCategory.equals("All") || selectedCategory.equalsIgnoreCase(category))) {
                     entries.add(entry);
                 }
             }
 
-            Collections.sort(entries, (JSONObject o1, JSONObject o2) -> {
-                String scoreStr1 = (String) o1.get("score");
-                String scoreStr2 = (String) o2.get("score");
-
-                int score1 = Integer.parseInt(scoreStr1.split("/")[0].trim());
-                int score2 = Integer.parseInt(scoreStr2.split("/")[0].trim());
-
-                return Integer.compare(score2, score1);
+            // Sort by most recent timestamp
+            entries.sort((o1, o2) -> {
+                String time1 = (String) o1.getOrDefault("timestamp", "");
+                String time2 = (String) o2.getOrDefault("timestamp", "");
+                return time2.compareTo(time1);
             });
 
+            // Add entries to table
             for (JSONObject entry : entries) {
                 model.addRow(new Object[]{
                     entry.get("player"),
+                    entry.get("quizTitle"),
                     entry.get("category"),
                     entry.get("score"),
                     entry.get("result"),
@@ -239,7 +241,7 @@ public class History extends javax.swing.JFrame {
                 });
             }
 
-        } catch (IOException | ParseException | NumberFormatException e) {
+        } catch (IOException | ParseException e) {
             JOptionPane.showMessageDialog(this, "Failed to load history!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -287,11 +289,6 @@ public class History extends javax.swing.JFrame {
     }
 
     private void searchHistory(String keyword) {
-        String selectedCategory = (String) CategorySelection.getSelectedItem();
-        if (selectedCategory == null) {
-            selectedCategory = "All";
-        }
-
         DefaultTableModel model = (DefaultTableModel) HistoryTable.getModel();
         model.setRowCount(0);
 
@@ -300,20 +297,29 @@ public class History extends javax.swing.JFrame {
             JSONObject root = (JSONObject) parser.parse(reader);
             JSONArray history = (JSONArray) root.get("History");
 
+            if (history == null) {
+                return;
+            }
+
+            ArrayList<JSONObject> filtered = new ArrayList<>();
+
             for (Object obj : history) {
                 JSONObject entry = (JSONObject) obj;
-                String player = (String) entry.get("player");
-                String category = (String) entry.get("category");
-                String score = (String) entry.get("score");
-                String result = (String) entry.get("result");
-                String timestamp = (String) entry.get("timestamp");
 
-                // Check access permission
+                String player = (String) entry.getOrDefault("player", "");
+                String category = (String) entry.getOrDefault("category", "");
+                String title = (String) entry.getOrDefault("quizTitle", "");
+                String score = (String) entry.getOrDefault("score", "");
+                String result = (String) entry.getOrDefault("result", "");
+                String timestamp = (String) entry.getOrDefault("timestamp", "");
+                String creator = (String) entry.getOrDefault("creator", "");
+
                 boolean canView = false;
-                if ("Administrator".equals(playerName)) {
+
+                if (adminName != null && !adminName.isEmpty()) {
                     canView = true;
                 } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
-                    canView = gameMasterName.equals(player);
+                    canView = gameMasterName.equals(creator);
                 } else if (playerName != null && !playerName.isEmpty()) {
                     canView = playerName.equals(player);
                 }
@@ -322,28 +328,39 @@ public class History extends javax.swing.JFrame {
                     continue;
                 }
 
-                // Match keyword against any relevant field
-                boolean matchesKeyword = player.toLowerCase().contains(keyword.toLowerCase())
+                if (player.toLowerCase().contains(keyword.toLowerCase())
                         || category.toLowerCase().contains(keyword.toLowerCase())
+                        || title.toLowerCase().contains(keyword.toLowerCase())
                         || score.toLowerCase().contains(keyword.toLowerCase())
                         || result.toLowerCase().contains(keyword.toLowerCase())
-                        || timestamp.toLowerCase().contains(keyword.toLowerCase());
-
-                boolean matchesCategory = selectedCategory.equals("All") || selectedCategory.equals(category);
-
-                if (matchesKeyword && matchesCategory) {
-                    model.addRow(new Object[]{player, category, score, result, timestamp});
+                        || timestamp.toLowerCase().contains(keyword.toLowerCase())) {
+                    filtered.add(entry);
                 }
             }
+
+            filtered.sort((o1, o2) -> ((String) o2.getOrDefault("timestamp", ""))
+                    .compareTo((String) o1.getOrDefault("timestamp", "")));
+
+            for (JSONObject entry : filtered) {
+                model.addRow(new Object[]{
+                    entry.get("player"),
+                    entry.get("quizTitle"),
+                    entry.get("category"),
+                    entry.get("score"),
+                    entry.get("result"),
+                    entry.get("timestamp")
+                });
+            }
+
         } catch (IOException | ParseException e) {
-            JOptionPane.showMessageDialog(this, "Error searching history!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Search failed!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     // Main method for testing
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new History("Player", "GameMaster", "testsss", "testests").setVisible(true);
+            new History("AdminUser", "", "", "adminusername").setVisible(true);
         });
     }
 

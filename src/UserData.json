@@ -81,6 +81,18 @@
         {
             "category": "Math",
             "quizzesDone": 1,
+            "player": "James",
+            "timestamp": "2025-04-17, 03:00 PM"
+        },
+        {
+            "category": "Science",
+            "quizzesDone": 1,
+            "player": "James",
+            "timestamp": "2025-04-17, 01:00 PM"
+        },
+        {
+            "category": "Math",
+            "quizzesDone": 1,
             "player": "Justin",
             "timestamp": "2025-04-15, 10:45 AM"
         }
@@ -91,112 +103,171 @@
             "category": "Science",
             "player": "JohnDoe",
             "timestamp": "2025-04-15, 02:30 PM",
-            "result": "pass"
+            "result": "pass",
+            "creator": "Neill",
+            "quizTitle": "Science Quiz 1"
         },
         {
             "score": "7/10",
             "category": "Science",
             "player": "JaneSmith",
             "timestamp": "2025-04-15, 03:45 PM",
-            "result": "pass"
+            "result": "pass",
+            "creator": "Neill",
+            "quizTitle": "Science Quiz 1"
         },
         {
             "score": "5/10",
             "category": "Math",
             "player": "JaneSmith",
             "timestamp": "2025-04-15, 03:45 PM",
-            "result": "pass"
+            "result": "pass",
+            "creator": "test1",
+            "quizTitle": "Math Quiz 1"
         },
         {
             "score": "6/10",
             "category": "Math",
             "player": "JohnDoe",
             "timestamp": "2025-04-15, 03:45 PM",
-            "result": "pass"
+            "result": "pass",
+            "creator": "test1",
+            "quizTitle": "Math Quiz 1"
         },
         {
             "score": "3/10",
             "category": "History",
             "player": "Neill",
             "timestamp": "2025-04-15, 03:45 PM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "test3",
+            "quizTitle": "History Quiz 1"
         },
         {
             "score": "7/10",
             "category": "English",
             "player": "JohnDoe",
             "timestamp": "2025-04-16, 09:15 AM",
-            "result": "pass"
+            "result": "pass",
+            "creator": "test3",
+            "quizTitle": "English Quiz 1"
         },
         {
             "score": "3/10",
             "category": "Math",
             "player": "Enter player name",
             "timestamp": "2025-04-15, 10:00 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "test10",
+            "quizTitle": "Math Quiz 2"
         },
         {
             "score": "3/10",
             "category": "Science",
             "player": "ahsdiahd",
             "timestamp": "2025-04-15, 10:05 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "test1",
+            "quizTitle": "Science Quiz 2"
         },
         {
             "score": "3/10",
             "category": "Math",
             "player": "Hello",
             "timestamp": "2025-04-15, 10:10 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "test3",
+            "quizTitle": "Math Quiz 2"
         },
         {
             "score": "3/10",
             "category": "Science",
             "player": "Neil",
             "timestamp": "2025-04-15, 10:15 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "test1",
+            "quizTitle": "Science Quiz 2"
         },
         {
             "score": "3/10",
             "category": "English",
             "player": "jex",
             "timestamp": "2025-04-15, 10:20 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "test10",
+            "quizTitle": "English Quiz 2"
         },
         {
             "score": "3/10",
             "category": "Math",
             "player": "Eduardo II L. Millondaga",
             "timestamp": "2025-04-15, 10:25 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "test1",
+            "quizTitle": "Math Quiz 3"
         },
         {
             "score": "3/10",
             "category": "English",
             "player": "Enter player name",
             "timestamp": "2025-04-15, 10:30 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "Neill",
+            "quizTitle": "English Quiz 2"
         },
         {
             "score": "3/10",
             "category": "Math",
             "player": "Enter player name",
             "timestamp": "2025-04-15, 10:35 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "Neill",
+            "quizTitle": "Math Quiz 3"
         },
         {
             "score": "3/10",
             "category": "Math",
             "player": "Enter player name",
             "timestamp": "2025-04-15, 10:40 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "test3",
+            "quizTitle": "Math Quiz 3"
         },
         {
             "score": "3/10",
             "category": "Math",
             "player": "Justin",
             "timestamp": "2025-04-15, 10:45 AM",
-            "result": "fail"
+            "result": "fail",
+            "creator": "Neill",
+            "quizTitle": "Math Quiz 3"
+        },
+        {
+            "score": "9/10",
+            "category": "Science",
+            "player": "James",
+            "timestamp": "2025-04-17, 01:00 PM",
+            "result": "pass",
+            "creator": "test3",
+            "quizTitle": "Science Quiz 3"
+        },
+        {
+            "score": "2/10",
+            "category": "History",
+            "player": "James",
+            "timestamp": "2025-04-17, 02:00 PM",
+            "result": "fail",
+            "creator": "test1",
+            "quizTitle": "History Quiz 1"
+        },
+        {
+            "score": "10/10",
+            "category": "Math",
+            "player": "James",
+            "timestamp": "2025-04-17, 03:00 PM",
+            "result": "pass",
+            "creator": "Neill",
+            "quizTitle": "Math Quiz 1"
         }
     ],
     "Accounts": [

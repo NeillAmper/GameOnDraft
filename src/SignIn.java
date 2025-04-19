@@ -192,7 +192,7 @@ public class SignIn extends javax.swing.JFrame {
                     setVisible(false);
                 } else if ("Administrator".equalsIgnoreCase(foundType)) {
                     // ✅ REDIRECT TO ADMINISTRATOR FRAME
-                    Administrator a = new Administrator(usname);
+                    Administrator a = new Administrator(usname, "test");
                     a.setVisible(true);
                     setVisible(false);
                 }
