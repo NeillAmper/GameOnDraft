@@ -45,7 +45,7 @@ public final class QuizResult extends javax.swing.JFrame {
         MenuButton = new javax.swing.JButton();
         LeaderboardButton = new javax.swing.JButton();
         RetryButton = new javax.swing.JButton();
-        quizIdLabel = new javax.swing.JLabel();
+        quizDetailsLabel = new javax.swing.JLabel();
         categoryUI = new javax.swing.JLabel();
         scoreUI = new javax.swing.JLabel();
         timestampLabel = new javax.swing.JLabel();
@@ -81,7 +81,7 @@ public final class QuizResult extends javax.swing.JFrame {
             }
         });
 
-        quizIdLabel.setText("Quiz Details");
+        quizDetailsLabel.setText("Quiz Details");
 
         timestampLabel.setText("Timestamp");
 
@@ -104,7 +104,7 @@ public final class QuizResult extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addComponent(quizIdLabel)
+                .addComponent(quizDetailsLabel)
                 .addGap(83, 83, 83)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -142,7 +142,7 @@ public final class QuizResult extends javax.swing.JFrame {
                 .addComponent(categoryUI, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(3, 3, 3)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(quizIdLabel)
+                    .addComponent(quizDetailsLabel)
                     .addComponent(timestampLabel)
                     .addComponent(scoreLabel))
                 .addGap(30, 30, 30)
@@ -232,7 +232,7 @@ public final class QuizResult extends javax.swing.JFrame {
 
     private void displayResults() {
         // Set dynamic labels
-        quizIdLabel.setText("Title: " + quizTitle + " | Creator: " + creator + " | Category: " + category);
+        quizDetailsLabel.setText("Title: " + quizTitle + " | Creator: " + creator + " | Category: " + category);
         scoreUI.setText("Score: " + finalScore + " / " + maxScore);
         timestampLabel.setText("Timestamp: " + (timestamp != null ? timestamp : "N/A"));
 
@@ -261,7 +261,7 @@ public final class QuizResult extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel quizIdLabel;
+    private javax.swing.JLabel quizDetailsLabel;
     private javax.swing.JTable resultTable;
     private javax.swing.JLabel scoreLabel;
     private javax.swing.JLabel scoreUI;

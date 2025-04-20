@@ -7,8 +7,7 @@ import javax.swing.table.DefaultTableModel;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,10 +16,10 @@ import org.json.simple.parser.ParseException;
 public class DeleteQuiz extends javax.swing.JFrame {
 
     private static final String FILE_PATH = "src/QuizData.json";
-    private JSONObject lastDeletedQuiz = null;
-    private int lastDeletedRowIndex = -1;
+    private final Stack<DeletedQuiz> deletedQuizzesStack = new Stack<>(); // Stack to store deletion history
     private final String gameMasterName;
     private final String usname;
+    private boolean isUndoDialogShown = false; // Flag to prevent duplicate dialogs
 
     public DeleteQuiz(String gameMasterName, String usname) {
         this.gameMasterName = gameMasterName;
@@ -29,7 +28,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
         initializeListeners();
         populateCategorySelection();
 
-        // 🛠️ Ensure a category is selected before loading quizzes
+        // Ensure a category is selected before loading quizzes
         if (CategorySelection.getSelectedItem() != null) {
             loadCategoryQuizzes();
         }
@@ -48,7 +47,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         QuizTable = new javax.swing.JTable();
         DeleteButton = new javax.swing.JButton();
-        UndoButton = new javax.swing.JButton();
+        undoButton = new javax.swing.JButton();
         searchField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -94,10 +93,10 @@ public class DeleteQuiz extends javax.swing.JFrame {
             }
         });
 
-        UndoButton.setText("Undo");
-        UndoButton.addActionListener(new java.awt.event.ActionListener() {
+        undoButton.setText("Undo");
+        undoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                UndoButtonActionPerformed(evt);
+                undoButtonActionPerformed(evt);
             }
         });
 
@@ -107,7 +106,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(58, 58, 58)
-                .addComponent(UndoButton)
+                .addComponent(undoButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(DeleteButton)
                 .addGap(57, 57, 57))
@@ -145,7 +144,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(DeleteButton)
-                    .addComponent(UndoButton))
+                    .addComponent(undoButton))
                 .addGap(48, 48, 48))
         );
 
@@ -177,7 +176,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
         int row = QuizTable.getSelectedRow();
         if (row == -1) {
-            JOptionPane.showMessageDialog(DeleteQuiz.this, "Please select a quiz to delete.");
+            // Silently return if no quiz is selected
             return;
         }
 
@@ -185,9 +184,8 @@ public class DeleteQuiz extends javax.swing.JFrame {
         String creator = (String) QuizTable.getValueAt(row, 1);
         String category = (String) QuizTable.getValueAt(row, 2);
 
-        // ONLY ALLOW DELETION IF THE LOGGED-IN USER IS THE CREATOR
         if (!creator.equals(gameMasterName)) {
-            JOptionPane.showMessageDialog(DeleteQuiz.this, "You can only delete quizzes you created.", "Access Denied", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "You can only delete quizzes you created.", "Access Denied", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -201,9 +199,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
                 if (quizTitle.equals(quiz.get("QuizTitle"))
                         && creator.equals(quiz.get("Creator"))
                         && category.equals(quiz.get("Category"))) {
-
-                    lastDeletedQuiz = quiz;
-                    lastDeletedRowIndex = row;
+                    deletedQuizzesStack.push(new DeletedQuiz(quiz, row));
                     quizzes.remove(i);
                     break;
                 }
@@ -214,45 +210,54 @@ public class DeleteQuiz extends javax.swing.JFrame {
             }
 
             ((DefaultTableModel) QuizTable.getModel()).removeRow(row);
-            JOptionPane.showMessageDialog(DeleteQuiz.this, "Quiz deleted successfully!");
+            JOptionPane.showMessageDialog(this, "Quiz deleted successfully!");
 
         } catch (IOException | ParseException e) {
-            JOptionPane.showMessageDialog(DeleteQuiz.this, "Error deleting quiz.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error deleting quiz.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_DeleteButtonActionPerformed
 
-    private void UndoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UndoButtonActionPerformed
-        if (lastDeletedQuiz == null || lastDeletedRowIndex < 0) {
-            JOptionPane.showMessageDialog(DeleteQuiz.this, "Nothing to undo.");
-            return;
+    private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoButtonActionPerformed
+        // Check if the stack is empty
+        if (deletedQuizzesStack.isEmpty()) {
+            if (!isUndoDialogShown) {
+                isUndoDialogShown = true; // Set flag to true
+                JOptionPane.showMessageDialog(this, "Nothing to undo.", "Undo Error", JOptionPane.WARNING_MESSAGE);
+            }
+            return; // Exit early
         }
+
+        // Reset the flag since there is something to undo
+        isUndoDialogShown = false;
+
+        // Proceed with undo logic if the stack is not empty
+        DeletedQuiz lastDeleted = deletedQuizzesStack.pop();
 
         try (FileReader reader = new FileReader(FILE_PATH)) {
             JSONParser parser = new JSONParser();
             JSONObject root = (JSONObject) parser.parse(reader);
             JSONArray quizzes = (JSONArray) root.get("Quizzes");
 
-            quizzes.add(lastDeletedQuiz);
+            // Add the last deleted quiz back to the JSON file
+            quizzes.add(lastDeleted.getQuiz());
 
             try (FileWriter writer = new FileWriter(FILE_PATH)) {
                 writer.write(root.toJSONString());
             }
 
-            ((DefaultTableModel) QuizTable.getModel()).insertRow(lastDeletedRowIndex, new Object[]{
-                lastDeletedQuiz.get("QuizTitle"),
-                lastDeletedQuiz.get("Creator"),
-                lastDeletedQuiz.get("Category")
+            // Reinsert the row in the table
+            ((DefaultTableModel) QuizTable.getModel()).insertRow(lastDeleted.getRowIndex(), new Object[]{
+                lastDeleted.getQuiz().get("QuizTitle"),
+                lastDeleted.getQuiz().get("Creator"),
+                lastDeleted.getQuiz().get("Category")
             });
 
-            lastDeletedQuiz = null;
-            lastDeletedRowIndex = -1;
-
-            JOptionPane.showMessageDialog(DeleteQuiz.this, "Undo successful!");
+            JOptionPane.showMessageDialog(this, "Undo successful!");
 
         } catch (IOException | ParseException e) {
-            JOptionPane.showMessageDialog(DeleteQuiz.this, "Failed to undo delete.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to undo delete.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_UndoButtonActionPerformed
+    }//GEN-LAST:event_undoButtonActionPerformed
 
     private void populateCategorySelection() {
         try (FileReader reader = new FileReader(FILE_PATH)) {
@@ -285,7 +290,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
         String selectedCategory = (String) CategorySelection.getSelectedItem();
 
         if (selectedCategory == null) {
-            return; // prevent null pointer crash
+            return;
         }
 
         String searchText = searchField.getText().trim().toLowerCase();
@@ -338,26 +343,42 @@ public class DeleteQuiz extends javax.swing.JFrame {
             }
         });
     }
+
     // ✅ ADDED METHOD: Filters quiz table based on search query
-
     private void initializeListeners() {
-        BackButton.addActionListener((ActionEvent evt) -> {
-            BackButtonActionPerformed(evt);
-        });
+        // Listener for Back button to navigate back to the main screen
+        BackButton.addActionListener(this::BackButtonActionPerformed);
 
-        CategorySelection.addActionListener((ActionEvent evt) -> {
-            CategorySelectionActionPerformed(evt);
-        });
+        // Listener for category selection changes to reload quizzes
+        CategorySelection.addActionListener(this::CategorySelectionActionPerformed);
 
-        DeleteButton.addActionListener((ActionEvent evt) -> {
-            DeleteButtonActionPerformed(evt);
-        });
+        // Listener for delete button to delete a selected quiz
+        DeleteButton.addActionListener(this::DeleteButtonActionPerformed);
 
-        UndoButton.addActionListener((ActionEvent evt) -> {
-            UndoButtonActionPerformed(evt);
-        });
+        // Listener for undo button to undo the last deletion
+        undoButton.addActionListener(this::undoButtonActionPerformed);
 
-        addSearchListener(); // You already added this, so just keep it here
+        // Add a search listener for the searchField to filter quizzes dynamically
+        addSearchListener();
+    }
+
+    private static class DeletedQuiz {
+
+        private final JSONObject quiz;
+        private final int rowIndex;
+
+        public DeletedQuiz(JSONObject quiz, int rowIndex) {
+            this.quiz = quiz;
+            this.rowIndex = rowIndex;
+        }
+
+        public JSONObject getQuiz() {
+            return quiz;
+        }
+
+        public int getRowIndex() {
+            return rowIndex;
+        }
     }
 
     public static void main(String args[]) {
@@ -371,10 +392,10 @@ public class DeleteQuiz extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> CategorySelection;
     private javax.swing.JButton DeleteButton;
     private javax.swing.JTable QuizTable;
-    private javax.swing.JButton UndoButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField searchField;
+    private javax.swing.JButton undoButton;
     // End of variables declaration//GEN-END:variables
 }

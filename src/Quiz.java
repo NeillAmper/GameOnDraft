@@ -50,7 +50,7 @@ public class Quiz extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         questionLabel = new javax.swing.JLabel();
-        quizIdLabel = new javax.swing.JLabel();
+        quizDetailsLabel = new javax.swing.JLabel();
         option1 = new javax.swing.JToggleButton();
         option2 = new javax.swing.JToggleButton();
         option3 = new javax.swing.JToggleButton();
@@ -64,7 +64,7 @@ public class Quiz extends javax.swing.JFrame {
 
         questionLabel.setText("Question");
 
-        quizIdLabel.setText("Quiz Details");
+        quizDetailsLabel.setText("Quiz Details");
 
         buttonGroup1.add(option1);
         option1.setText("Option 1");
@@ -139,7 +139,7 @@ public class Quiz extends javax.swing.JFrame {
                 .addGap(109, 109, 109)
                 .addComponent(timerLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(quizIdLabel)
+                .addComponent(quizDetailsLabel)
                 .addGap(112, 112, 112))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -171,7 +171,7 @@ public class Quiz extends javax.swing.JFrame {
                 .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(timerLabel)
-                    .addComponent(quizIdLabel))
+                    .addComponent(quizDetailsLabel))
                 .addGap(59, 59, 59)
                 .addComponent(questionLabel)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -348,7 +348,7 @@ public class Quiz extends javax.swing.JFrame {
                     String category = (String) quizEntry.get("Category");
 
                     // Set the information in the quizIdLabel
-                    quizIdLabel.setText("Title: " + quizTitle + " | Creator: " + creator + " | Category: " + category);
+                    quizDetailsLabel.setText("Title: " + quizTitle + " | Creator: " + creator + " | Category: " + category);
 
                     // Extract the Questions array
                     JSONArray questions = (JSONArray) quizEntry.get("Questions");
@@ -634,7 +634,7 @@ public class Quiz extends javax.swing.JFrame {
     private javax.swing.JToggleButton option3;
     private javax.swing.JToggleButton option4;
     private javax.swing.JLabel questionLabel;
-    private javax.swing.JLabel quizIdLabel;
+    private javax.swing.JLabel quizDetailsLabel;
     private javax.swing.JLabel timerLabel;
     // End of variables declaration//GEN-END:variables
 }
