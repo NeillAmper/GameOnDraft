@@ -1,4 +1,5 @@
 
+import java.awt.HeadlessException;
 import javax.swing.table.DefaultTableModel;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -148,17 +149,29 @@ public class Leaderboard extends javax.swing.JFrame {
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
         try {
+            // Check if adminName is not null or empty
             if (adminName != null && !adminName.isEmpty()) {
+                // Navigate back to Administrator with adminName and usname
                 new Administrator(adminName, usname).setVisible(true);
-            } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+            } // Check if gameMasterName is not null or empty
+            else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+                // Navigate back to GameMaster with gameMasterName and usname
                 new GameMaster(gameMasterName, usname).setVisible(true);
-            } else if (playerName != null && !playerName.isEmpty()) {
+            } // Check if playerName is not null or empty
+            else if (playerName != null && !playerName.isEmpty()) {
+                // Navigate back to Player with appropriate parameters
                 new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
+            } else {
+                // Display an error message if no valid user type is found
+                JOptionPane.showMessageDialog(this, "No valid user type found to navigate back.", "Error", JOptionPane.WARNING_MESSAGE);
             }
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
+            // Handle unexpected exceptions and provide feedback to the user
             JOptionPane.showMessageDialog(this, "Error navigating back: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // Dispose the current frame to return to the previous one
+            this.dispose();
         }
-        this.dispose();
     }//GEN-LAST:event_BackActionPerformed
 
     private void CategorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategorySelectionActionPerformed

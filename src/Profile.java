@@ -10,13 +10,15 @@ public class Profile extends javax.swing.JFrame {
 
     private final String gameMasterName;
     private final String playerName;
+    private final String adminName;
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
     private final String usname; // Mark as final to ensure consistency
 
-    public Profile(String gameMasterName, String playerName, String usname) {
+    public Profile(String adminName, String gameMasterName, String playerName, String usname) {
+        this.adminName = adminName;
         this.gameMasterName = gameMasterName;
         this.playerName = playerName;
-        this.usname = usname; // Use the usname passed directly
+        this.usname = usname;
 
         fetchUserType(); // Fetch type if needed
         initComponents();
@@ -169,18 +171,29 @@ public class Profile extends javax.swing.JFrame {
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
         try {
-            if (gameMasterName != null && !gameMasterName.isEmpty()) {
+            // Check if adminName is not null or empty
+            if (adminName != null && !adminName.isEmpty()) {
+                // Navigate back to Administrator with adminName and usname
+                new Administrator(adminName, usname).setVisible(true);
+            } // Check if gameMasterName is not null or empty
+            else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+                // Navigate back to GameMaster with gameMasterName and usname
                 new GameMaster(gameMasterName, usname).setVisible(true);
-            } else if (playerName != null && !playerName.isEmpty()) {
+            } // Check if playerName is not null or empty
+            else if (playerName != null && !playerName.isEmpty()) {
+                // Navigate back to Player with appropriate parameters
                 new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(this, "Unable to determine the user role. Returning to the login page.");
-                new SignIn(usname, "test").setVisible(true);
+                // Display an error message if no valid user type is found
+                JOptionPane.showMessageDialog(this, "No valid user type found to navigate back.", "Error", JOptionPane.WARNING_MESSAGE);
             }
         } catch (HeadlessException e) {
+            // Handle unexpected exceptions and provide feedback to the user
             JOptionPane.showMessageDialog(this, "Error navigating back: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // Dispose the current frame to return to the previous one
+            this.dispose();
         }
-        this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
 
     private void ConfirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmButtonActionPerformed
@@ -367,7 +380,7 @@ public class Profile extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Profile("Player", "GameMaster", "Admin").setVisible(true);
+            new Profile("Player", "GameMaster", "Admin", "User").setVisible(true);
         });
     }
 

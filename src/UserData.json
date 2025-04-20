@@ -148,46 +148,55 @@
         }],
     "Accounts": [{
             "password": "password1",
+            "disabledFeature": "None",
             "type": "Game Master",
             "username": "user1",
             "status": "Disabled"
         }, {
             "password": "password2",
+            "disabledFeature": "None",
             "type": "Player",
             "username": "user2",
             "status": "Disabled"
         }, {
             "password": "test1",
+            "disabledFeature": "History",
             "type": "Game Master",
             "username": "test1",
             "status": "Accessible"
         }, {
             "password": "test2",
+            "disabledFeature": "None",
             "type": "Player",
             "username": "test2",
             "status": "Accessible"
         }, {
             "password": "test3",
+            "disabledFeature": "None",
             "type": "Game Master",
             "username": "test3",
             "status": "Accessible"
         }, {
             "password": "test10",
+            "disabledFeature": "None",
             "type": "Game Master",
             "username": "test10",
             "status": "Accessible"
         }, {
             "password": "neill",
+            "disabledFeature": "None",
             "type": "Game Master",
             "username": "Neill",
             "status": "Accessible"
         }, {
             "password": "admin",
+            "disabledFeature": "None",
             "type": "Administrator",
             "username": "admin",
             "status": "Accessible"
         }, {
             "password": "james",
+            "disabledFeature": "None",
             "type": "Player",
             "username": "James",
             "status": "Accessible"

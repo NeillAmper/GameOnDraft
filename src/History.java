@@ -1,10 +1,10 @@
 
+import java.awt.HeadlessException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import org.json.simple.JSONArray;
@@ -146,14 +146,30 @@ public class History extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        if (adminName != null && !adminName.isEmpty()) {
-            new Administrator(adminName, usname).setVisible(true);
-        } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
-            new GameMaster(gameMasterName, usname).setVisible(true);
-        } else if (playerName != null && !playerName.isEmpty()) {
-            new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
+        try {
+            // Check if adminName is not null or empty
+            if (adminName != null && !adminName.isEmpty()) {
+                // Navigate back to Administrator with adminName and usname
+                new Administrator(adminName, usname).setVisible(true);
+            } // Check if gameMasterName is not null or empty
+            else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+                // Navigate back to GameMaster with gameMasterName and usname
+                new GameMaster(gameMasterName, usname).setVisible(true);
+            } // Check if playerName is not null or empty
+            else if (playerName != null && !playerName.isEmpty()) {
+                // Navigate back to Player with appropriate parameters
+                new Player(playerName, "Player", 1, 2, "Player", usname).setVisible(true);
+            } else {
+                // Display an error message if no valid user type is found
+                JOptionPane.showMessageDialog(this, "No valid user type found to navigate back.", "Error", JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (HeadlessException e) {
+            // Handle unexpected exceptions and provide feedback to the user
+            JOptionPane.showMessageDialog(this, "Error navigating back: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // Dispose the current frame to return to the previous one
+            this.dispose();
         }
-        this.dispose();
     }//GEN-LAST:event_BackButtonActionPerformed
 
     private void HistoryTableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_HistoryTableAncestorAdded

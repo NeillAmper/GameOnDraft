@@ -135,18 +135,16 @@ public class SignUp extends javax.swing.JFrame {
         String confirmPassword = ConfirmPassword.getText();
         String userCategory = TypeComboBox.getSelectedItem().toString();
         String username = Username.getText();
-        //These lines of code retrieve user input from text fields and remove any spaces, declaring and initializing to store the input.
 
+        // Validate inputs
         if (username.equals("Username")) {
             JOptionPane.showMessageDialog(null, "Please enter a Username", "Input Information", JOptionPane.WARNING_MESSAGE);
             return;
-
         }
 
         if (password.equals("Password")) {
             JOptionPane.showMessageDialog(null, "Please enter a Password", "Input Information", JOptionPane.WARNING_MESSAGE);
             return;
-
         }
 
         if (userCategory.equals("Select User Type")) {
@@ -157,44 +155,47 @@ public class SignUp extends javax.swing.JFrame {
         if (!password.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(null, "Passwords do not match! Please enter matching passwords.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-            // These lines of code prompts and checks if the password field does not match, asking the user to enter exact same password.
         }
 
+        // Confirm user addition
         int confirm = JOptionPane.showConfirmDialog(null,
                 "Are you sure you want to add this user?",
                 "Confirm User Addition",
                 JOptionPane.YES_NO_OPTION);
-        // These lines of code shows a confirmation prompt, having two options such as yes and no.
 
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                filecheck();
-             ////This lines of code handles errors and prompts an error message.
+                filecheck(); // Ensure the file and structure are ready
             } catch (IOException | ParseException ex) {
                 Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
             }
+
+            // Gather user input
             addname = Username.getText();
             addpass = Password.getText();
             addtype = TypeComboBox.getSelectedItem().toString();
 
+            // Create the new user object with the required structure
             JSONObject newUser = new JSONObject();
             newUser.put("username", addname);
             newUser.put("password", addpass);
             newUser.put("type", addtype);
-            newUser.put("status", "Accessible");
+            newUser.put("status", "Disabled"); // Default status to "Disabled"
+            newUser.put("disabledFeature", "None"); // Ensure "disabledFeature" is set to "None"
+
+            // Add the new user to the user list
             userlist.add(newUser);
             record.put("Accounts", userlist);
 
             try {
-                save();
+                save(); // Save the updated JSON structure to the file
             } catch (IOException ex) {
                 Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
             }
+
             JOptionPane.showMessageDialog(null, "Successfully Added into the Database...");
-            //This prompts if the user pressed Yes. Therefore adding it to the json file.
         } else {
             JOptionPane.showMessageDialog(null, "User addition canceled.", "Canceled", JOptionPane.INFORMATION_MESSAGE);
-            //This if no.
         }
     }//GEN-LAST:event_SignUpButtonActionPerformed
 

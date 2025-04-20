@@ -63,7 +63,7 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="categorySelection" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="SelectedItem" min="-2" max="-2" attributes="0"/>
+                                      <Component id="numberOfQuestionsLabel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="questionAmount" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -80,12 +80,13 @@
                                       <Component id="nextQuestionButton" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
                                       <Component id="saveQuizButton" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="answer2" min="-2" max="-2" attributes="0"/>
-                                          <Component id="answer3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="answer1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="option2Button" min="-2" max="-2" attributes="0"/>
+                                          <Component id="option3Button" min="-2" max="-2" attributes="0"/>
+                                          <Component id="option1Button" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -96,7 +97,7 @@
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="answer4" min="-2" max="-2" attributes="0"/>
+                                      <Component id="option4Button" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="option4Field" max="32767" attributes="0"/>
                                   </Group>
@@ -133,7 +134,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="categorySelection" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="SelectedItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="numberOfQuestionsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="questionAmount" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="inputButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -144,23 +145,23 @@
                   </Group>
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="answer1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="option1Button" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="option1Field" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="answer2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="option2Button" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="option2Field" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="answer3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="option3Button" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="option3Field" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="option4Field" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="answer4" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="option4Button" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -214,7 +215,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="questionFieldActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="answer1">
+        <Component class="javax.swing.JRadioButton" name="option1Button">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup"/>
@@ -222,7 +223,7 @@
             <Property name="text" type="java.lang.String" value="Option #1:"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="answer1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="option1ButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="option1Field">
@@ -230,7 +231,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="option1FieldActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="answer2">
+        <Component class="javax.swing.JRadioButton" name="option2Button">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup"/>
@@ -238,10 +239,10 @@
             <Property name="text" type="java.lang.String" value="Option #2:"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="answer2ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="option2ButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="answer3">
+        <Component class="javax.swing.JRadioButton" name="option3Button">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup"/>
@@ -249,10 +250,10 @@
             <Property name="text" type="java.lang.String" value="Option #3:"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="answer3ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="option3ButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="answer4">
+        <Component class="javax.swing.JRadioButton" name="option4Button">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup"/>
@@ -260,7 +261,7 @@
             <Property name="text" type="java.lang.String" value="Choice #4:"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="answer4ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="option4ButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="option2Field">
@@ -288,7 +289,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BackActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="SelectedItem">
+        <Component class="javax.swing.JLabel" name="numberOfQuestionsLabel">
           <Properties>
             <Property name="text" type="java.lang.String" value="# of Questions"/>
           </Properties>

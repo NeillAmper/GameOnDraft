@@ -1,8 +1,6 @@
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -10,23 +8,27 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import java.io.FileReader;
+import java.io.IOException;
 
-public class Administrator extends javax.swing.JFrame {
+public final class Administrator extends javax.swing.JFrame {
 
     private static String newUser, newPassword, newType, newStatus, UserSelection, UserSelection1;
     private final JSONArray changedAccount = new JSONArray();
-    private final String usname;
     private final String adminName;
+    private final String usname;
+    private String Disabled_Feature; // Instance field for the disabled feature
 
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
 
     public Administrator(String adminName, String usname) {
+        initComponents();
         this.adminName = adminName;
         this.usname = usname;
-        initComponents();
 
         populateUserSelection();
         populateUserSelection_disable_account_feature();
+        Current_Disabled_Feature(); // Dynamically enable/disable buttons based on Disabled_Feature
 
     }
 
@@ -41,10 +43,18 @@ public class Administrator extends javax.swing.JFrame {
 
         admin = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        edit_accountbutton = new javax.swing.JButton();
-        delete_account_featurebutton = new javax.swing.JButton();
+        editAccountButton = new javax.swing.JButton();
+        disableFeatureButton = new javax.swing.JButton();
         menubutton = new javax.swing.JButton();
+        logoutButton = new javax.swing.JButton();
         Panes = new javax.swing.JTabbedPane();
+        menu_pane = new javax.swing.JPanel();
+        leaderboardButton = new javax.swing.JButton();
+        historyButton = new javax.swing.JButton();
+        createQuizButton = new javax.swing.JButton();
+        deleteQuizButton = new javax.swing.JButton();
+        editQuizButton = new javax.swing.JButton();
+        profileButton = new javax.swing.JButton();
         edit_account_pane = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         savebutton = new javax.swing.JButton();
@@ -72,12 +82,6 @@ public class Administrator extends javax.swing.JFrame {
         featureSelection = new javax.swing.JComboBox<>();
         selectfeature = new javax.swing.JButton();
         selectedUser2 = new javax.swing.JLabel();
-        menu_pane = new javax.swing.JPanel();
-        leaderboardButton = new javax.swing.JButton();
-        historyButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -86,17 +90,17 @@ public class Administrator extends javax.swing.JFrame {
 
         jLabel1.setText("Welcome Administrator");
 
-        edit_accountbutton.setText("Edit a Account");
-        edit_accountbutton.addActionListener(new java.awt.event.ActionListener() {
+        editAccountButton.setText("Edit a Account");
+        editAccountButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                edit_accountbuttonActionPerformed(evt);
+                editAccountButtonActionPerformed(evt);
             }
         });
 
-        delete_account_featurebutton.setText("Disable a Account's Feature");
-        delete_account_featurebutton.addActionListener(new java.awt.event.ActionListener() {
+        disableFeatureButton.setText("Disable a Account's Feature");
+        disableFeatureButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delete_account_featurebuttonActionPerformed(evt);
+                disableFeatureButtonActionPerformed(evt);
             }
         });
 
@@ -104,6 +108,13 @@ public class Administrator extends javax.swing.JFrame {
         menubutton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menubuttonActionPerformed(evt);
+            }
+        });
+
+        logoutButton.setText("Logout");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
             }
         });
 
@@ -115,16 +126,19 @@ public class Administrator extends javax.swing.JFrame {
                 .addGroup(adminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(adminLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(delete_account_featurebutton))
+                        .addComponent(disableFeatureButton))
                     .addGroup(adminLayout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(jLabel1))
                     .addGroup(adminLayout.createSequentialGroup()
-                        .addGap(57, 57, 57)
+                        .addGap(51, 51, 51)
+                        .addComponent(logoutButton))
+                    .addGroup(adminLayout.createSequentialGroup()
+                        .addGap(53, 53, 53)
                         .addComponent(menubutton))
                     .addGroup(adminLayout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(edit_accountbutton)))
+                        .addGap(36, 36, 36)
+                        .addComponent(editAccountButton)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         adminLayout.setVerticalGroup(
@@ -132,18 +146,95 @@ public class Administrator extends javax.swing.JFrame {
             .addGroup(adminLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
-                .addGap(26, 26, 26)
-                .addComponent(edit_accountbutton)
-                .addGap(28, 28, 28)
-                .addComponent(delete_account_featurebutton)
-                .addGap(30, 30, 30)
+                .addGap(64, 64, 64)
                 .addComponent(menubutton)
-                .addContainerGap(273, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(editAccountButton)
+                .addGap(32, 32, 32)
+                .addComponent(disableFeatureButton)
+                .addGap(43, 43, 43)
+                .addComponent(logoutButton)
+                .addContainerGap(177, Short.MAX_VALUE))
         );
 
         getContentPane().add(admin, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 466));
 
+        leaderboardButton.setText("Leaderboard");
+        leaderboardButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                leaderboardButtonActionPerformed(evt);
+            }
+        });
+
+        historyButton.setText("History");
+        historyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                historyButtonActionPerformed(evt);
+            }
+        });
+
+        createQuizButton.setText("Create Quiz");
+        createQuizButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createQuizButtonActionPerformed(evt);
+            }
+        });
+
+        deleteQuizButton.setText("Delete Quiz");
+        deleteQuizButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteQuizButtonActionPerformed(evt);
+            }
+        });
+
+        editQuizButton.setText("Edit Quiz");
+        editQuizButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editQuizButtonActionPerformed(evt);
+            }
+        });
+
+        profileButton.setText("Profile");
+
+        javax.swing.GroupLayout menu_paneLayout = new javax.swing.GroupLayout(menu_pane);
+        menu_pane.setLayout(menu_paneLayout);
+        menu_paneLayout.setHorizontalGroup(
+            menu_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menu_paneLayout.createSequentialGroup()
+                .addGap(143, 143, 143)
+                .addGroup(menu_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(leaderboardButton, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                    .addComponent(historyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(createQuizButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deleteQuizButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editQuizButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(profileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(163, Short.MAX_VALUE))
+        );
+        menu_paneLayout.setVerticalGroup(
+            menu_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(menu_paneLayout.createSequentialGroup()
+                .addGap(67, 67, 67)
+                .addComponent(leaderboardButton)
+                .addGap(18, 18, 18)
+                .addComponent(historyButton)
+                .addGap(18, 18, 18)
+                .addComponent(createQuizButton)
+                .addGap(18, 18, 18)
+                .addComponent(deleteQuizButton)
+                .addGap(18, 18, 18)
+                .addComponent(editQuizButton)
+                .addGap(18, 18, 18)
+                .addComponent(profileButton)
+                .addContainerGap(184, Short.MAX_VALUE))
+        );
+
+        Panes.addTab("tab3", menu_pane);
+
+        edit_account_pane.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         jLabel3.setText("Edit an Account Tab");
+        edit_account_pane.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 40, -1, -1));
 
         savebutton.setText("Save Changes");
         savebutton.setEnabled(false);
@@ -152,11 +243,14 @@ public class Administrator extends javax.swing.JFrame {
                 savebuttonActionPerformed(evt);
             }
         });
+        edit_account_pane.add(savebutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 390, -1, -1));
 
         jLabel4.setText("List of Account");
+        edit_account_pane.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(74, 102, -1, -1));
 
         typeSelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Game Master", "Player" }));
         typeSelection.setEnabled(false);
+        edit_account_pane.add(typeSelection, new org.netbeans.lib.awtextra.AbsoluteConstraints(293, 355, -1, -1));
 
         selectAccount.setText("Select");
         selectAccount.addActionListener(new java.awt.event.ActionListener() {
@@ -164,10 +258,13 @@ public class Administrator extends javax.swing.JFrame {
                 selectAccountActionPerformed(evt);
             }
         });
+        edit_account_pane.add(selectAccount, new org.netbeans.lib.awtextra.AbsoluteConstraints(266, 125, -1, -1));
 
         jLabel7.setText("Account's Type");
+        edit_account_pane.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(307, 332, -1, -1));
 
         jLabel5.setText("******");
+        edit_account_pane.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(74, 204, -1, -1));
 
         backbutton.setText("Reset");
         backbutton.addActionListener(new java.awt.event.ActionListener() {
@@ -175,106 +272,31 @@ public class Administrator extends javax.swing.JFrame {
                 backbuttonActionPerformed(evt);
             }
         });
+        edit_account_pane.add(backbutton, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 125, -1, -1));
 
         jLabel6.setText("New Username :");
+        edit_account_pane.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(74, 230, -1, -1));
 
         userUI.setEnabled(false);
+        edit_account_pane.add(userUI, new org.netbeans.lib.awtextra.AbsoluteConstraints(177, 227, 245, -1));
 
         jLabel8.setText("******");
+        edit_account_pane.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(74, 268, -1, -1));
 
         jLabel9.setText("New Password :");
+        edit_account_pane.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(74, 294, -1, -1));
 
         passwordUI.setEnabled(false);
+        edit_account_pane.add(passwordUI, new org.netbeans.lib.awtextra.AbsoluteConstraints(182, 291, 245, -1));
 
         statusSelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Accessible", "Disabled" }));
         statusSelection.setEnabled(false);
+        edit_account_pane.add(statusSelection, new org.netbeans.lib.awtextra.AbsoluteConstraints(78, 355, -1, -1));
 
         jLabel10.setText("Status of Account");
+        edit_account_pane.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(74, 332, -1, -1));
 
-        javax.swing.GroupLayout edit_account_paneLayout = new javax.swing.GroupLayout(edit_account_pane);
-        edit_account_pane.setLayout(edit_account_paneLayout);
-        edit_account_paneLayout.setHorizontalGroup(
-            edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, edit_account_paneLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(savebutton)
-                .addGap(166, 166, 166))
-            .addGroup(edit_account_paneLayout.createSequentialGroup()
-                .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(edit_account_paneLayout.createSequentialGroup()
-                        .addGap(74, 74, 74)
-                        .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel5)
-                                .addGroup(edit_account_paneLayout.createSequentialGroup()
-                                    .addComponent(jLabel6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(userUI, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jLabel8)
-                                .addGroup(edit_account_paneLayout.createSequentialGroup()
-                                    .addComponent(jLabel9)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(passwordUI, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(edit_account_paneLayout.createSequentialGroup()
-                                    .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(statusSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel10))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, edit_account_paneLayout.createSequentialGroup()
-                                            .addComponent(jLabel7)
-                                            .addGap(29, 29, 29))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, edit_account_paneLayout.createSequentialGroup()
-                                            .addComponent(typeSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(20, 20, 20)))))
-                            .addGroup(edit_account_paneLayout.createSequentialGroup()
-                                .addComponent(userSelection, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(12, 12, 12)
-                                .addComponent(selectAccount)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(backbutton))))
-                    .addGroup(edit_account_paneLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel3)))
-                .addContainerGap(38, Short.MAX_VALUE))
-        );
-        edit_account_paneLayout.setVerticalGroup(
-            edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(edit_account_paneLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(jLabel3)
-                .addGap(49, 49, 49)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(userSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(selectAccount)
-                    .addComponent(backbutton))
-                .addGap(56, 56, 56)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(userUI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(passwordUI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(edit_account_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(typeSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(statusSelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(savebutton)
-                .addContainerGap(70, Short.MAX_VALUE))
-        );
+        edit_account_pane.add(userSelection, new org.netbeans.lib.awtextra.AbsoluteConstraints(74, 125, 180, -1));
 
         Panes.addTab("tab1", edit_account_pane);
 
@@ -298,7 +320,7 @@ public class Administrator extends javax.swing.JFrame {
 
         jLabel13.setText("Feature");
 
-        featureSelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Leaderboards", "History" }));
+        featureSelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "Leaderboards", "History" }));
         featureSelection.setEnabled(false);
 
         selectfeature.setText("Select");
@@ -316,34 +338,31 @@ public class Administrator extends javax.swing.JFrame {
         disable_account_feature_paneLayout.setHorizontalGroup(
             disable_account_feature_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(disable_account_feature_paneLayout.createSequentialGroup()
+                .addGap(41, 41, 41)
                 .addGroup(disable_account_feature_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel13)
                     .addGroup(disable_account_feature_paneLayout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(jLabel2))
+                        .addComponent(featureSelection, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(selectfeature))
+                    .addComponent(selectedUser2)
                     .addGroup(disable_account_feature_paneLayout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addGroup(disable_account_feature_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel13)
-                            .addGroup(disable_account_feature_paneLayout.createSequentialGroup()
-                                .addComponent(userSelection1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(12, 12, 12)
-                                .addComponent(selectAccount1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(backbutton1))
-                            .addGroup(disable_account_feature_paneLayout.createSequentialGroup()
-                                .addComponent(featureSelection, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(selectfeature))
-                            .addComponent(selectedUser2))))
+                        .addGroup(disable_account_feature_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2)
+                            .addComponent(userSelection1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addComponent(selectAccount1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(backbutton1)))
                 .addContainerGap(71, Short.MAX_VALUE))
         );
         disable_account_feature_paneLayout.setVerticalGroup(
             disable_account_feature_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(disable_account_feature_paneLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(43, 43, 43)
                 .addComponent(jLabel2)
-                .addGap(39, 39, 39)
+                .addGap(38, 38, 38)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(disable_account_feature_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -363,123 +382,63 @@ public class Administrator extends javax.swing.JFrame {
 
         Panes.addTab("tab2", disable_account_feature_pane);
 
-        leaderboardButton.setText("Leaderboard");
-
-        historyButton.setText("History");
-        historyButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                historyButtonActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("Create Quiz");
-
-        jButton4.setText("Delete Quiz");
-
-        jButton5.setText("Edit Quiz");
-
-        javax.swing.GroupLayout menu_paneLayout = new javax.swing.GroupLayout(menu_pane);
-        menu_pane.setLayout(menu_paneLayout);
-        menu_paneLayout.setHorizontalGroup(
-            menu_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menu_paneLayout.createSequentialGroup()
-                .addGap(143, 143, 143)
-                .addGroup(menu_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(leaderboardButton, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .addComponent(historyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(163, Short.MAX_VALUE))
-        );
-        menu_paneLayout.setVerticalGroup(
-            menu_paneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menu_paneLayout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addComponent(leaderboardButton)
-                .addGap(18, 18, 18)
-                .addComponent(historyButton)
-                .addGap(18, 18, 18)
-                .addComponent(jButton3)
-                .addGap(18, 18, 18)
-                .addComponent(jButton4)
-                .addGap(18, 18, 18)
-                .addComponent(jButton5)
-                .addContainerGap(221, Short.MAX_VALUE))
-        );
-
-        Panes.addTab("tab3", menu_pane);
-
         getContentPane().add(Panes, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, -44, 460, 510));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void edit_accountbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_accountbuttonActionPerformed
-
-        Panes.setSelectedIndex(0);
-
-    }//GEN-LAST:event_edit_accountbuttonActionPerformed
-
-    private void delete_account_featurebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_account_featurebuttonActionPerformed
+    private void editAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editAccountButtonActionPerformed
 
         Panes.setSelectedIndex(1);
 
-    }//GEN-LAST:event_delete_account_featurebuttonActionPerformed
+    }//GEN-LAST:event_editAccountButtonActionPerformed
+
+    private void disableFeatureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_disableFeatureButtonActionPerformed
+
+        Panes.setSelectedIndex(2);
+
+    }//GEN-LAST:event_disableFeatureButtonActionPerformed
 
     private void menubuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menubuttonActionPerformed
 
-        Panes.setSelectedIndex(2);
+        Panes.setSelectedIndex(0);
 
     }//GEN-LAST:event_menubuttonActionPerformed
 
     private void savebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savebuttonActionPerformed
-
-        UserSelection = userSelection.getSelectedItem().toString();
+        // Get user input from the UI
+        UserSelection = userSelection.getSelectedItem() != null ? userSelection.getSelectedItem().toString() : "";
+        if (UserSelection.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a user.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         newUser = userUI.getText();
         newPassword = passwordUI.getText();
-        newType = typeSelection.getSelectedItem().toString();
-        newStatus = statusSelection.getSelectedItem().toString();
+        newType = (String) typeSelection.getSelectedItem();
+        newStatus = (String) statusSelection.getSelectedItem();
 
-        if (newUser.isEmpty()) {
-
-            JOptionPane.showMessageDialog(null, "Please Enter an Username");
+        // Validate inputs
+        if (newUser == null || newUser.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a new username.", "Input Error", JOptionPane.WARNING_MESSAGE);
             return;
-
         }
 
-        if (newPassword.isEmpty()) {
-
-            JOptionPane.showMessageDialog(null, "Please Enter an Password");
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a new password.", "Input Error", JOptionPane.WARNING_MESSAGE);
             return;
-
         }
 
         try {
-
+            // Call Editification to update the account details
             Editification();
-
-        } catch (IOException ex) {
-            Logger.getLogger(Edit_Account.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(Edit_Account.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | ParseException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Error updating user account. Please try again.", "Update Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_savebuttonActionPerformed
 
     private void selectAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAccountActionPerformed
-
-        try {
-
-            selectedUser();
-
-        } catch (IOException ex) {
-            Logger.getLogger(Edit_Account.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(Edit_Account.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        disableComponent();
 
     }//GEN-LAST:event_selectAccountActionPerformed
 
@@ -488,7 +447,7 @@ public class Administrator extends javax.swing.JFrame {
         jLabel5.setText("******");
         jLabel8.setText("******");
 
-        userSelection.setSelectedItem(0);
+        userSelection.setSelectedIndex(-1); // Deselect
         userSelection.setEnabled(true);
 
         selectAccount.setEnabled(true);
@@ -499,10 +458,10 @@ public class Administrator extends javax.swing.JFrame {
         passwordUI.setText("");
         passwordUI.setEnabled(false);
 
-        statusSelection.setSelectedItem(0);
+        statusSelection.setSelectedIndex(0);
         statusSelection.setEnabled(false);
 
-        typeSelection.setSelectedItem(0);
+        typeSelection.setSelectedIndex(0);
         typeSelection.setEnabled(false);
 
         savebutton.setEnabled(false);
@@ -517,122 +476,129 @@ public class Administrator extends javax.swing.JFrame {
 
         selectedUser2.setText("******");
 
-        userSelection1.setSelectedItem(0);
+        userSelection1.setSelectedIndex(-1); // Deselect
         userSelection1.setEnabled(true);
 
         selectAccount1.setEnabled(true);
 
-        selectfeature.setEnabled(false);
+        featureSelection.setSelectedIndex(0);
         featureSelection.setEnabled(false);
+
+        selectfeature.setEnabled(false);
 
     }//GEN-LAST:event_backbutton1ActionPerformed
 
     private void selectAccount1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAccount1ActionPerformed
 
-        try {
-
-            selectedUser2();
-
-        } catch (IOException ex) {
-            Logger.getLogger(Edit_Account.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(Edit_Account.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        disableComponent2();
-
     }//GEN-LAST:event_selectAccount1ActionPerformed
 
     private void selectfeatureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectfeatureActionPerformed
+        // Ensure a feature is selected before proceeding
+        String selectedFeature = featureSelection.getSelectedItem() != null ? featureSelection.getSelectedItem().toString() : "";
+        if (selectedFeature.trim().isEmpty() || selectedFeature.equals("None")) {
+            JOptionPane.showMessageDialog(this, "Please select a valid feature to disable.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        UserSelection1 = userSelection.getSelectedItem().toString();
+        // Ensure a user is selected before proceeding
+        String selectedUser = userSelection1.getSelectedItem() != null ? userSelection1.getSelectedItem().toString() : "";
+        if (selectedUser.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a user before disabling a feature.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         try {
-
+            // Call the method to disable the selected feature for the selected user
             Editification_disable_account_feature();
+
+            // Disable the feature selection components after the operation
             featureSelection.setEnabled(false);
             selectfeature.setEnabled(false);
 
-        } catch (IOException ex) {
-            Logger.getLogger(Edit_Account.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(Edit_Account.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            // Provide success feedback
+            JOptionPane.showMessageDialog(this, "Feature '" + selectedFeature + "' disabled successfully for user '" + selectedUser + "'.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
+        } catch (IOException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Error saving disabled feature: " + ex.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+        } catch (ParseException ex) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Error parsing user data: " + ex.getMessage(), "Parse Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_selectfeatureActionPerformed
+
+    private void leaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaderboardButtonActionPerformed
+        this.setVisible(false);
+        // Navigate to the Leaderboard with the Game Master's details
+        new Leaderboard(null, adminName, null, usname).setVisible(true);
+    }//GEN-LAST:event_leaderboardButtonActionPerformed
 
     private void historyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyButtonActionPerformed
         this.setVisible(false);
-        new History(adminName, usname, "GameMaster", "GameMaster").setVisible(true);
+        // Corrected the argument order and roles passed to the History class
+        new History(adminName, null, null, usname).setVisible(true);
     }//GEN-LAST:event_historyButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Administrator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Administrator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Administrator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Administrator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void createQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createQuizButtonActionPerformed
+        this.setVisible(false);
+        new CreateQuiz(adminName, null, usname).setVisible(true);
+    }//GEN-LAST:event_createQuizButtonActionPerformed
 
-        /* Create and display the form */
+    private void deleteQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteQuizButtonActionPerformed
+        this.setVisible(false);
+        new DeleteQuiz(adminName, usname).setVisible(true);
+    }//GEN-LAST:event_deleteQuizButtonActionPerformed
+
+    private void editQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editQuizButtonActionPerformed
+        this.setVisible(false);
+        new EditQuizTable(adminName, usname).setVisible(true);
+    }//GEN-LAST:event_editQuizButtonActionPerformed
+
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        SignIn b = new SignIn(usname, "pass");
+        b.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_logoutButtonActionPerformed
+
+    public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Administrator("admin", "test").setVisible(true);
+            new Administrator("Admin", "User").setVisible(true);
         });
     }
 
     private void Editification() throws IOException, ParseException {
-
-        statusSelection.getSelectedItem();
-        typeSelection.getSelectedItem();
-
         newUser = userUI.getText();
         newPassword = passwordUI.getText();
+
+        if (newUser == null || newUser.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a new username.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (newPassword == null || newPassword.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a new password.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         try (FileReader reader = new FileReader(FILE_PATH[1])) {
             JSONParser parser = new JSONParser();
             JSONObject data = (JSONObject) parser.parse(reader);
             JSONArray userlist = (JSONArray) data.get("Accounts");
 
-            for (int i = 0; i < userlist.size(); i++) {
-
-                Object obj = userlist.get(i);
-
-                if (obj instanceof JSONObject) {
-
-                    JSONObject user = (JSONObject) obj;
-
+            for (Object obj : userlist) {
+                if (obj instanceof JSONObject user) {
                     String currentUsername = (String) user.get("username");
-
                     if (currentUsername.equals(userSelection.getSelectedItem().toString())) {
-                        // Update values
+                        // Update user details
                         user.put("username", newUser);
                         user.put("password", newPassword);
                         user.put("status", newStatus);
                         user.put("type", newType);
                         break;
                     }
-
                 }
             }
+
             // Write updated JSON back to file
             try (FileWriter writer = new FileWriter(FILE_PATH[1])) {
                 writer.write(data.toJSONString());
@@ -640,155 +606,91 @@ public class Administrator extends javax.swing.JFrame {
             }
 
             JOptionPane.showMessageDialog(this, "User account updated successfully!");
-
         } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(this, "Error loading usernames: " + e.getMessage());
-
+            JOptionPane.showMessageDialog(this, "The user data file is missing. Please contact support.", "File Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(this, "Error updating user account. Please try again.", "Update Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void Editification_disable_account_feature() throws IOException, ParseException {
+        String selectedFeature = (String) featureSelection.getSelectedItem();
+        String selectedUser = userSelection1.getSelectedItem() != null ? userSelection1.getSelectedItem().toString() : "";
+        if (selectedUser.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a user.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-        featureSelection.getSelectedItem();
+        if (selectedFeature == null || selectedFeature.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a feature to disable.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (selectedUser == null || selectedUser.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a user.", "Input Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         try (FileReader reader = new FileReader(FILE_PATH[1])) {
             JSONParser parser = new JSONParser();
             JSONObject data = (JSONObject) parser.parse(reader);
             JSONArray userlist = (JSONArray) data.get("Accounts");
 
-            for (int i = 0; i < userlist.size(); i++) {
-
-                Object obj = userlist.get(i);
-
-                if (obj instanceof JSONObject) {
-
-                    JSONObject user = (JSONObject) obj;
-
+            for (Object obj : userlist) {
+                if (obj instanceof JSONObject user) {
                     String currentUsername = (String) user.get("username");
-
-                    if (currentUsername.equals(userSelection1.getSelectedItem().toString())) {
-                        // Update values
-                        user.put("Disabled Feature", featureSelection.getSelectedItem().toString());
-
+                    if (currentUsername.equals(selectedUser)) {
+                        user.put("Disabled Feature", selectedFeature);
                         break;
                     }
-
                 }
             }
-            // Write updated JSON back to file
+
             try (FileWriter writer = new FileWriter(FILE_PATH[1])) {
                 writer.write(data.toJSONString());
                 writer.flush();
             }
 
-            JOptionPane.showMessageDialog(this, "User account updated successfully!");
-
-        } catch (FileNotFoundException e) {
-            JOptionPane.showMessageDialog(this, "Error loading usernames: " + e.getMessage());
-            e.printStackTrace();
-
+            JOptionPane.showMessageDialog(this, "Feature disabled successfully!");
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(Administrator.class.getName()).log(Level.SEVERE, null, e);
+            JOptionPane.showMessageDialog(this, "An unexpected error occurred while disabling the feature. Please contact support.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void populateUserSelection() {
-
-        try (FileReader reader = new FileReader(FILE_PATH[1])) {
-            JSONParser parser = new JSONParser();
-            JSONObject data = (JSONObject) parser.parse(reader);
-            JSONArray userlist = (JSONArray) data.get("Accounts");
-
-            // Loop through each item (each should be a JSONObject)
-            for (int i = 0; i < userlist.size(); i++) {
-                Object obj = userlist.get(i); // no getJSONObject()
-
-                if (obj instanceof JSONObject) {
-                    JSONObject account = (JSONObject) obj;
-
-                    // Use has() + get() + instanceof to safely pull "username"
-                    try {
-
-                        Object usernameObj = account.get("username"); // throws if key missing
-
-                        if (usernameObj instanceof String) {
-                            userSelection.addItem((String) usernameObj);
-                        }
-
-                    } catch (Exception e) {
-                        // "username" key not present, just skip
-                    }
-                }
-            }
-
-        } catch (IOException | ParseException e) {
-            JOptionPane.showMessageDialog(this, "Error loading usernames: " + e.getMessage());
-        }
-
+        populateUserSelectionCombo(userSelection);
     }
 
     private void populateUserSelection_disable_account_feature() {
-
-        try (FileReader reader = new FileReader(FILE_PATH[1])) {
-            JSONParser parser = new JSONParser();
-            JSONObject data = (JSONObject) parser.parse(reader);
-            JSONArray userlist = (JSONArray) data.get("Accounts");
-
-            // Loop through each item (each should be a JSONObject)
-            for (int i = 0; i < userlist.size(); i++) {
-                Object obj = userlist.get(i); // no getJSONObject()
-
-                if (obj instanceof JSONObject) {
-                    JSONObject account = (JSONObject) obj;
-
-                    // Use has() + get() + instanceof to safely pull "username"
-                    try {
-
-                        Object usernameObj = account.get("username"); // throws if key missing
-
-                        if (usernameObj instanceof String) {
-                            userSelection1.addItem((String) usernameObj);
-                        }
-
-                    } catch (Exception e) {
-                        // "username" key not present, just skip
-                    }
-                }
-            }
-
-        } catch (IOException | ParseException e) {
-            JOptionPane.showMessageDialog(this, "Error loading usernames: " + e.getMessage());
-            e.printStackTrace();
-        }
-
+        populateUserSelectionCombo(userSelection1);
     }
 
     public void selectedUser() throws IOException, ParseException {
-
         String selecteduser = (String) userSelection.getSelectedItem();
+        if (selecteduser == null || selecteduser.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please select a user.", "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         try (FileReader reader = new FileReader(FILE_PATH[1])) {
             JSONParser parser = new JSONParser();
             JSONObject data = (JSONObject) parser.parse(reader);
             JSONArray userlist = (JSONArray) data.get("Accounts");
 
-            // Loop through each item (each should be a JSONObject)
-            for (int i = 0; i < userlist.size(); i++) {
-
-                Object obj = userlist.get(i);
-
-                if (obj instanceof JSONObject) {
-
-                    JSONObject user = (JSONObject) obj;
-
+            for (Object obj : userlist) {
+                if (obj instanceof JSONObject user) {
                     String currentUser = (String) user.get("username");
-                    String currentPassword = (String) user.get("password");
-
                     if (currentUser.equals(selecteduser)) {
-
-                        jLabel5.setText("Account's Current Username: " + user.get("username").toString());
-                        jLabel8.setText("Account's Current Password: " + user.get("password").toString());
+                        jLabel5.setText("Account's Current Username: " + user.getOrDefault("username", "N/A"));
+                        jLabel8.setText("Account's Current Password: " + user.getOrDefault("password", "N/A"));
+                        return;
                     }
                 }
             }
+
+            JOptionPane.showMessageDialog(this, "User not found.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -806,9 +708,7 @@ public class Administrator extends javax.swing.JFrame {
 
                 Object obj = userlist.get(i);
 
-                if (obj instanceof JSONObject) {
-
-                    JSONObject user = (JSONObject) obj;
+                if (obj instanceof JSONObject user) {
 
                     String currentUser = (String) user.get("username");
 
@@ -842,23 +742,136 @@ public class Administrator extends javax.swing.JFrame {
 
         userSelection.setEnabled(false);
         selectAccount.setEnabled(false);
-
     }
 
+    private void populateUserSelectionCombo(javax.swing.JComboBox<String> comboBox) {
+        try (FileReader reader = new FileReader(FILE_PATH[1])) {
+            JSONParser parser = new JSONParser();
+            JSONObject data = (JSONObject) parser.parse(reader);
+            JSONArray userlist = (JSONArray) data.get("Accounts");
+
+            comboBox.removeAllItems(); // Clear existing items
+
+            for (Object obj : userlist) {
+                if (obj instanceof JSONObject account) {
+                    String username = (String) account.get("username");
+                    if (username != null) {
+                        comboBox.addItem(username);
+                    }
+                }
+            }
+        } catch (IOException | ParseException e) {
+            JOptionPane.showMessageDialog(this, "Error loading user data: " + e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void Current_Disabled_Feature() {
+        Disabled_Feature = "None"; // Default value in case of error or missing data
+
+        try (FileReader reader = new FileReader("src/UserData.json")) {
+            // Parse the JSON file
+            JSONParser parser = new JSONParser();
+            JSONObject data = (JSONObject) parser.parse(reader);
+
+            // Get the "Accounts" array
+            JSONArray accounts = (JSONArray) data.get("Accounts");
+
+            // Search for the account matching the current username
+            for (Object obj : accounts) {
+                JSONObject account = (JSONObject) obj;
+                String username = (String) account.get("username");
+
+                if (username.equals(adminName)) {
+                    // Get the disabledFeature value
+                    Object disabledFeatureObject = account.get("disabledFeature");
+
+                    // Reset all buttons to enabled (default state)
+                    leaderboardButton.setEnabled(true);
+                    historyButton.setEnabled(true);
+                    createQuizButton.setEnabled(true);
+                    deleteQuizButton.setEnabled(true);
+                    editQuizButton.setEnabled(true);
+                    editAccountButton.setEnabled(true);
+                    disableFeatureButton.setEnabled(true);
+                    profileButton.setEnabled(true); // Reset profileButton to enabled
+                    // Check if disabledFeature is an array or single string
+                    switch (disabledFeatureObject) {
+                        case JSONArray disabledFeaturesArray -> {
+
+                            // Disable buttons based on the array contents
+                            for (Object feature : disabledFeaturesArray) {
+                                String featureName = (String) feature;
+
+                                switch (featureName) {
+                                    case "Leaderboard" ->
+                                        leaderboardButton.setEnabled(false);
+                                    case "History" ->
+                                        historyButton.setEnabled(false);
+                                    case "CreateQuiz" ->
+                                        createQuizButton.setEnabled(false);
+                                    case "DeleteQuiz" ->
+                                        deleteQuizButton.setEnabled(false);
+                                    case "EditQuiz" ->
+                                        editQuizButton.setEnabled(false);
+                                    case "EditAccount" ->
+                                        editAccountButton.setEnabled(false);
+                                    case "DisableFeature" ->
+                                        disableFeatureButton.setEnabled(false);
+                                    case "Profile" ->
+                                        profileButton.setEnabled(false); // Disable profileButton
+                                }
+                            }
+                        }
+                        case String string -> {
+                            // Handle disabledFeature as a single string (fallback for older format)
+                            Disabled_Feature = string;
+
+                            switch (Disabled_Feature) {
+                                case "None" -> {
+                                    // All buttons remain enabled
+                                }
+                                case "Leaderboard" ->
+                                    leaderboardButton.setEnabled(false);
+                                case "History" ->
+                                    historyButton.setEnabled(false);
+                                case "CreateQuiz" ->
+                                    createQuizButton.setEnabled(false);
+                                case "DeleteQuiz" ->
+                                    deleteQuizButton.setEnabled(false);
+                                case "EditQuiz" ->
+                                    editQuizButton.setEnabled(false);
+                                case "EditAccount" ->
+                                    editAccountButton.setEnabled(false);
+                                case "DisableFeature" ->
+                                    disableFeatureButton.setEnabled(false);
+                                case "Profile" ->
+                                    profileButton.setEnabled(false); // Disable profileButton
+                            }
+                        }
+                        default -> {
+                        }
+                    }
+
+                    break; // Exit loop once the matching account is found
+                }
+            }
+        } catch (IOException | ParseException e) {
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane Panes;
     private javax.swing.JPanel admin;
     private javax.swing.JButton backbutton;
     private javax.swing.JButton backbutton1;
-    private javax.swing.JButton delete_account_featurebutton;
+    private javax.swing.JButton createQuizButton;
+    private javax.swing.JButton deleteQuizButton;
+    private javax.swing.JButton disableFeatureButton;
     private javax.swing.JPanel disable_account_feature_pane;
+    private javax.swing.JButton editAccountButton;
+    private javax.swing.JButton editQuizButton;
     private javax.swing.JPanel edit_account_pane;
-    private javax.swing.JButton edit_accountbutton;
     private javax.swing.JComboBox<String> featureSelection;
     private javax.swing.JButton historyButton;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -872,9 +885,11 @@ public class Administrator extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JButton leaderboardButton;
+    private javax.swing.JButton logoutButton;
     private javax.swing.JPanel menu_pane;
     private javax.swing.JButton menubutton;
     private javax.swing.JTextField passwordUI;
+    private javax.swing.JButton profileButton;
     private javax.swing.JButton savebutton;
     private javax.swing.JButton selectAccount;
     private javax.swing.JButton selectAccount1;

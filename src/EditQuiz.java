@@ -1,10 +1,8 @@
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.swing.*;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,18 +10,29 @@ import org.json.simple.parser.ParseException;
 
 public class EditQuiz extends javax.swing.JFrame {
 
-    private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
+    private static final String FILE_PATH = "src/QuizData.json";
     private static final JSONParser jsonParser = new JSONParser();
-    private static JSONObject record = new JSONObject();
+
     private final String gameMasterName;
     private final String usname;
+    private final ButtonGroup answerGroup;
+    private final JSONArray quizArray = new JSONArray(); // Stores questions for the current quiz
 
-    public EditQuiz(String selectedQuizID, String gameMasterName, String usname) {
+    private int currentQuestionIndex = -1; // Tracks the currently displayed question
+
+    public EditQuiz(String selectedQuizTitle, String gameMasterName, String usname) {
         initComponents();
-        this.gameMasterName = gameMasterName;  // Set user name
+        this.gameMasterName = gameMasterName;
         this.usname = usname;
-        QuizID.setText(selectedQuizID);  // Display the Quiz ID in the text field
-        loadQuizData(selectedQuizID);    // Load the quiz data into the form fields
+
+        // Group radio buttons for selecting the correct answer
+        answerGroup = new ButtonGroup();
+        answerGroup.add(option1Button);
+        answerGroup.add(option2Button);
+        answerGroup.add(option3Button);
+        answerGroup.add(option4Button);
+
+        loadQuizData(selectedQuizTitle);
     }
 
     @SuppressWarnings("unchecked")
@@ -35,24 +44,24 @@ public class EditQuiz extends javax.swing.JFrame {
         editQuizTitle = new javax.swing.JLabel();
         Back = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        categoryComboBox = new javax.swing.JComboBox<>();
+        categorySelection = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        QuestionOne = new javax.swing.JLabel();
-        QuestionField = new javax.swing.JTextField();
-        Option1Button = new javax.swing.JRadioButton();
-        Option2Button = new javax.swing.JRadioButton();
-        Option3Button = new javax.swing.JRadioButton();
-        Option4Button = new javax.swing.JRadioButton();
-        Edit = new javax.swing.JButton();
-        Option1Field = new javax.swing.JTextField();
-        Option2Field = new javax.swing.JTextField();
-        Option3Field = new javax.swing.JTextField();
-        Option4Field = new javax.swing.JTextField();
+        questionCounterLabel = new javax.swing.JLabel();
+        questionField = new javax.swing.JTextField();
+        option1Button = new javax.swing.JRadioButton();
+        option2Button = new javax.swing.JRadioButton();
+        option3Button = new javax.swing.JRadioButton();
+        saveQuizButton = new javax.swing.JButton();
+        option4Button = new javax.swing.JRadioButton();
+        option1Field = new javax.swing.JTextField();
+        option2Field = new javax.swing.JTextField();
+        option3Field = new javax.swing.JTextField();
+        option4Field = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        NewQuizID = new javax.swing.JTextField();
+        newQuizTitle = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        questionAmount = new javax.swing.JComboBox<>();
+        inputButton = new javax.swing.JButton();
         quizTitleLabel = new javax.swing.JLabel();
         previousQuestionButton = new javax.swing.JButton();
         nextQuestionButton = new javax.swing.JButton();
@@ -70,55 +79,55 @@ public class EditQuiz extends javax.swing.JFrame {
 
         jLabel2.setText("Category:");
 
-        categoryComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Math", "Science", "History", "English" }));
+        categorySelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Math", "Science", "History", "English" }));
 
         jLabel3.setText("Quiz Title:");
 
-        QuestionOne.setText("Question #1:");
+        questionCounterLabel.setText("Question #1:");
 
-        QuestionField.addActionListener(new java.awt.event.ActionListener() {
+        questionField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                QuestionFieldActionPerformed(evt);
+                questionFieldActionPerformed(evt);
             }
         });
 
-        CorrectAnswer.add(Option1Button);
-        Option1Button.setText("Option #1:");
+        CorrectAnswer.add(option1Button);
+        option1Button.setText("Option #1:");
 
-        CorrectAnswer.add(Option2Button);
-        Option2Button.setText("Option #2:");
-        Option2Button.addActionListener(new java.awt.event.ActionListener() {
+        CorrectAnswer.add(option2Button);
+        option2Button.setText("Option #2:");
+        option2Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Option2ButtonActionPerformed(evt);
+                option2ButtonActionPerformed(evt);
             }
         });
 
-        CorrectAnswer.add(Option3Button);
-        Option3Button.setText("Option #3:");
-        Option3Button.addActionListener(new java.awt.event.ActionListener() {
+        CorrectAnswer.add(option3Button);
+        option3Button.setText("Option #3:");
+        option3Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Option3ButtonActionPerformed(evt);
+                option3ButtonActionPerformed(evt);
             }
         });
 
-        CorrectAnswer.add(Option4Button);
-        Option4Button.setText("Option #4:");
-        Option4Button.addActionListener(new java.awt.event.ActionListener() {
+        saveQuizButton.setText("Save");
+        saveQuizButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Option4ButtonActionPerformed(evt);
+                saveQuizButtonActionPerformed(evt);
             }
         });
 
-        Edit.setText("EDIT QUIZ");
-        Edit.addActionListener(new java.awt.event.ActionListener() {
+        CorrectAnswer.add(option4Button);
+        option4Button.setText("Option #4:");
+        option4Button.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditActionPerformed(evt);
+                option4ButtonActionPerformed(evt);
             }
         });
 
-        Option1Field.addActionListener(new java.awt.event.ActionListener() {
+        option1Field.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Option1FieldActionPerformed(evt);
+                option1FieldActionPerformed(evt);
             }
         });
 
@@ -126,15 +135,25 @@ public class EditQuiz extends javax.swing.JFrame {
 
         jLabel1.setText("# of Questions");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        questionAmount.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
 
-        jButton1.setText("Input");
+        inputButton.setText("Input");
 
         quizTitleLabel.setText("Quiz Title Label");
 
         previousQuestionButton.setText("Previous");
+        previousQuestionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                previousQuestionButtonActionPerformed(evt);
+            }
+        });
 
         nextQuestionButton.setText("Next");
+        nextQuestionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextQuestionButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -149,13 +168,12 @@ public class EditQuiz extends javax.swing.JFrame {
                     .addComponent(jLabel4))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(NewQuizID)
-                        .addContainerGap())
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addComponent(quizTitleLabel)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(quizTitleLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(newQuizTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(100, 100, 100)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -164,34 +182,36 @@ public class EditQuiz extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(nextQuestionButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Edit))
+                        .addComponent(saveQuizButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Option4Button, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(Option3Button, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(Option2Button, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(Option1Button, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(QuestionOne, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(option4Button, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(option3Button, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(option2Button, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(option1Button, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(questionCounterLabel, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(editQuizTitle, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(QuestionField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Option2Field, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Option3Field, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Option1Field, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Option4Field))))
+                            .addComponent(option2Field, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(option3Field, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(option1Field, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(option4Field)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(questionField, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(56, 56, 56))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(categorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(questionAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(inputButton)
                 .addGap(18, 18, 18))
         );
         jPanel1Layout.setVerticalGroup(
@@ -210,45 +230,41 @@ public class EditQuiz extends javax.swing.JFrame {
                             .addComponent(quizTitleLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(NewQuizID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(newQuizTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(categoryComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(categorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(questionAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputButton))
                 .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(QuestionOne)
-                    .addComponent(QuestionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(Option2Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Option1Button)
-                            .addComponent(Option1Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(Option2Button)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Option3Button)
-                            .addComponent(Option3Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Option4Button)
-                            .addComponent(Option4Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(previousQuestionButton)
-                            .addComponent(nextQuestionButton)
-                            .addComponent(Edit))
-                        .addContainerGap(20, Short.MAX_VALUE))))
+                    .addComponent(questionCounterLabel)
+                    .addComponent(questionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(option1Button)
+                    .addComponent(option1Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(option2Button)
+                    .addComponent(option2Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(option3Button)
+                    .addComponent(option3Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(option4Button)
+                    .addComponent(option4Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(previousQuestionButton)
+                    .addComponent(nextQuestionButton)
+                    .addComponent(saveQuizButton))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -267,222 +283,210 @@ public class EditQuiz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        EditQuizTable e = new EditQuizTable(gameMasterName, usname);
-        e.setVisible(true);
         setVisible(false);
+        new EditQuizTable(gameMasterName, usname).setVisible(true);
     }//GEN-LAST:event_BackActionPerformed
 
-    private void Option2ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Option2ButtonActionPerformed
+    private void option2ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_option2ButtonActionPerformed
         CorrectAnswer.clearSelection();
-        Option2Button.setSelected(true);
-    }//GEN-LAST:event_Option2ButtonActionPerformed
+        option2Button.setSelected(true);
+    }//GEN-LAST:event_option2ButtonActionPerformed
 
-    private void EditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditActionPerformed
-        updateQuiz();  // Call method to update the quiz data
-    }//GEN-LAST:event_EditActionPerformed
+    private void saveQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveQuizButtonActionPerformed
+        saveCurrentQuestion(); // Ensure the current question is saved
 
-    private void Option3ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Option3ButtonActionPerformed
-        CorrectAnswer.clearSelection();
-        Option3Button.setSelected(true);
-    }//GEN-LAST:event_Option3ButtonActionPerformed
-
-    private void Option4ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Option4ButtonActionPerformed
-        CorrectAnswer.clearSelection();
-        Option4Button.setSelected(true);
-    }//GEN-LAST:event_Option4ButtonActionPerformed
-
-    private void QuestionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuestionFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_QuestionFieldActionPerformed
-
-    private void Option1FieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Option1FieldActionPerformed
-        CorrectAnswer.clearSelection();
-        Option1Button.setSelected(true);
-    }//GEN-LAST:event_Option1FieldActionPerformed
-
-    private void loadQuizData(String selectedQuizID) {
-        try {
-            filecheck();
-            JSONArray quizzes = (JSONArray) record.get("Quizzes");
+        try (FileReader reader = new FileReader(FILE_PATH)) {
+            JSONObject root = (JSONObject) jsonParser.parse(reader);
+            JSONArray quizzes = (JSONArray) root.get("Quizzes");
 
             for (Object obj : quizzes) {
                 JSONObject quizObject = (JSONObject) obj;
 
-                if (selectedQuizID.equals(quizObject.get("quizid"))) {
-                    QuizID.setText((String) quizObject.get("quizid"));
-                    QuestionField.setText((String) quizObject.get("question"));
-                    Option1Field.setText((String) quizObject.get("option1"));
-                    Option2Field.setText((String) quizObject.get("option2"));
-                    Option3Field.setText((String) quizObject.get("option3"));
-                    Option4Field.setText((String) quizObject.get("option4"));
-                    categoryComboBox.setSelectedItem(quizObject.get("category"));
+                if (quizTitleLabel.getText().equals(quizObject.get("QuizTitle"))) {
+                    quizObject.put("Category", categorySelection.getSelectedItem());
+                    quizObject.put("Questions", quizArray);
+                    break;
+                }
+            }
 
-                    String correctAnswer = (String) quizObject.get("answer");
-                    if (Option1Field.getText().equals(correctAnswer)) {
-                        Option1Button.setSelected(true);
-                    } else if (Option2Field.getText().equals(correctAnswer)) {
-                        Option2Button.setSelected(true);
-                    } else if (Option3Field.getText().equals(correctAnswer)) {
-                        Option3Button.setSelected(true);
-                    } else if (Option4Field.getText().equals(correctAnswer)) {
-                        Option4Button.setSelected(true);
-                    }
+            try (FileWriter writer = new FileWriter(FILE_PATH)) {
+                writer.write(root.toJSONString());
+                showMessage("Quiz updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (IOException | ParseException e) {
+            Logger.getLogger(EditQuiz.class.getName()).log(Level.SEVERE, "Error saving quiz data", e);
+            showMessage("Error saving quiz data. Please try again.", "Save Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_saveQuizButtonActionPerformed
 
+    private void option3ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_option3ButtonActionPerformed
+        CorrectAnswer.clearSelection();
+        option3Button.setSelected(true);
+    }//GEN-LAST:event_option3ButtonActionPerformed
+
+    private void option4ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_option4ButtonActionPerformed
+        CorrectAnswer.clearSelection();
+        option4Button.setSelected(true);
+    }//GEN-LAST:event_option4ButtonActionPerformed
+
+    private void questionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_questionFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_questionFieldActionPerformed
+
+    private void option1FieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_option1FieldActionPerformed
+        CorrectAnswer.clearSelection();
+        option1Button.setSelected(true);
+    }//GEN-LAST:event_option1FieldActionPerformed
+
+    private void previousQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousQuestionButtonActionPerformed
+        saveCurrentQuestion(); // Save the current question before navigating
+        if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            loadQuestion(currentQuestionIndex);
+        } else {
+            showMessage("This is the first question.", "Navigation Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_previousQuestionButtonActionPerformed
+
+    private void nextQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextQuestionButtonActionPerformed
+        saveCurrentQuestion(); // Save the current question before navigating
+        if (currentQuestionIndex < quizArray.size() - 1) {
+            currentQuestionIndex++;
+            loadQuestion(currentQuestionIndex);
+        } else {
+            showMessage("This is the last question.", "Navigation Error", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_nextQuestionButtonActionPerformed
+
+    private void loadQuizData(String selectedQuizTitle) {
+        try (FileReader reader = new FileReader(FILE_PATH)) {
+            JSONObject root = (JSONObject) jsonParser.parse(reader);
+            JSONArray quizzes = (JSONArray) root.get("Quizzes");
+
+            for (Object obj : quizzes) {
+                JSONObject quizObject = (JSONObject) obj;
+
+                if (selectedQuizTitle.equals(quizObject.get("QuizTitle"))) {
+                    quizTitleLabel.setText(selectedQuizTitle);
+                    categorySelection.setSelectedItem(quizObject.get("Category"));
+
+                    // Load questions into quiz array
+                    quizArray.clear();
+                    quizArray.addAll((JSONArray) quizObject.get("Questions"));
+                    currentQuestionIndex = 0;
+                    loadQuestion(currentQuestionIndex); // Load the first question
                     break;
                 }
             }
         } catch (IOException | ParseException e) {
             Logger.getLogger(EditQuiz.class.getName()).log(Level.SEVERE, "Error loading quiz data", e);
+            showMessage("Error loading quiz data. Please try again.", "Load Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // This method reads from the first file (QuizData.json)
-    private void filecheck() throws IOException, ParseException {
-        try (FileReader reader = new FileReader(FILE_PATH[0])) {
-            record = (JSONObject) jsonParser.parse(reader);
-        }
-    }
-
-    // This method writes to the first file (QuizData.json)
-    private void saveToFile() {
-        try (FileWriter file = new FileWriter(FILE_PATH[0])) {
-            file.write(record.toJSONString());
-            file.flush();
-        } catch (IOException e) {
-            Logger.getLogger(EditQuiz.class.getName()).log(Level.SEVERE, "Error saving data to file", e);
-        }
-    }
-
-    private void updateQuiz() {
-        String category = categoryComboBox.getSelectedItem().toString();
-        String quizid = QuizID.getText().trim();
-        String newQuizid = NewQuizID.getText().trim();
-        String question = QuestionField.getText().trim();
-        String option1 = Option1Field.getText().trim();
-        String option2 = Option2Field.getText().trim();
-        String option3 = Option3Field.getText().trim();
-        String option4 = Option4Field.getText().trim();
-
-        if (quizid.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter an existing Quiz ID.", "Input needed", JOptionPane.ERROR_MESSAGE);
+    private void loadQuestion(int index) {
+        if (index < 0 || index >= quizArray.size()) {
+            showMessage("No more questions to load.", "Navigation Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        try {
-            filecheck();
-            JSONArray quizzes = (JSONArray) record.get("Quizzes");
-            boolean quizFound = false;
-            boolean isUpdated = false;
+        JSONObject questionObject = (JSONObject) quizArray.get(index);
 
-            for (Object obj : quizzes) {
-                JSONObject quizObject = (JSONObject) obj;
+        // Safely populate fields
+        questionField.setText(questionObject.getOrDefault("question", "").toString());
+        option1Field.setText(questionObject.getOrDefault("option1", "").toString());
+        option2Field.setText(questionObject.getOrDefault("option2", "").toString());
+        option3Field.setText(questionObject.getOrDefault("option3", "").toString());
+        option4Field.setText(questionObject.getOrDefault("option4", "").toString());
 
-                if (quizid.equals(quizObject.get("quizid"))) {
-                    quizFound = true;
+        // Set the correct answer
+        String correctAnswer = questionObject.getOrDefault("answer", "").toString();
+        if (correctAnswer.equals(option1Field.getText())) {
+            answerGroup.setSelected(option1Button.getModel(), true);
+        } else if (correctAnswer.equals(option2Field.getText())) {
+            answerGroup.setSelected(option2Button.getModel(), true);
+        } else if (correctAnswer.equals(option3Field.getText())) {
+            answerGroup.setSelected(option3Button.getModel(), true);
+        } else if (correctAnswer.equals(option4Field.getText())) {
+            answerGroup.setSelected(option4Button.getModel(), true);
+        }
 
-                    if (!newQuizid.isEmpty() && !newQuizid.equals(quizid)) {
-                        quizObject.put("quizid", newQuizid);
-                        isUpdated = true;
-                    }
-
-                    if (!question.isEmpty()) {
-                        quizObject.put("question", question);
-                        isUpdated = true;
-                    }
-
-                    if (!option1.isEmpty()) {
-                        quizObject.put("option1", option1);
-                        isUpdated = true;
-                    }
-
-                    if (!option2.isEmpty()) {
-                        quizObject.put("option2", option2);
-                        isUpdated = true;
-                    }
-
-                    if (!option3.isEmpty()) {
-                        quizObject.put("option3", option3);
-                        isUpdated = true;
-                    }
-
-                    if (!option4.isEmpty()) {
-                        quizObject.put("option4", option4);
-                        isUpdated = true;
-                    }
-
-                    if (!category.isEmpty()) {
-                        quizObject.put("category", category);
-                        isUpdated = true;
-                    }
-
-                    if (Option1Button.isSelected()) {
-                        quizObject.put("answer", option1);
-                    } else if (Option2Button.isSelected()) {
-                        quizObject.put("answer", option2);
-                    } else if (Option3Button.isSelected()) {
-                        quizObject.put("answer", option3);
-                    } else if (Option4Button.isSelected()) {
-                        quizObject.put("answer", option4);
-                    }
-
-                    break;
-                }
-            }
-
-            if (!quizFound) {
-                JOptionPane.showMessageDialog(null, "Quiz not found!", "Update Failed", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            if (!isUpdated) {
-                JOptionPane.showMessageDialog(null, "Nothing was updated. Please enter new inputs.", "No Changes Made", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-
-            int confirm = JOptionPane.showConfirmDialog(null, "Are you sure you want to update the quiz?", "Confirm Update", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                saveToFile();
-                JOptionPane.showMessageDialog(null, "Quiz updated successfully!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Update canceled.", "Cancelled", JOptionPane.INFORMATION_MESSAGE);
-            }
-
-        } catch (IOException | ParseException e) {
-            Logger.getLogger(EditQuiz.class.getName()).log(Level.SEVERE, "Error updating quiz", e);
+        // Update the question counter
+        if (questionCounterLabel != null) {
+            questionCounterLabel.setText("Question #" + (index + 1));
         }
     }
 
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new EditQuizTable("test", "Testss").setVisible(true));
+    private void saveCurrentQuestion() {
+        if (currentQuestionIndex < 0) {
+            showMessage("No question selected to save.", "Save Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        JSONObject questionObject = new JSONObject();
+
+        // Safely retrieve field values
+        questionObject.put("question", questionField.getText() != null ? questionField.getText().trim() : "");
+        questionObject.put("option1", option1Field.getText() != null ? option1Field.getText().trim() : "");
+        questionObject.put("option2", option2Field.getText() != null ? option2Field.getText().trim() : "");
+        questionObject.put("option3", option3Field.getText() != null ? option3Field.getText().trim() : "");
+        questionObject.put("option4", option4Field.getText() != null ? option4Field.getText().trim() : "");
+
+        // Save the selected correct answer
+        if (option1Button.isSelected()) {
+            questionObject.put("answer", questionObject.get("option1"));
+        } else if (option2Button.isSelected()) {
+            questionObject.put("answer", questionObject.get("option2"));
+        } else if (option3Button.isSelected()) {
+            questionObject.put("answer", questionObject.get("option3"));
+        } else if (option4Button.isSelected()) {
+            questionObject.put("answer", questionObject.get("option4"));
+        }
+
+        // Update the quiz array
+        if (currentQuestionIndex < quizArray.size()) {
+            quizArray.set(currentQuestionIndex, questionObject);
+        } else {
+            quizArray.add(questionObject);
+        }
+    }
+    // This method writes to the first file (QuizData.json)
+
+    private void showMessage(String message, String title, int messageType) {
+        JOptionPane.showMessageDialog(this, message, title, messageType);
+    }
+
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(() -> new EditQuiz("Sample Quiz", "GameMaster", "testUser").setVisible(true));
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Back;
     private javax.swing.ButtonGroup CorrectAnswer;
-    private javax.swing.JButton Edit;
-    private javax.swing.JTextField NewQuizID;
-    private javax.swing.JRadioButton Option1Button;
-    private javax.swing.JTextField Option1Field;
-    private javax.swing.JRadioButton Option2Button;
-    private javax.swing.JTextField Option2Field;
-    private javax.swing.JRadioButton Option3Button;
-    private javax.swing.JTextField Option3Field;
-    private javax.swing.JRadioButton Option4Button;
-    private javax.swing.JTextField Option4Field;
-    private javax.swing.JTextField QuestionField;
-    private javax.swing.JLabel QuestionOne;
-    private javax.swing.JComboBox<String> categoryComboBox;
+    private javax.swing.JComboBox<String> categorySelection;
     private javax.swing.JLabel editQuizTitle;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton inputButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField newQuizTitle;
     private javax.swing.JButton nextQuestionButton;
+    private javax.swing.JRadioButton option1Button;
+    private javax.swing.JTextField option1Field;
+    private javax.swing.JRadioButton option2Button;
+    private javax.swing.JTextField option2Field;
+    private javax.swing.JRadioButton option3Button;
+    private javax.swing.JTextField option3Field;
+    private javax.swing.JRadioButton option4Button;
+    private javax.swing.JTextField option4Field;
     private javax.swing.JButton previousQuestionButton;
+    private javax.swing.JComboBox<String> questionAmount;
+    private javax.swing.JLabel questionCounterLabel;
+    private javax.swing.JTextField questionField;
     private javax.swing.JLabel quizTitleLabel;
+    private javax.swing.JButton saveQuizButton;
     // End of variables declaration//GEN-END:variables
 }

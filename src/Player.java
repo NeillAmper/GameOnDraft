@@ -1,14 +1,23 @@
 
-public class Player extends javax.swing.JFrame {
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public final class Player extends javax.swing.JFrame {
 
     private final String playerName;
     private final String usname;
+    private String Disabled_Feature; // Instance field for the disabled feature
 
     public Player(String playerName, String player, int par, int par1, String player1, String usname) {
         this.playerName = playerName; // ✅ Store it for later use
         this.usname = usname;
         initComponents();
         jLabel1.setText("Welcome, Player " + playerName + "!"); // DYNAMIC GREETING
+        Current_Disabled_Feature(); // Dynamically enable/disable buttons based on Disabled_Feature
     }
 
     /**
@@ -145,8 +154,78 @@ public class Player extends javax.swing.JFrame {
     private void ProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileActionPerformed
         this.dispose();
         // Pass the correct username to the Profile constructor
-        new Profile(null, playerName, usname).setVisible(true);
+        new Profile(null, null, playerName, usname).setVisible(true);
     }//GEN-LAST:event_ProfileActionPerformed
+
+    public void Current_Disabled_Feature() {
+        Disabled_Feature = "None"; // Default value in case of error or missing data
+
+        try (FileReader reader = new FileReader("src/UserData.json")) {
+            // Parse the JSON file
+            JSONParser parser = new JSONParser();
+            JSONObject data = (JSONObject) parser.parse(reader);
+
+            // Get the "Accounts" array
+            JSONArray accounts = (JSONArray) data.get("Accounts");
+
+            // Search for the account matching the current username
+            for (Object obj : accounts) {
+                JSONObject account = (JSONObject) obj;
+                String username = (String) account.get("username");
+
+                if (username.equals(playerName)) {
+                    // Get the disabledFeature value
+                    Object disabledFeatureObject = account.get("disabledFeature");
+
+                    // Reset all buttons to enabled (default state)
+                    StartGame.setEnabled(true);
+                    Leaderboard.setEnabled(true);
+                    History.setEnabled(true);
+                    Profile.setEnabled(true);
+
+                    // Check if disabledFeature is an array or single string
+                    if (disabledFeatureObject instanceof JSONArray disabledFeaturesArray) {
+
+                        // Disable buttons based on the array contents
+                        for (Object feature : disabledFeaturesArray) {
+                            String featureName = (String) feature;
+
+                            switch (featureName) {
+                                case "StartGame" ->
+                                    StartGame.setEnabled(false);
+                                case "Leaderboard" ->
+                                    Leaderboard.setEnabled(false);
+                                case "History" ->
+                                    History.setEnabled(false);
+                                case "Profile" ->
+                                    Profile.setEnabled(false);
+                            }
+                        }
+                    } else if (disabledFeatureObject instanceof String string) {
+                        // Handle disabledFeature as a single string (fallback for older format)
+                        Disabled_Feature = string;
+
+                        switch (Disabled_Feature) {
+                            case "None" -> {
+                                // All buttons remain enabled
+                            }
+                            case "StartGame" ->
+                                StartGame.setEnabled(false);
+                            case "Leaderboard" ->
+                                Leaderboard.setEnabled(false);
+                            case "History" ->
+                                History.setEnabled(false);
+                            case "Profile" ->
+                                Profile.setEnabled(false);
+                        }
+                    }
+
+                    break; // Exit loop once the matching account is found
+                }
+            }
+        } catch (IOException | ParseException e) {
+        }
+    }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {

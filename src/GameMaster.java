@@ -1,14 +1,23 @@
 
-public class GameMaster extends javax.swing.JFrame {
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public final class GameMaster extends javax.swing.JFrame {
 
     private final String gameMasterName;
     private final String usname;
+    private String Disabled_Feature; // Instance field for the disabled feature
 
     public GameMaster(String gameMasterName, String usname) {
         this.gameMasterName = gameMasterName;
         this.usname = usname;
         initComponents();
         WelcomeMessage.setText("Welcome, Game Master " + gameMasterName + "!"); // ✅ Fixed from usernameLabel
+        Current_Disabled_Feature(); // Dynamically enable/disable buttons based on Disabled_Feature
     }
 
     @SuppressWarnings("unchecked")
@@ -144,7 +153,7 @@ public class GameMaster extends javax.swing.JFrame {
 
     private void CreateQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateQuizActionPerformed
         this.setVisible(false);
-        new CreateQuiz(gameMasterName, usname).setVisible(true);
+        new CreateQuiz(null, gameMasterName, usname).setVisible(true);
     }//GEN-LAST:event_CreateQuizActionPerformed
 
     private void DeleteQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteQuizActionPerformed
@@ -154,7 +163,7 @@ public class GameMaster extends javax.swing.JFrame {
 
     private void EditQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditQuizActionPerformed
         this.setVisible(false);
-        new EditQuizTable(gameMasterName, usname).setVisible(true); // ✅ Fixed here
+        new EditQuizTable(gameMasterName, usname).setVisible(true);
     }//GEN-LAST:event_EditQuizActionPerformed
 
     private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
@@ -172,8 +181,93 @@ public class GameMaster extends javax.swing.JFrame {
     private void ProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileButtonActionPerformed
         this.dispose();
         // Pass the correct username to the Profile constructor
-        new Profile(null, gameMasterName, usname).setVisible(true);
+        new Profile(null, null, gameMasterName, usname).setVisible(true);
     }//GEN-LAST:event_ProfileButtonActionPerformed
+
+    public void Current_Disabled_Feature() {
+        Disabled_Feature = "None"; // Default value in case of error or missing data
+
+        try (FileReader reader = new FileReader("src/UserData.json")) {
+            // Parse the JSON file
+            JSONParser parser = new JSONParser();
+            JSONObject data = (JSONObject) parser.parse(reader);
+
+            // Get the "Accounts" array
+            JSONArray accounts = (JSONArray) data.get("Accounts");
+
+            // Search for the account matching the current username
+            for (Object obj : accounts) {
+                JSONObject account = (JSONObject) obj;
+                String username = (String) account.get("username");
+
+                if (username.equals(gameMasterName)) {
+                    // Get the disabledFeature value
+                    Object disabledFeatureObject = account.get("disabledFeature");
+
+                    // Reset all buttons to enabled (default state)
+                    Leaderboard.setEnabled(true);
+                    History.setEnabled(true);
+                    CreateQuiz.setEnabled(true);
+                    DeleteQuiz.setEnabled(true);
+                    EditQuiz.setEnabled(true);
+                    ProfileButton.setEnabled(true);
+
+                    // Check if disabledFeature is an array or single string
+                    switch (disabledFeatureObject) {
+                        case JSONArray disabledFeaturesArray -> {
+                            
+                            // Disable buttons based on the array contents
+                            for (Object feature : disabledFeaturesArray) {
+                                String featureName = (String) feature;
+                                
+                                switch (featureName) {
+                                    case "Leaderboard" ->
+                                        Leaderboard.setEnabled(false);
+                                    case "History" ->
+                                        History.setEnabled(false);
+                                    case "CreateQuiz" ->
+                                        CreateQuiz.setEnabled(false);
+                                    case "DeleteQuiz" ->
+                                        DeleteQuiz.setEnabled(false);
+                                    case "EditQuiz" ->
+                                        EditQuiz.setEnabled(false);
+                                    case "Profile" ->
+                                        ProfileButton.setEnabled(false);
+                                }
+                            }
+                        }
+                        case String string -> {
+                            // Handle disabledFeature as a single string (fallback for older format)
+                            Disabled_Feature = string;
+                            
+                            switch (Disabled_Feature) {
+                                case "None" -> {
+                                    // All buttons remain enabled
+                                }
+                                case "Leaderboard" ->
+                                    Leaderboard.setEnabled(false);
+                                case "History" ->
+                                    History.setEnabled(false);
+                                case "CreateQuiz" ->
+                                    CreateQuiz.setEnabled(false);
+                                case "DeleteQuiz" ->
+                                    DeleteQuiz.setEnabled(false);
+                                case "EditQuiz" ->
+                                    EditQuiz.setEnabled(false);
+                                case "Profile" ->
+                                    ProfileButton.setEnabled(false);
+                            }
+                        }
+                        default -> {
+                        }
+                    }
+
+                    break; // Exit loop once the matching account is found
+                }
+            }
+        } catch (IOException | ParseException e) {
+        }
+    }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
