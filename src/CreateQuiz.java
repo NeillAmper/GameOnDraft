@@ -25,6 +25,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
     public CreateQuiz(String adminName, String gameMasterName, String usname) {
         initComponents();
+
         this.adminName = adminName;
         this.gameMasterName = gameMasterName;
         this.usname = usname;
@@ -304,72 +305,33 @@ public final class CreateQuiz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void option1ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_option1ButtonActionPerformed
-
         correctanswer = option1Field.getText();
-        System.out.println(correctanswer);
-
     }//GEN-LAST:event_option1ButtonActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
         resetAllFields();
-
         if (adminName != null && !adminName.isEmpty()) {
-            // Navigate back to Administrator.java for adminName
             Administrator admin = new Administrator(adminName, usname);
             admin.setVisible(true);
         } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
-            // Navigate back to GameMaster.java for gameMasterName
             GameMaster g = new GameMaster(gameMasterName, usname);
             g.setVisible(true);
         }
-
-        this.setVisible(false); // Close the current CreateQuiz window
+        this.setVisible(false);
     }//GEN-LAST:event_BackActionPerformed
 
     private void option4ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_option4ButtonActionPerformed
-
         correctanswer = option4Field.getText();
-        System.out.println(correctanswer);
-
     }//GEN-LAST:event_option4ButtonActionPerformed
 
     private void option2ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_option2ButtonActionPerformed
 
         correctanswer = option2Field.getText();
-        System.out.println(correctanswer);
-
     }//GEN-LAST:event_option2ButtonActionPerformed
 
     private void saveQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveQuizButtonActionPerformed
-        // Validate inputs before saving the quiz
-        if (!validateQuestionInput()) {
-            return; // Stop if validation fails
-        }
-
-        // Perform duplicate validation for all questions in the quiz
-        List<Integer> duplicateQuestionNumbers = new ArrayList<>();
-        for (int i = 0; i < newQuizArray.size(); i++) {
-            JSONObject questionObject = (JSONObject) newQuizArray.get(i);
-            String existingQuestion = (String) questionObject.get("question");
-            if (existingQuestion.equalsIgnoreCase(questionField.getText().trim())) {
-                duplicateQuestionNumbers.add(i + 1); // Add 1 to index to get question number
-            }
-        }
-
-        if (!duplicateQuestionNumbers.isEmpty()) {
-            String duplicateNumbers = duplicateQuestionNumbers.toString();
-            showMessage("Duplicate Question! This question already exists in the quiz at question number(s): " + duplicateNumbers,
-                    "Duplicate Question", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        saveCurrentQuestion();
-
-        if (newQuizArray.size() == numberOfQuizToEnter) {
-            saveQuizToFile();
-            resetAllFields();
-            showMessage("Quiz saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        }
+        // Validate and save the entire quiz
+        validateAndSaveQuiz();
     }//GEN-LAST:event_saveQuizButtonActionPerformed
 
     private void questionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_questionFieldActionPerformed
@@ -381,10 +343,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
     }//GEN-LAST:event_option2FieldActionPerformed
 
     private void option3ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_option3ButtonActionPerformed
-
         correctanswer = option3Field.getText();
-        System.out.println(correctanswer);
-
     }//GEN-LAST:event_option3ButtonActionPerformed
 
     private void savequizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savequizActionPerformed
@@ -398,7 +357,13 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
     private void inputButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputButtonActionPerformed
         title = quizTitle.getText().trim();
-        numberOfQuizToEnter = Integer.parseInt((String) questionAmount.getSelectedItem());
+
+        try {
+            numberOfQuizToEnter = Integer.parseInt((String) questionAmount.getSelectedItem());
+        } catch (NumberFormatException e) {
+            showMessage("Invalid number of questions selected.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         if (DEFAULT_CATEGORY.equals(categorySelection.getSelectedItem())) {
             showMessage("You must select a category.", "Validation Error", JOptionPane.WARNING_MESSAGE);
@@ -410,17 +375,12 @@ public final class CreateQuiz extends javax.swing.JFrame {
             return;
         }
 
-        if (isDuplicateQuizTitle(title)) {
-            showMessage("A quiz with the same title already exists.", "Duplicate Title", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
         currentQuestionIndex = 0;
         newQuizArray.clear();
         labelquestioncounter.setText("Question #1");
         toggleInputFields(true);
         updateNavigationButtons();
-        saveQuizButton.setEnabled(false); // Ensure save button is disabled until questions are added
+        saveQuizButton.setEnabled(true);
         showMessage("Ready to enter " + numberOfQuizToEnter + " questions.", "Quiz Setup", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_inputButtonActionPerformed
 
@@ -434,59 +394,46 @@ public final class CreateQuiz extends javax.swing.JFrame {
     }//GEN-LAST:event_option1FieldActionPerformed
 
     private void previousQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousQuestionButtonActionPerformed
-        // Save the current question without validation errors
         saveCurrentQuestion(false);
-
         if (currentQuestionIndex > 0) {
             currentQuestionIndex--;
-            loadQuestion(currentQuestionIndex); // Load the previous question
-        } else {
-            showMessage("This is the first question.", "Navigation Error", JOptionPane.WARNING_MESSAGE);
+            loadQuestion(currentQuestionIndex);
         }
-
-        updateNavigationButtons();
+        updateNavigationButtons(); // Ensure proper button state
     }//GEN-LAST:event_previousQuestionButtonActionPerformed
 
     private void nextQuestionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextQuestionButtonActionPerformed
-        // Save the current question without validation errors
         saveCurrentQuestion(false);
-
         if (currentQuestionIndex < newQuizArray.size() - 1) {
             currentQuestionIndex++;
-            loadQuestion(currentQuestionIndex); // Load the next question
+            loadQuestion(currentQuestionIndex);
         } else if (currentQuestionIndex < numberOfQuizToEnter - 1) {
-            // Clear fields and prepare for a new question
             clearFields();
             currentQuestionIndex++;
             labelquestioncounter.setText("Question #" + (currentQuestionIndex + 1));
         } else {
             showMessage("You have reached the last question.", "Navigation Error", JOptionPane.WARNING_MESSAGE);
         }
-
         updateNavigationButtons();
     }//GEN-LAST:event_nextQuestionButtonActionPerformed
 
     private void resetAllFields() {
-        // Reset title, category, and question amount fields
         quizTitle.setText("");
-        quizTitle.setEnabled(true); // Make title field visible and editable
-        categorySelection.setSelectedIndex(0); // Reset to "Select a Category"
-        categorySelection.setEnabled(true); // Enable category selection
-        questionAmount.setSelectedIndex(0); // Reset to the first value (e.g., 1)
-        questionAmount.setEnabled(true); // Enable question amount selection
-        inputButton.setEnabled(true); // Enable input button
-
-        // Reset question-related fields and disable them
+        quizTitle.setEnabled(true);
+        categorySelection.setSelectedIndex(0);
+        categorySelection.setEnabled(true);
+        questionAmount.setSelectedIndex(0);
+        questionAmount.setEnabled(true);
+        inputButton.setEnabled(true);
         clearFields();
-        newQuizArray.clear(); // Clear the quiz array
-        currentQuestionIndex = -1; // Set no question selected
-        toggleInputFields(false); // Disable all question-related fields
-        saveQuizButton.setEnabled(false); // Disable save button initially
-        updateNavigationButtons(); // Ensure navigation buttons are disabled
+        newQuizArray.clear();
+        currentQuestionIndex = -1;
+        toggleInputFields(false);
+        saveQuizButton.setEnabled(false);
+        updateNavigationButtons();
     }
 
     private void updateNavigationButtons() {
-        // Enable or disable navigation buttons based on the current state
         previousQuestionButton.setEnabled(currentQuestionIndex > 0);
         nextQuestionButton.setEnabled(currentQuestionIndex < numberOfQuizToEnter - 1);
         saveQuizButton.setEnabled(newQuizArray.size() == numberOfQuizToEnter);
@@ -497,42 +444,59 @@ public final class CreateQuiz extends javax.swing.JFrame {
             return;
         }
 
-        // Load the question and its details from the quiz array
         JSONObject questionObject = (JSONObject) newQuizArray.get(index);
-        questionField.setText((String) questionObject.get("question"));
-        option1Field.setText((String) questionObject.get("option1"));
-        option2Field.setText((String) questionObject.get("option2"));
-        option3Field.setText((String) questionObject.get("option3"));
-        option4Field.setText((String) questionObject.get("option4"));
+        questionField.setText((String) questionObject.getOrDefault("question", ""));
+        option1Field.setText((String) questionObject.getOrDefault("option1", ""));
+        option2Field.setText((String) questionObject.getOrDefault("option2", ""));
+        option3Field.setText((String) questionObject.getOrDefault("option3", ""));
+        option4Field.setText((String) questionObject.getOrDefault("option4", ""));
 
-        // Set the selected radio button based on the correct answer
-        String correctAnswer = (String) questionObject.get("answer");
-        if (correctAnswer.equalsIgnoreCase(option1Field.getText())) {
-            answerGroup.setSelected(option1Button.getModel(), true);
-        } else if (correctAnswer.equalsIgnoreCase(option2Field.getText())) {
-            answerGroup.setSelected(option2Button.getModel(), true);
-        } else if (correctAnswer.equalsIgnoreCase(option3Field.getText())) {
-            answerGroup.setSelected(option3Button.getModel(), true);
-        } else if (correctAnswer.equalsIgnoreCase(option4Field.getText())) {
-            answerGroup.setSelected(option4Button.getModel(), true);
+        String correctAnswer = (String) questionObject.getOrDefault("answer", null);
+        if (correctAnswer != null) {
+            if (correctAnswer.equalsIgnoreCase(option1Field.getText())) {
+                answerGroup.setSelected(option1Button.getModel(), true);
+            } else if (correctAnswer.equalsIgnoreCase(option2Field.getText())) {
+                answerGroup.setSelected(option2Button.getModel(), true);
+            } else if (correctAnswer.equalsIgnoreCase(option3Field.getText())) {
+                answerGroup.setSelected(option3Button.getModel(), true);
+            } else if (correctAnswer.equalsIgnoreCase(option4Field.getText())) {
+                answerGroup.setSelected(option4Button.getModel(), true);
+            }
+        } else {
+            answerGroup.clearSelection();
         }
-
-        // Update the question counter label
         labelquestioncounter.setText("Question #" + (index + 1));
     }
 
     private void saveCurrentQuestion(boolean validate) {
-        if (currentQuestionIndex < 0) {
+        if (currentQuestionIndex < 0 || currentQuestionIndex >= numberOfQuizToEnter) {
             return;
         }
 
-        // If validate is true, perform input validation
         if (validate && !validateQuestionInput()) {
             return;
         }
 
-        // Create a new question object and save it to the quiz array
-        JSONObject questionObject = createQuestionObject();
+        JSONObject questionObject = new JSONObject();
+        questionObject.put("questionnumber", currentQuestionIndex + 1);
+        questionObject.put("question", questionField.getText().trim());
+        questionObject.put("option1", option1Field.getText().trim());
+        questionObject.put("option2", option2Field.getText().trim());
+        questionObject.put("option3", option3Field.getText().trim());
+        questionObject.put("option4", option4Field.getText().trim());
+
+        if (option1Button.isSelected()) {
+            questionObject.put("answer", option1Field.getText().trim());
+        } else if (option2Button.isSelected()) {
+            questionObject.put("answer", option2Field.getText().trim());
+        } else if (option3Button.isSelected()) {
+            questionObject.put("answer", option3Field.getText().trim());
+        } else if (option4Button.isSelected()) {
+            questionObject.put("answer", option4Field.getText().trim());
+        } else {
+            questionObject.put("answer", null);
+        }
+
         if (currentQuestionIndex < newQuizArray.size()) {
             newQuizArray.set(currentQuestionIndex, questionObject);
         } else {
@@ -549,7 +513,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
         opt4 = option4Field.getText().trim();
 
         if (DEFAULT_CATEGORY.equals(category) || question.isEmpty() || opt1.isEmpty() || opt2.isEmpty() || opt3.isEmpty() || opt4.isEmpty()) {
-            showMessage("Please complete all fields and select the correct answer.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+            showMessage("Please complete all fields and select a valid answer.", "Validation Error", JOptionPane.WARNING_MESSAGE);
             return false;
         }
 
@@ -558,12 +522,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
             return false;
         }
 
-        if (isDuplicateQuestion(question)) {
-            showMessage("This question already exists in the quiz.", "Duplicate Question", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
-
-        if (!Arrays.asList(opt1, opt2, opt3, opt4).contains(correctanswer)) {
+        if (correctanswer == null || !Arrays.asList(opt1, opt2, opt3, opt4).contains(correctanswer)) {
             showMessage("The correct answer must match one of the options.", "Validation Error", JOptionPane.WARNING_MESSAGE);
             return false;
         }
@@ -571,59 +530,8 @@ public final class CreateQuiz extends javax.swing.JFrame {
         return true;
     }
 
-    private void validateAndSaveQuiz() {
-        // Validate inputs before saving the quiz
-        if (!validateQuestionInput()) {
-            return; // Stop if validation fails
-        }
-
-        saveCurrentQuestion(true); // Save with validation
-
-        if (newQuizArray.size() == numberOfQuizToEnter) {
-            saveQuizToFile(); // Save to file
-            resetAllFields();
-            showMessage("Quiz saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
     private boolean areOptionsUnique(String... options) {
         return Arrays.stream(options).distinct().count() == options.length;
-    }
-
-    private boolean isDuplicateQuestion(String question) {
-        return newQuizArray.stream()
-                .anyMatch(obj -> ((JSONObject) obj).get("question").toString().equalsIgnoreCase(question));
-    }
-
-    private boolean isDuplicateQuizTitle(String title) {
-        try (FileReader reader = new FileReader(FILE_PATH)) {
-            JSONObject root = (JSONObject) jsonParser.parse(reader);
-            JSONArray quizzes = (JSONArray) root.get("Quizzes");
-
-            for (Object obj : quizzes) {
-                JSONObject existingQuiz = (JSONObject) obj;
-                if (existingQuiz.get("QuizTitle").toString().equalsIgnoreCase(title)) {
-                    return true;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            Logger.getLogger(CreateQuiz.class.getName()).log(Level.WARNING, "Quiz data file not found.", e);
-        } catch (IOException | ParseException e) {
-            Logger.getLogger(CreateQuiz.class.getName()).log(Level.SEVERE, "An error occurred while validating quiz title.", e);
-        }
-        return false;
-    }
-
-    private JSONObject createQuestionObject() {
-        JSONObject questionObject = new JSONObject();
-        questionObject.put("questionnumber", currentQuestionIndex + 1);
-        questionObject.put("question", question);
-        questionObject.put("option1", opt1);
-        questionObject.put("option2", opt2);
-        questionObject.put("option3", opt3);
-        questionObject.put("option4", opt4);
-        questionObject.put("answer", correctanswer);
-        return questionObject;
     }
 
     private void clearFields() {
@@ -636,29 +544,39 @@ public final class CreateQuiz extends javax.swing.JFrame {
     }
 
     private void saveQuizToFile() {
-        try (FileWriter writer = new FileWriter(FILE_PATH)) {
-            JSONObject root = new JSONObject();
-            JSONArray quizzes = new JSONArray();
+        try {
+            JSONObject root = new JSONObject(); // Root object for JSON
+            JSONArray quizzes = new JSONArray(); // Array to store all quizzes
 
+            // Check if file exists and load existing data
             File file = new File(FILE_PATH);
-            if (file.exists()) {
+            if (file.exists() && file.length() > 0) {
                 try (FileReader reader = new FileReader(FILE_PATH)) {
-                    root = (JSONObject) jsonParser.parse(reader);
-                    quizzes = (JSONArray) root.getOrDefault("Quizzes", new JSONArray());
-                } catch (ParseException e) {
-                    Logger.getLogger(CreateQuiz.class.getName()).log(Level.WARNING, "Existing file corrupted. Overwriting.", e);
+                    Object parsedObject = jsonParser.parse(reader);
+                    if (parsedObject instanceof JSONObject jSONObject) { // Ensure the content is a valid JSON object
+                        root = jSONObject;
+                        quizzes = (JSONArray) root.getOrDefault("Quizzes", new JSONArray());
+                    } else {
+                        Logger.getLogger(CreateQuiz.class.getName()).log(Level.WARNING, "Invalid JSON structure in file. Initializing new data.");
+                    }
+                } catch (IOException | ParseException e) {
+                    Logger.getLogger(CreateQuiz.class.getName()).log(Level.WARNING, "Error reading or parsing file. Initializing new data.", e);
                 }
             }
 
+            // Create a new quiz object with the current session data
             JSONObject newQuiz = new JSONObject();
             newQuiz.put("QuizTitle", title);
             newQuiz.put("Creator", gameMasterName);
             newQuiz.put("Category", category);
             newQuiz.put("Questions", newQuizArray);
-            quizzes.add(newQuiz);
+            quizzes.add(newQuiz); // Add the new quiz to the array
 
+            // Update the root object and write to the file
             root.put("Quizzes", quizzes);
-            writer.write(root.toJSONString());
+            try (FileWriter writer = new FileWriter(FILE_PATH)) {
+                writer.write(root.toJSONString());
+            }
         } catch (IOException e) {
             showMessage("Failed to save the quiz.", "Save Error", JOptionPane.ERROR_MESSAGE);
             Logger.getLogger(CreateQuiz.class.getName()).log(Level.SEVERE, "Error saving quiz.", e);
@@ -669,24 +587,26 @@ public final class CreateQuiz extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, message, title, messageType);
     }
 
-private void saveCurrentQuestion(boolean validate) {
-    if (currentQuestionIndex < 0 || currentQuestionIndex >= numberOfQuizToEnter) {
-        return; // Exit if the current index is invalid or exceeds the number of questions
-    }
+    private void validateAndSaveQuiz() {
+        // Validate all questions in the quiz
+        for (int i = 0; i < newQuizArray.size(); i++) {
+            currentQuestionIndex = i;
+            if (!validateQuestionInput()) {
+                showMessage("Validation failed for Question #" + (i + 1), "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return; // Stop saving if validation fails
+            }
+        }
 
-    // If validate is true, perform input validation
-    if (validate && !validateQuestionInput()) {
-        return; // Exit if validation fails
-    }
+        // Check if the quiz is ready to be saved (all questions entered)
+        if (newQuizArray.size() != numberOfQuizToEnter) {
+            showMessage("Please complete all " + numberOfQuizToEnter + " questions before saving.", "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-    // Create a new question object and save it to the quiz array
-    JSONObject questionObject = createQuestionObject();
-    if (currentQuestionIndex < newQuizArray.size()) {
-        newQuizArray.set(currentQuestionIndex, questionObject); // Update existing question
-    } else {
-        newQuizArray.add(questionObject); // Add new question
+        saveQuizToFile(); // Save the entire quiz to file
+        resetAllFields(); // Reset fields after saving
+        showMessage("Quiz saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
-}
 
     private void toggleInputFields(boolean enable) {
         questionField.setEnabled(enable);
@@ -700,11 +620,18 @@ private void saveCurrentQuestion(boolean validate) {
         option4Button.setEnabled(enable);
         saveQuizButton.setEnabled(enable);
         labelquestioncounter.setEnabled(enable);
+        nextQuestionButton.setEnabled(enable);
+        previousQuestionButton.setEnabled(enable);
     }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new CreateQuiz("TestName", "tests", "Testing").setVisible(true);
+            try {
+                CreateQuiz createQuiz = new CreateQuiz("AdminName", "GameMasterName", "Username");
+                createQuiz.setVisible(true);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Failed to initialize the application: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
     }
 
@@ -734,4 +661,5 @@ private void saveCurrentQuestion(boolean validate) {
     private javax.swing.JTextField quizTitle;
     private javax.swing.JButton saveQuizButton;
     // End of variables declaration//GEN-END:variables
+
 }

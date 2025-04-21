@@ -184,13 +184,33 @@ public final class Player extends javax.swing.JFrame {
                     Profile.setEnabled(true);
 
                     // Check if disabledFeature is an array or single string
-                    if (disabledFeatureObject instanceof JSONArray disabledFeaturesArray) {
-
-                        // Disable buttons based on the array contents
-                        for (Object feature : disabledFeaturesArray) {
-                            String featureName = (String) feature;
-
-                            switch (featureName) {
+                    switch (disabledFeatureObject) {
+                        case JSONArray disabledFeaturesArray -> {
+                            
+                            // Disable buttons based on the array contents
+                            for (Object feature : disabledFeaturesArray) {
+                                String featureName = (String) feature;
+                                
+                                switch (featureName) {
+                                    case "StartGame" ->
+                                        StartGame.setEnabled(false);
+                                    case "Leaderboard" ->
+                                        Leaderboard.setEnabled(false);
+                                    case "History" ->
+                                        History.setEnabled(false);
+                                    case "Profile" ->
+                                        Profile.setEnabled(false);
+                                }
+                            }
+                        }
+                        case String string -> {
+                            // Handle disabledFeature as a single string (fallback for older format)
+                            Disabled_Feature = string;
+                            
+                            switch (Disabled_Feature) {
+                                case "None" -> {
+                                    // All buttons remain enabled
+                                }
                                 case "StartGame" ->
                                     StartGame.setEnabled(false);
                                 case "Leaderboard" ->
@@ -201,22 +221,7 @@ public final class Player extends javax.swing.JFrame {
                                     Profile.setEnabled(false);
                             }
                         }
-                    } else if (disabledFeatureObject instanceof String string) {
-                        // Handle disabledFeature as a single string (fallback for older format)
-                        Disabled_Feature = string;
-
-                        switch (Disabled_Feature) {
-                            case "None" -> {
-                                // All buttons remain enabled
-                            }
-                            case "StartGame" ->
-                                StartGame.setEnabled(false);
-                            case "Leaderboard" ->
-                                Leaderboard.setEnabled(false);
-                            case "History" ->
-                                History.setEnabled(false);
-                            case "Profile" ->
-                                Profile.setEnabled(false);
+                        default -> {
                         }
                     }
 

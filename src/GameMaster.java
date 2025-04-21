@@ -158,12 +158,12 @@ public final class GameMaster extends javax.swing.JFrame {
 
     private void DeleteQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteQuizActionPerformed
         this.setVisible(false);
-        new DeleteQuiz(gameMasterName, usname).setVisible(true);
+        new DeleteQuiz(null, gameMasterName, usname).setVisible(true);
     }//GEN-LAST:event_DeleteQuizActionPerformed
 
     private void EditQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditQuizActionPerformed
         this.setVisible(false);
-        new EditQuizTable(gameMasterName, usname).setVisible(true);
+        new EditQuizTable(null, gameMasterName, usname, null).setVisible(true);
     }//GEN-LAST:event_EditQuizActionPerformed
 
     private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
@@ -181,7 +181,7 @@ public final class GameMaster extends javax.swing.JFrame {
     private void ProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileButtonActionPerformed
         this.dispose();
         // Pass the correct username to the Profile constructor
-        new Profile(null, null, gameMasterName, usname).setVisible(true);
+        new Profile(null, gameMasterName, null, usname).setVisible(true); // changed
     }//GEN-LAST:event_ProfileButtonActionPerformed
 
     public void Current_Disabled_Feature() {
@@ -215,11 +215,11 @@ public final class GameMaster extends javax.swing.JFrame {
                     // Check if disabledFeature is an array or single string
                     switch (disabledFeatureObject) {
                         case JSONArray disabledFeaturesArray -> {
-                            
+
                             // Disable buttons based on the array contents
                             for (Object feature : disabledFeaturesArray) {
                                 String featureName = (String) feature;
-                                
+
                                 switch (featureName) {
                                     case "Leaderboard" ->
                                         Leaderboard.setEnabled(false);
@@ -239,7 +239,7 @@ public final class GameMaster extends javax.swing.JFrame {
                         case String string -> {
                             // Handle disabledFeature as a single string (fallback for older format)
                             Disabled_Feature = string;
-                            
+
                             switch (Disabled_Feature) {
                                 case "None" -> {
                                     // All buttons remain enabled

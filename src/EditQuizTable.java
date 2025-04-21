@@ -15,12 +15,16 @@ import org.json.simple.parser.ParseException;
 public class EditQuizTable extends javax.swing.JFrame {
 
     private static final String[] FILE_PATH = {"src/QuizData.json", "src/UserData.json"};
+    private final String adminName;
     private final String gameMasterName;
     private final String usname;
+    private final String selectedQuizTitle;
 
-    public EditQuizTable(String gameMasterName, String usname) {
+    public EditQuizTable(String adminName, String gameMasterName, String usname, String selectedQuizTitle) {
+        this.adminName = adminName;
         this.gameMasterName = gameMasterName;
         this.usname = usname;
+        this.selectedQuizTitle = selectedQuizTitle;
         initComponents();
         loadQuizzesByCreator();
         populateCategorySelection(); // Populates category combo box with available categories
@@ -147,8 +151,17 @@ public class EditQuizTable extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        new GameMaster(gameMasterName, usname).setVisible(true);
-        this.dispose();
+        if (adminName != null && !adminName.isEmpty()) {
+            // Navigate back to Administrator.java for adminName
+            Administrator admin = new Administrator(adminName, usname);
+            admin.setVisible(true);
+        } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+            // Navigate back to GameMaster.java for gameMasterName
+            GameMaster g = new GameMaster(gameMasterName, usname);
+            g.setVisible(true);
+        }
+
+        this.setVisible(false); // Close the current CreateQuiz window
     }//GEN-LAST:event_BackButtonActionPerformed
 
     private void CategorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategorySelectionActionPerformed
@@ -179,7 +192,7 @@ public class EditQuizTable extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Failed to read quiz for undo.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        EditQuiz e = new EditQuiz(selectedQuizID, gameMasterName, usname);
+        EditQuiz e = new EditQuiz(gameMasterName, usname, selectedQuizTitle, null);
         e.setVisible(true);
         setVisible(false);
     }//GEN-LAST:event_EditButtonActionPerformed
@@ -319,8 +332,12 @@ public class EditQuizTable extends javax.swing.JFrame {
         }
     }
 
-    // ✅ CHECK IF USER IS ADMINISTRATOR
     private boolean isAdminUser() {
+        if (adminName == null || adminName.isEmpty()) {
+            // If adminName is null or empty, the user is not an administrator
+            return false;
+        }
+
         try (FileReader reader = new FileReader(FILE_PATH[1])) {
             JSONParser parser = new JSONParser();
             JSONObject root = (JSONObject) parser.parse(reader);
@@ -335,7 +352,7 @@ public class EditQuizTable extends javax.swing.JFrame {
                     String username = usernameObj.toString();
                     String type = typeObj.toString();
 
-                    if (gameMasterName.equals(username)) {
+                    if (adminName.equals(username)) {
                         return type.equalsIgnoreCase("Administrator");
                     }
                 }
@@ -343,7 +360,8 @@ public class EditQuizTable extends javax.swing.JFrame {
         } catch (IOException | ParseException e) {
             JOptionPane.showMessageDialog(this, "Error reading user data.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        return false;
+
+        return false; // Return false if adminName is not found or an error occurs
     }
 
 

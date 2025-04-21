@@ -12,7 +12,8 @@ public class EditQuiz extends javax.swing.JFrame {
 
     private static final String FILE_PATH = "src/QuizData.json";
     private static final JSONParser jsonParser = new JSONParser();
-
+    private final String selectedQuizTitle;
+    private final String adminName;
     private final String gameMasterName;
     private final String usname;
     private final ButtonGroup answerGroup;
@@ -20,10 +21,12 @@ public class EditQuiz extends javax.swing.JFrame {
 
     private int currentQuestionIndex = -1; // Tracks the currently displayed question
 
-    public EditQuiz(String selectedQuizTitle, String gameMasterName, String usname) {
+    public EditQuiz(String selectedQuizTitle, String adminName, String gameMasterName, String usname) {
         initComponents();
+        this.adminName = adminName;
         this.gameMasterName = gameMasterName;
         this.usname = usname;
+        this.selectedQuizTitle = selectedQuizTitle;
 
         // Group radio buttons for selecting the correct answer
         answerGroup = new ButtonGroup();
@@ -283,8 +286,17 @@ public class EditQuiz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
-        setVisible(false);
-        new EditQuizTable(gameMasterName, usname).setVisible(true);
+        if (adminName != null && !adminName.isEmpty()) {
+            // Navigate back to Administrator.java for adminName
+            Administrator admin = new Administrator(adminName, usname);
+            admin.setVisible(true);
+        } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+            // Navigate back to GameMaster.java for gameMasterName
+            GameMaster g = new GameMaster(gameMasterName, usname);
+            g.setVisible(true);
+        }
+
+        this.setVisible(false); // Close the current CreateQuiz window
     }//GEN-LAST:event_BackActionPerformed
 
     private void option2ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_option2ButtonActionPerformed
@@ -457,7 +469,7 @@ public class EditQuiz extends javax.swing.JFrame {
     }
 
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new EditQuiz("Sample Quiz", "GameMaster", "testUser").setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new EditQuiz("Sample Quiz", "GameMaster", "testUser", "testss").setVisible(true));
     }
 
 

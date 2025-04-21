@@ -29,6 +29,7 @@ public final class Administrator extends javax.swing.JFrame {
         populateUserSelection();
         populateUserSelection_disable_account_feature();
         Current_Disabled_Feature(); // Dynamically enable/disable buttons based on Disabled_Feature
+        welcomeMessage.setText("Welcome, Administrator " + adminName + "!"); // ✅ Fixed from usernameLabel
 
     }
 
@@ -42,7 +43,7 @@ public final class Administrator extends javax.swing.JFrame {
     private void initComponents() {
 
         admin = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        welcomeMessage = new javax.swing.JLabel();
         editAccountButton = new javax.swing.JButton();
         disableFeatureButton = new javax.swing.JButton();
         menubutton = new javax.swing.JButton();
@@ -88,7 +89,7 @@ public final class Administrator extends javax.swing.JFrame {
 
         admin.setBackground(new java.awt.Color(204, 204, 204));
 
-        jLabel1.setText("Welcome Administrator");
+        welcomeMessage.setText("Welcome Administrator");
 
         editAccountButton.setText("Edit a Account");
         editAccountButton.addActionListener(new java.awt.event.ActionListener() {
@@ -129,7 +130,7 @@ public final class Administrator extends javax.swing.JFrame {
                         .addComponent(disableFeatureButton))
                     .addGroup(adminLayout.createSequentialGroup()
                         .addGap(27, 27, 27)
-                        .addComponent(jLabel1))
+                        .addComponent(welcomeMessage))
                     .addGroup(adminLayout.createSequentialGroup()
                         .addGap(51, 51, 51)
                         .addComponent(logoutButton))
@@ -145,7 +146,7 @@ public final class Administrator extends javax.swing.JFrame {
             adminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(adminLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jLabel1)
+                .addComponent(welcomeMessage)
                 .addGap(64, 64, 64)
                 .addComponent(menubutton)
                 .addGap(18, 18, 18)
@@ -530,28 +531,28 @@ public final class Administrator extends javax.swing.JFrame {
     private void leaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaderboardButtonActionPerformed
         this.setVisible(false);
         // Navigate to the Leaderboard with the Game Master's details
-        new Leaderboard(null, adminName, null, usname).setVisible(true);
+        new Leaderboard(adminName, null, null, usname).setVisible(true);
     }//GEN-LAST:event_leaderboardButtonActionPerformed
 
     private void historyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyButtonActionPerformed
         this.setVisible(false);
         // Corrected the argument order and roles passed to the History class
-        new History(adminName, null, null, usname).setVisible(true);
+        new History(adminName, usname, null, null).setVisible(true);
     }//GEN-LAST:event_historyButtonActionPerformed
 
     private void createQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createQuizButtonActionPerformed
         this.setVisible(false);
-        new CreateQuiz(adminName, null, usname).setVisible(true);
+        new CreateQuiz(adminName, usname, null).setVisible(true);
     }//GEN-LAST:event_createQuizButtonActionPerformed
 
     private void deleteQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteQuizButtonActionPerformed
         this.setVisible(false);
-        new DeleteQuiz(adminName, usname).setVisible(true);
+        new DeleteQuiz(adminName, null, usname).setVisible(true);
     }//GEN-LAST:event_deleteQuizButtonActionPerformed
 
     private void editQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editQuizButtonActionPerformed
         this.setVisible(false);
-        new EditQuizTable(adminName, usname).setVisible(true);
+        new EditQuizTable(adminName, null, usname, null).setVisible(true);
     }//GEN-LAST:event_editQuizButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
@@ -872,7 +873,6 @@ public final class Administrator extends javax.swing.JFrame {
     private javax.swing.JPanel edit_account_pane;
     private javax.swing.JComboBox<String> featureSelection;
     private javax.swing.JButton historyButton;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
@@ -900,5 +900,6 @@ public final class Administrator extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> userSelection;
     private javax.swing.JComboBox<String> userSelection1;
     private javax.swing.JTextField userUI;
+    private javax.swing.JLabel welcomeMessage;
     // End of variables declaration//GEN-END:variables
 }

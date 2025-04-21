@@ -1,5 +1,4 @@
 
-import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -17,11 +16,13 @@ public class DeleteQuiz extends javax.swing.JFrame {
 
     private static final String FILE_PATH = "src/QuizData.json";
     private final Stack<DeletedQuiz> deletedQuizzesStack = new Stack<>(); // Stack to store deletion history
+    private final String adminName;
     private final String gameMasterName;
     private final String usname;
     private boolean isUndoDialogShown = false; // Flag to prevent duplicate dialogs
 
-    public DeleteQuiz(String gameMasterName, String usname) {
+    public DeleteQuiz(String adminName, String gameMasterName, String usname) {
+        this.adminName = adminName;
         this.gameMasterName = gameMasterName;
         this.usname = usname;
         initComponents();
@@ -164,9 +165,16 @@ public class DeleteQuiz extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
-        GameMaster g = new GameMaster(gameMasterName, usname);
-        g.setVisible(true);
-        setVisible(false);
+        if (adminName != null && !adminName.isEmpty()) {
+            // Navigate back to Administrator.java for adminName
+            Administrator admin = new Administrator(adminName, usname);
+            admin.setVisible(true);
+        } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
+            GameMaster g = new GameMaster(gameMasterName, usname);
+            g.setVisible(true);
+        }
+
+        this.setVisible(false); // Close the current CreateQuiz window
     }//GEN-LAST:event_BackButtonActionPerformed
 
     private void CategorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategorySelectionActionPerformed
@@ -308,14 +316,14 @@ public class DeleteQuiz extends javax.swing.JFrame {
                 String creator = (String) quiz.get("Creator");
                 String category = (String) quiz.get("Category");
 
-                if (!creator.equals(gameMasterName)) {
-                    continue;
-                }
+                // Show all quizzes if the user is an Administrator
+                boolean isAdmin = adminName != null && !adminName.isEmpty();
+                boolean matchesCreator = isAdmin || creator.equals(gameMasterName);
 
                 boolean matchesCategory = "All".equals(selectedCategory) || category.equalsIgnoreCase(selectedCategory);
                 boolean matchesSearch = title.toLowerCase().contains(searchText) || category.toLowerCase().contains(searchText);
 
-                if (matchesCategory && matchesSearch) {
+                if (matchesCreator && matchesCategory && matchesSearch) {
                     model.addRow(new Object[]{title, creator, category});
                 }
             }
@@ -383,7 +391,7 @@ public class DeleteQuiz extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new DeleteQuiz("Test", "Testss").setVisible(true);
+            new DeleteQuiz("Test", "Testss", "Testsss").setVisible(true);
         });
     }
 

@@ -249,7 +249,7 @@ public class SignIn extends javax.swing.JFrame {
             Logger.getLogger(SignIn.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        java.awt.EventQueue.invokeLater(() -> new SignIn("Test","Testss").setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new SignIn("Test", "Testss").setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
