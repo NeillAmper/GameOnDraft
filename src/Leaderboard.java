@@ -27,7 +27,7 @@ public class Leaderboard extends javax.swing.JFrame {
         this.playerName = playerName;
         this.usname = usname;
         initComponents();
-        tableModel = (DefaultTableModel) LeaderboardTable.getModel();
+        tableModel = (DefaultTableModel) leaderboardTable.getModel();
         loadCategories();
         loadAllLeaderboardData();
         addSearchListener();
@@ -39,24 +39,24 @@ public class Leaderboard extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        CategorySelection = new javax.swing.JComboBox<>();
+        categorySelection = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        LeaderboardTable = new javax.swing.JTable();
+        leaderboardTable = new javax.swing.JTable();
         Back = new javax.swing.JButton();
-        SearchField = new javax.swing.JTextField();
+        searchField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Leaderboard");
 
-        CategorySelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Math", "Science", "History", "English" }));
-        CategorySelection.addActionListener(new java.awt.event.ActionListener() {
+        categorySelection.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Math", "Science", "History", "English" }));
+        categorySelection.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CategorySelectionActionPerformed(evt);
+                categorySelectionActionPerformed(evt);
             }
         });
 
-        LeaderboardTable.setModel(new javax.swing.table.DefaultTableModel(
+        leaderboardTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -75,16 +75,16 @@ public class Leaderboard extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        LeaderboardTable.addAncestorListener(new javax.swing.event.AncestorListener() {
+        leaderboardTable.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                LeaderboardTableAncestorAdded(evt);
+                leaderboardTableAncestorAdded(evt);
             }
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
-        jScrollPane1.setViewportView(LeaderboardTable);
+        jScrollPane1.setViewportView(leaderboardTable);
 
         Back.setText("<");
         Back.addActionListener(new java.awt.event.ActionListener() {
@@ -110,9 +110,9 @@ public class Leaderboard extends javax.swing.JFrame {
                                 .addComponent(jLabel1))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(57, 57, 57)
-                        .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(categorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(12, 12, 12)))
                 .addContainerGap(19, Short.MAX_VALUE))
         );
@@ -125,8 +125,8 @@ public class Leaderboard extends javax.swing.JFrame {
                     .addComponent(Back))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CategorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(SearchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(categorySelection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -174,56 +174,82 @@ public class Leaderboard extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_BackActionPerformed
 
-    private void CategorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategorySelectionActionPerformed
+    private void categorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categorySelectionActionPerformed
         // Skip if categories are still being loaded
         if (isLoadingCategories) {
             return;
         }
-        String selectedCategory = (String) CategorySelection.getSelectedItem();
+
+        String selectedCategory = (String) categorySelection.getSelectedItem();
         if (selectedCategory != null) {
+            // Force reload by explicitly calling filterByCategory
             filterByCategory(selectedCategory);
         }
-    }//GEN-LAST:event_CategorySelectionActionPerformed
+    }//GEN-LAST:event_categorySelectionActionPerformed
 
-    private void LeaderboardTableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_LeaderboardTableAncestorAdded
+    private void leaderboardTableAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_leaderboardTableAncestorAdded
         // TODO add your handling code here:
-    }//GEN-LAST:event_LeaderboardTableAncestorAdded
+    }//GEN-LAST:event_leaderboardTableAncestorAdded
 
     private void loadAllLeaderboardData() {
-        try (FileReader reader = new FileReader(FILE_PATH[1])) {
+        try (FileReader reader = new FileReader(FILE_PATH[1])) { // Use FILE_PATH[1] for UserData.json
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
+
+            // Ensure "Standing" exists and is not null
             JSONArray standing = (JSONArray) jsonObject.get("Standing");
+            if (standing == null) {
+                JOptionPane.showMessageDialog(this, "Leaderboard data is empty.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                tableModel.setRowCount(0); // Clear the table
+                return;
+            }
 
             List<JSONObject> allData = new ArrayList<>();
             for (Object obj : standing) {
-                allData.add((JSONObject) obj);
+                JSONObject entry = (JSONObject) obj;
+                allData.add(entry); // Add all entries without filtering
             }
 
-            loadLeaderBoard(allData);
+            // Clear the table and load all data into it
+            tableModel.setRowCount(0); // Clear existing data from the table
+            loadLeaderBoard(allData); // Load all data into the table
         } catch (IOException | ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Error loading leaderboard data: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void filterByCategory(String selectedCategory) {
-        try (FileReader reader = new FileReader(FILE_PATH[1])) {
+        try (FileReader reader = new FileReader(FILE_PATH[1])) { // Use FILE_PATH[1] for UserData.json
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
+
+            // Ensure "Standing" exists and is not null
             JSONArray standing = (JSONArray) jsonObject.get("Standing");
+            if (standing == null) {
+                JOptionPane.showMessageDialog(this, "Leaderboard data is empty.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                tableModel.setRowCount(0); // Clear the table
+                return;
+            }
 
             List<JSONObject> filtered = new ArrayList<>();
             for (Object obj : standing) {
                 JSONObject entry = (JSONObject) obj;
                 String category = (String) entry.get("category");
-                if (selectedCategory.equals("All") || selectedCategory.equalsIgnoreCase(category)) {
+
+                // If "All" is selected, include all entries
+                if ("All".equalsIgnoreCase(selectedCategory)) {
+                    filtered.add(entry);
+                } else if (category != null && selectedCategory.equalsIgnoreCase(category)) {
+                    // Filter by the selected category
                     filtered.add(entry);
                 }
             }
 
-            // Load all data into the leaderboard table
-            loadLeaderBoard(filtered);
+            // Clear the table and reload data
+            tableModel.setRowCount(0); // Clear existing data from the table
+            loadLeaderBoard(filtered); // Load new data into the table
         } catch (IOException | ParseException ex) {
-            JOptionPane.showMessageDialog(this, "Error loading leaderboard: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error filtering leaderboard: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -267,10 +293,10 @@ public class Leaderboard extends javax.swing.JFrame {
     }
 
     private void addSearchListener() {
-        SearchField.addKeyListener(new KeyAdapter() {
+        searchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                String keyword = SearchField.getText().trim().toLowerCase();
+                String keyword = searchField.getText().trim().toLowerCase();
                 if (keyword.isEmpty()) {
                     loadAllLeaderboardData();
                 } else {
@@ -286,37 +312,12 @@ public class Leaderboard extends javax.swing.JFrame {
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
             JSONArray leaderboard = (JSONArray) jsonObject.get("Standing");
 
-            List<JSONObject> allData = new ArrayList<>();
-            for (Object obj : leaderboard) {
-                allData.add((JSONObject) obj);
-            }
-
-            // Get highest score per player
-            Map<String, JSONObject> bestScores = new HashMap<>();
-            for (JSONObject entry : allData) {
-                String player = (String) entry.get("player");
-                if (player == null) {
-                    continue;
-                }
-
-                long quizzesDone = (entry.get("quizzesDone") instanceof Number)
-                        ? ((Number) entry.get("quizzesDone")).longValue()
-                        : 0L;
-
-                if (!bestScores.containsKey(player) || quizzesDone > (long) bestScores.get(player).get("quizzesDone")) {
-                    bestScores.put(player, entry);
-                }
-            }
-
-            List<JSONObject> sorted = new ArrayList<>(bestScores.values());
-            sorted.sort((a, b) -> Long.compare((long) b.get("quizzesDone"), (long) a.get("quizzesDone")));
-
             List<Object[]> matchedRows = new ArrayList<>();
-            String keywordLower = keyword.toLowerCase();
+            String keywordLower = keyword.toLowerCase(); // Convert keyword to lowercase for case-insensitive searching
 
-            for (int i = 0; i < sorted.size(); i++) {
-                JSONObject entry = sorted.get(i);
-                int rank = i + 1;
+            int rank = 1;
+            for (Object obj : leaderboard) {
+                JSONObject entry = (JSONObject) obj;
 
                 String title = switch (rank) {
                     case 1 ->
@@ -358,8 +359,11 @@ public class Leaderboard extends javax.swing.JFrame {
                         category != null ? category : ""
                     });
                 }
+
+                rank++;
             }
 
+            // Update the table with matched rows
             tableModel.setRowCount(0);
             for (Object[] row : matchedRows) {
                 tableModel.addRow(row);
@@ -372,29 +376,16 @@ public class Leaderboard extends javax.swing.JFrame {
 
     private void loadCategories() {
         isLoadingCategories = true;
-        Set<String> categories = new HashSet<>();
 
-        try (FileReader reader = new FileReader(FILE_PATH[1])) {
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(reader);
-            JSONArray leaderboard = (JSONArray) jsonObject.get("Standing");
-
-            for (Object obj : leaderboard) {
-                JSONObject quiz = (JSONObject) obj;
-                String category = (String) quiz.get("category");
-                if (category != null && !category.isEmpty()) {
-                    categories.add(category);
-                }
-            }
-
-            // Populate category dropdown
-            CategorySelection.removeAllItems();
-            CategorySelection.addItem("All");
-            for (String category : categories) {
-                CategorySelection.addItem(category);
-            }
-
-        } catch (IOException | ParseException ex) {
+        try {
+            // Populate fixed categories
+            categorySelection.removeAllItems();
+            categorySelection.addItem("All");
+            categorySelection.addItem("Math");
+            categorySelection.addItem("Science");
+            categorySelection.addItem("History");
+            categorySelection.addItem("English");
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error loading categories: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
             isLoadingCategories = false;
@@ -411,11 +402,11 @@ public class Leaderboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Back;
-    private javax.swing.JComboBox<String> CategorySelection;
-    private javax.swing.JTable LeaderboardTable;
-    private javax.swing.JTextField SearchField;
+    private javax.swing.JComboBox<String> categorySelection;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable leaderboardTable;
+    private javax.swing.JTextField searchField;
     // End of variables declaration//GEN-END:variables
 }

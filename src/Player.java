@@ -31,48 +31,48 @@ public final class Player extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        StartGame = new javax.swing.JButton();
-        Profile = new javax.swing.JButton();
-        Leaderboard = new javax.swing.JButton();
-        History = new javax.swing.JButton();
-        Logout = new javax.swing.JButton();
+        startGameButton = new javax.swing.JButton();
+        profileButton = new javax.swing.JButton();
+        leaderboardButton = new javax.swing.JButton();
+        historyButton = new javax.swing.JButton();
+        logoutButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Welcome, Player (...)!");
 
-        StartGame.setText("Start Game");
-        StartGame.addActionListener(new java.awt.event.ActionListener() {
+        startGameButton.setText("Start Game");
+        startGameButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StartGameActionPerformed(evt);
+                startGameButtonActionPerformed(evt);
             }
         });
 
-        Profile.setText("Profile");
-        Profile.addActionListener(new java.awt.event.ActionListener() {
+        profileButton.setText("Profile");
+        profileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ProfileActionPerformed(evt);
+                profileButtonActionPerformed(evt);
             }
         });
 
-        Leaderboard.setText("Leaderboards");
-        Leaderboard.addActionListener(new java.awt.event.ActionListener() {
+        leaderboardButton.setText("Leaderboard");
+        leaderboardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LeaderboardActionPerformed(evt);
+                leaderboardButtonActionPerformed(evt);
             }
         });
 
-        History.setText("History");
-        History.addActionListener(new java.awt.event.ActionListener() {
+        historyButton.setText("History");
+        historyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HistoryActionPerformed(evt);
+                historyButtonActionPerformed(evt);
             }
         });
 
-        Logout.setText("Logout");
-        Logout.addActionListener(new java.awt.event.ActionListener() {
+        logoutButton.setText("Logout");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LogoutActionPerformed(evt);
+                logoutButtonActionPerformed(evt);
             }
         });
 
@@ -84,14 +84,14 @@ public final class Player extends javax.swing.JFrame {
                 .addGap(127, 127, 127)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(StartGame)
+                        .addComponent(startGameButton)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(Leaderboard)
+                            .addComponent(leaderboardButton)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(Profile)
-                                    .addComponent(History)
-                                    .addComponent(Logout))
+                                    .addComponent(profileButton)
+                                    .addComponent(historyButton)
+                                    .addComponent(logoutButton))
                                 .addGap(24, 24, 24))))
                     .addComponent(jLabel1))
                 .addContainerGap(150, Short.MAX_VALUE))
@@ -102,15 +102,15 @@ public final class Player extends javax.swing.JFrame {
                 .addGap(65, 65, 65)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
-                .addComponent(StartGame)
+                .addComponent(startGameButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Leaderboard)
+                .addComponent(leaderboardButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(History)
+                .addComponent(historyButton)
                 .addGap(18, 18, 18)
-                .addComponent(Profile)
+                .addComponent(profileButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(Logout)
+                .addComponent(logoutButton)
                 .addGap(35, 35, 35))
         );
 
@@ -129,33 +129,33 @@ public final class Player extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         SignIn b = new SignIn(usname, "test");
         b.setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_LogoutActionPerformed
+    }//GEN-LAST:event_logoutButtonActionPerformed
 
-    private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
+    private void leaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaderboardButtonActionPerformed
         this.dispose();
         // Navigate to the Leaderboard with the player's details
         new Leaderboard(null, null, playerName, usname).setVisible(true);
-    }//GEN-LAST:event_LeaderboardActionPerformed
+    }//GEN-LAST:event_leaderboardButtonActionPerformed
 
-    private void HistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistoryActionPerformed
+    private void historyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyButtonActionPerformed
         this.dispose();
         new History(null, null, playerName, usname).setVisible(true);
-    }//GEN-LAST:event_HistoryActionPerformed
+    }//GEN-LAST:event_historyButtonActionPerformed
 
-    private void StartGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StartGameActionPerformed
+    private void startGameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startGameButtonActionPerformed
         this.dispose();
         new QuizSelection(playerName, "Player", "Player", usname).setVisible(true);
-    }//GEN-LAST:event_StartGameActionPerformed
+    }//GEN-LAST:event_startGameButtonActionPerformed
 
-    private void ProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileActionPerformed
+    private void profileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButtonActionPerformed
         this.dispose();
         // Pass the correct username to the Profile constructor
         new Profile(null, null, playerName, usname).setVisible(true);
-    }//GEN-LAST:event_ProfileActionPerformed
+    }//GEN-LAST:event_profileButtonActionPerformed
 
     public void Current_Disabled_Feature() {
         Disabled_Feature = "None"; // Default value in case of error or missing data
@@ -178,10 +178,10 @@ public final class Player extends javax.swing.JFrame {
                     Object disabledFeatureObject = account.get("disabledFeature");
 
                     // Reset all buttons to enabled (default state)
-                    StartGame.setEnabled(true);
-                    Leaderboard.setEnabled(true);
-                    History.setEnabled(true);
-                    Profile.setEnabled(true);
+                    startGameButton.setEnabled(true);
+                    leaderboardButton.setEnabled(true);
+                    historyButton.setEnabled(true);
+                    profileButton.setEnabled(true);
 
                     // Check if disabledFeature is an array or single string
                     switch (disabledFeatureObject) {
@@ -193,13 +193,13 @@ public final class Player extends javax.swing.JFrame {
                                 
                                 switch (featureName) {
                                     case "StartGame" ->
-                                        StartGame.setEnabled(false);
+                                        startGameButton.setEnabled(false);
                                     case "Leaderboard" ->
-                                        Leaderboard.setEnabled(false);
+                                        leaderboardButton.setEnabled(false);
                                     case "History" ->
-                                        History.setEnabled(false);
+                                        historyButton.setEnabled(false);
                                     case "Profile" ->
-                                        Profile.setEnabled(false);
+                                        profileButton.setEnabled(false);
                                 }
                             }
                         }
@@ -212,13 +212,13 @@ public final class Player extends javax.swing.JFrame {
                                     // All buttons remain enabled
                                 }
                                 case "StartGame" ->
-                                    StartGame.setEnabled(false);
+                                    startGameButton.setEnabled(false);
                                 case "Leaderboard" ->
-                                    Leaderboard.setEnabled(false);
+                                    leaderboardButton.setEnabled(false);
                                 case "History" ->
-                                    History.setEnabled(false);
+                                    historyButton.setEnabled(false);
                                 case "Profile" ->
-                                    Profile.setEnabled(false);
+                                    profileButton.setEnabled(false);
                             }
                         }
                         default -> {
@@ -239,12 +239,12 @@ public final class Player extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton History;
-    private javax.swing.JButton Leaderboard;
-    private javax.swing.JButton Logout;
-    private javax.swing.JButton Profile;
-    private javax.swing.JButton StartGame;
+    private javax.swing.JButton historyButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton leaderboardButton;
+    private javax.swing.JButton logoutButton;
+    private javax.swing.JButton profileButton;
+    private javax.swing.JButton startGameButton;
     // End of variables declaration//GEN-END:variables
 }

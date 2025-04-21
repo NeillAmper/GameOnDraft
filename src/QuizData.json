@@ -146,6 +146,35 @@
                 }],
             "Creator": "test1",
             "QuizTitle": "Pregnant"
+        }, {
+            "Category": "History",
+            "Questions": [{
+                    "questionnumber": 1,
+                    "question": "test1",
+                    "answer": "test2",
+                    "option3": "test4",
+                    "option4": "test5",
+                    "option1": "test2",
+                    "option2": "test3"
+                }, {
+                    "questionnumber": 2,
+                    "question": "test6",
+                    "answer": "test8",
+                    "option3": "test9",
+                    "option4": "test10",
+                    "option1": "test7",
+                    "option2": "test8"
+                }, {
+                    "questionnumber": 3,
+                    "question": "test11",
+                    "answer": "test14",
+                    "option3": "test14",
+                    "option4": "test15",
+                    "option1": "test12",
+                    "option2": "test13"
+                }],
+            "Creator": "test1",
+            "QuizTitle": "test1"
         }],
     "Scenarios": [{
             "startScenario": "Your journey begins at the entrance of ancient jungle ruins. A massive stone door blocks your path. A riddle is etched into its surface\u2014solve it to begin your quest.",

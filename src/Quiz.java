@@ -30,13 +30,15 @@ public class Quiz extends javax.swing.JFrame {
     private final List<JSONObject> scenarioList = new ArrayList<>();
     private final List<JSONObject> answerLog = new ArrayList<>(); // Log of question answers
     private JSONArray scenariosArray;
+    private final String category; // Add a new member variable
 
-    public Quiz(String playerName, String quizData, String selectedQuiz, String usname) {
+    public Quiz(String playerName, String quizData, String selectedQuiz, String usname, String category) {
         initComponents();
         this.playerName = playerName;
         this.usname = usname;
         this.quizData = quizData;
         this.selectedQuiz = selectedQuiz;
+        this.category = category; // Store the category
         loadQuizData();
         loadScenarios();
         showStartScenario();
@@ -507,7 +509,7 @@ public class Quiz extends javax.swing.JFrame {
         historyData.put("evaluation", score == maxscore ? "pass" : "fail"); // Result: pass or fail
         historyData.put("score", score + "/" + maxscore); // Score in the format x/y
         historyData.put("creator", getQuizCreator(selectedQuiz)); // Creator of the quiz
-        historyData.put("category", selectedQuiz); // Quiz category (subject)
+        historyData.put("category", category); // Use the category passed from QuizSelection
         historyData.put("quizTitle", selectedQuiz); // Title of the quiz
         historyData.put("player", playerName); // Player name
         historyData.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm a"))); // Timestamp
@@ -618,7 +620,7 @@ public class Quiz extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
-            new Quiz("Player1", "Test", "SampleCategory", "Testss").setVisible(true);
+            new Quiz("Player1", "Test", "SampleCategory", "Testss", "Trial").setVisible(true);
         });
     }
 

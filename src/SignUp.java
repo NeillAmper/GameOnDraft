@@ -157,6 +157,18 @@ public class SignUp extends javax.swing.JFrame {
             return;
         }
 
+        try {
+            filecheck(); // Ensure the file and structure are ready
+        } catch (IOException | ParseException ex) {
+            Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // Check if the username already exists
+        if (isUsernameTaken(username)) {
+            JOptionPane.showMessageDialog(null, "Username already exists. Please choose a different username.", "Duplicate Username", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         // Confirm user addition
         int confirm = JOptionPane.showConfirmDialog(null,
                 "Are you sure you want to add this user?",
@@ -164,12 +176,6 @@ public class SignUp extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            try {
-                filecheck(); // Ensure the file and structure are ready
-            } catch (IOException | ParseException ex) {
-                Logger.getLogger(SignUp.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
             // Gather user input
             addname = Username.getText();
             addpass = Password.getText();
@@ -247,6 +253,16 @@ public class SignUp extends javax.swing.JFrame {
                 }
             }
         }
+    }
+
+    private boolean isUsernameTaken(String username) {
+        for (Object userObject : userlist) {
+            JSONObject user = (JSONObject) userObject;
+            if (user.get("username").toString().equalsIgnoreCase(username)) {
+                return true; // Username exists
+            }
+        }
+        return false; // Username does not exist
     }
 
     public static void save() throws IOException {

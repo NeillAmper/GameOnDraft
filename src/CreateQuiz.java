@@ -566,7 +566,7 @@ public final class CreateQuiz extends javax.swing.JFrame {
 
             // Create a new quiz object with the current session data
             JSONObject newQuiz = new JSONObject();
-            newQuiz.put("QuizTitle", title);
+            newQuiz.put("QuizTitle", quizTitle);
             newQuiz.put("Creator", gameMasterName);
             newQuiz.put("Category", category);
             newQuiz.put("Questions", newQuizArray);

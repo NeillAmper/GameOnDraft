@@ -47,13 +47,13 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="139" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="Leaderboard" max="32767" attributes="0"/>
-                              <Component id="EditQuiz" alignment="0" max="32767" attributes="0"/>
-                              <Component id="DeleteQuiz" alignment="0" max="32767" attributes="0"/>
-                              <Component id="History" alignment="0" max="32767" attributes="0"/>
+                              <Component id="leaderboardButton" max="32767" attributes="0"/>
+                              <Component id="editQuizButton" alignment="0" max="32767" attributes="0"/>
+                              <Component id="deleteQuizButton" alignment="0" max="32767" attributes="0"/>
+                              <Component id="historyButton" alignment="0" max="32767" attributes="0"/>
                               <Component id="Logout" alignment="0" max="32767" attributes="0"/>
-                              <Component id="CreateQuiz" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="ProfileButton" max="32767" attributes="0"/>
+                              <Component id="createQuizButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="profileButton" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -67,17 +67,17 @@
                   <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="WelcomeMessage" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="CreateQuiz" min="-2" max="-2" attributes="0"/>
+                  <Component id="createQuizButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="DeleteQuiz" min="-2" max="-2" attributes="0"/>
+                  <Component id="deleteQuizButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="EditQuiz" min="-2" max="-2" attributes="0"/>
+                  <Component id="editQuizButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="Leaderboard" min="-2" max="-2" attributes="0"/>
+                  <Component id="leaderboardButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="History" min="-2" max="-2" attributes="0"/>
+                  <Component id="historyButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                  <Component id="ProfileButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="profileButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="Logout" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="31" max="32767" attributes="0"/>
@@ -91,44 +91,44 @@
             <Property name="text" type="java.lang.String" value="Welcome, Game Master (...)!"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="CreateQuiz">
+        <Component class="javax.swing.JButton" name="createQuizButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Create Quiz"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CreateQuizActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createQuizButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="DeleteQuiz">
+        <Component class="javax.swing.JButton" name="deleteQuizButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Delete Quiz"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DeleteQuizActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteQuizButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="EditQuiz">
+        <Component class="javax.swing.JButton" name="editQuizButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Edit Quiz"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="EditQuizActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="editQuizButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="Leaderboard">
+        <Component class="javax.swing.JButton" name="leaderboardButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Leaderboard"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LeaderboardActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="leaderboardButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="History">
+        <Component class="javax.swing.JButton" name="historyButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="History"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HistoryActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="historyButtonActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="Logout">
@@ -139,12 +139,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LogoutActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="ProfileButton">
+        <Component class="javax.swing.JButton" name="profileButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Profile"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ProfileButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="profileButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

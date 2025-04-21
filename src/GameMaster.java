@@ -26,50 +26,50 @@ public final class GameMaster extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         WelcomeMessage = new javax.swing.JLabel();
-        CreateQuiz = new javax.swing.JButton();
-        DeleteQuiz = new javax.swing.JButton();
-        EditQuiz = new javax.swing.JButton();
-        Leaderboard = new javax.swing.JButton();
-        History = new javax.swing.JButton();
+        createQuizButton = new javax.swing.JButton();
+        deleteQuizButton = new javax.swing.JButton();
+        editQuizButton = new javax.swing.JButton();
+        leaderboardButton = new javax.swing.JButton();
+        historyButton = new javax.swing.JButton();
         Logout = new javax.swing.JButton();
-        ProfileButton = new javax.swing.JButton();
+        profileButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         WelcomeMessage.setText("Welcome, Game Master (...)!");
 
-        CreateQuiz.setText("Create Quiz");
-        CreateQuiz.addActionListener(new java.awt.event.ActionListener() {
+        createQuizButton.setText("Create Quiz");
+        createQuizButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CreateQuizActionPerformed(evt);
+                createQuizButtonActionPerformed(evt);
             }
         });
 
-        DeleteQuiz.setText("Delete Quiz");
-        DeleteQuiz.addActionListener(new java.awt.event.ActionListener() {
+        deleteQuizButton.setText("Delete Quiz");
+        deleteQuizButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                DeleteQuizActionPerformed(evt);
+                deleteQuizButtonActionPerformed(evt);
             }
         });
 
-        EditQuiz.setText("Edit Quiz");
-        EditQuiz.addActionListener(new java.awt.event.ActionListener() {
+        editQuizButton.setText("Edit Quiz");
+        editQuizButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EditQuizActionPerformed(evt);
+                editQuizButtonActionPerformed(evt);
             }
         });
 
-        Leaderboard.setText("Leaderboard");
-        Leaderboard.addActionListener(new java.awt.event.ActionListener() {
+        leaderboardButton.setText("Leaderboard");
+        leaderboardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LeaderboardActionPerformed(evt);
+                leaderboardButtonActionPerformed(evt);
             }
         });
 
-        History.setText("History");
-        History.addActionListener(new java.awt.event.ActionListener() {
+        historyButton.setText("History");
+        historyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HistoryActionPerformed(evt);
+                historyButtonActionPerformed(evt);
             }
         });
 
@@ -80,10 +80,10 @@ public final class GameMaster extends javax.swing.JFrame {
             }
         });
 
-        ProfileButton.setText("Profile");
-        ProfileButton.addActionListener(new java.awt.event.ActionListener() {
+        profileButton.setText("Profile");
+        profileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ProfileButtonActionPerformed(evt);
+                profileButtonActionPerformed(evt);
             }
         });
 
@@ -99,13 +99,13 @@ public final class GameMaster extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(139, 139, 139)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(Leaderboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(EditQuiz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(DeleteQuiz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(History, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(leaderboardButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editQuizButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(deleteQuizButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(historyButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(Logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(CreateQuiz)
-                            .addComponent(ProfileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(createQuizButton)
+                            .addComponent(profileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(128, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -114,17 +114,17 @@ public final class GameMaster extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(WelcomeMessage)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(CreateQuiz)
+                .addComponent(createQuizButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(DeleteQuiz)
+                .addComponent(deleteQuizButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(EditQuiz)
+                .addComponent(editQuizButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Leaderboard)
+                .addComponent(leaderboardButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(History)
+                .addComponent(historyButton)
                 .addGap(7, 7, 7)
-                .addComponent(ProfileButton)
+                .addComponent(profileButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Logout)
                 .addContainerGap(31, Short.MAX_VALUE))
@@ -151,38 +151,38 @@ public final class GameMaster extends javax.swing.JFrame {
         setVisible(false);
     }//GEN-LAST:event_LogoutActionPerformed
 
-    private void CreateQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateQuizActionPerformed
+    private void createQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createQuizButtonActionPerformed
         this.setVisible(false);
         new CreateQuiz(null, gameMasterName, usname).setVisible(true);
-    }//GEN-LAST:event_CreateQuizActionPerformed
+    }//GEN-LAST:event_createQuizButtonActionPerformed
 
-    private void DeleteQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteQuizActionPerformed
+    private void deleteQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteQuizButtonActionPerformed
         this.setVisible(false);
         new DeleteQuiz(null, gameMasterName, usname).setVisible(true);
-    }//GEN-LAST:event_DeleteQuizActionPerformed
+    }//GEN-LAST:event_deleteQuizButtonActionPerformed
 
-    private void EditQuizActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditQuizActionPerformed
+    private void editQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editQuizButtonActionPerformed
         this.setVisible(false);
         new EditQuizTable(null, gameMasterName, usname, null).setVisible(true);
-    }//GEN-LAST:event_EditQuizActionPerformed
+    }//GEN-LAST:event_editQuizButtonActionPerformed
 
-    private void LeaderboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LeaderboardActionPerformed
+    private void leaderboardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaderboardButtonActionPerformed
         this.setVisible(false);
         // Navigate to the Leaderboard with the Game Master's details
         new Leaderboard(null, gameMasterName, null, usname).setVisible(true);
-    }//GEN-LAST:event_LeaderboardActionPerformed
+    }//GEN-LAST:event_leaderboardButtonActionPerformed
 
-    private void HistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HistoryActionPerformed
+    private void historyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_historyButtonActionPerformed
         this.setVisible(false);
         // Corrected the argument order and roles passed to the History class
         new History(null, gameMasterName, null, usname).setVisible(true);
-    }//GEN-LAST:event_HistoryActionPerformed
+    }//GEN-LAST:event_historyButtonActionPerformed
 
-    private void ProfileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProfileButtonActionPerformed
+    private void profileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_profileButtonActionPerformed
         this.dispose();
         // Pass the correct username to the Profile constructor
         new Profile(null, gameMasterName, null, usname).setVisible(true); // changed
-    }//GEN-LAST:event_ProfileButtonActionPerformed
+    }//GEN-LAST:event_profileButtonActionPerformed
 
     public void Current_Disabled_Feature() {
         Disabled_Feature = "None"; // Default value in case of error or missing data
@@ -205,12 +205,12 @@ public final class GameMaster extends javax.swing.JFrame {
                     Object disabledFeatureObject = account.get("disabledFeature");
 
                     // Reset all buttons to enabled (default state)
-                    Leaderboard.setEnabled(true);
-                    History.setEnabled(true);
-                    CreateQuiz.setEnabled(true);
-                    DeleteQuiz.setEnabled(true);
-                    EditQuiz.setEnabled(true);
-                    ProfileButton.setEnabled(true);
+                    leaderboardButton.setEnabled(true);
+                    historyButton.setEnabled(true);
+                    createQuizButton.setEnabled(true);
+                    deleteQuizButton.setEnabled(true);
+                    editQuizButton.setEnabled(true);
+                    profileButton.setEnabled(true);
 
                     // Check if disabledFeature is an array or single string
                     switch (disabledFeatureObject) {
@@ -222,17 +222,17 @@ public final class GameMaster extends javax.swing.JFrame {
 
                                 switch (featureName) {
                                     case "Leaderboard" ->
-                                        Leaderboard.setEnabled(false);
+                                        leaderboardButton.setEnabled(false);
                                     case "History" ->
-                                        History.setEnabled(false);
+                                        historyButton.setEnabled(false);
                                     case "CreateQuiz" ->
-                                        CreateQuiz.setEnabled(false);
+                                        createQuizButton.setEnabled(false);
                                     case "DeleteQuiz" ->
-                                        DeleteQuiz.setEnabled(false);
+                                        deleteQuizButton.setEnabled(false);
                                     case "EditQuiz" ->
-                                        EditQuiz.setEnabled(false);
+                                        editQuizButton.setEnabled(false);
                                     case "Profile" ->
-                                        ProfileButton.setEnabled(false);
+                                        profileButton.setEnabled(false);
                                 }
                             }
                         }
@@ -245,17 +245,17 @@ public final class GameMaster extends javax.swing.JFrame {
                                     // All buttons remain enabled
                                 }
                                 case "Leaderboard" ->
-                                    Leaderboard.setEnabled(false);
+                                    leaderboardButton.setEnabled(false);
                                 case "History" ->
-                                    History.setEnabled(false);
+                                    historyButton.setEnabled(false);
                                 case "CreateQuiz" ->
-                                    CreateQuiz.setEnabled(false);
+                                    createQuizButton.setEnabled(false);
                                 case "DeleteQuiz" ->
-                                    DeleteQuiz.setEnabled(false);
+                                    deleteQuizButton.setEnabled(false);
                                 case "EditQuiz" ->
-                                    EditQuiz.setEnabled(false);
+                                    editQuizButton.setEnabled(false);
                                 case "Profile" ->
-                                    ProfileButton.setEnabled(false);
+                                    profileButton.setEnabled(false);
                             }
                         }
                         default -> {
@@ -276,14 +276,14 @@ public final class GameMaster extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton CreateQuiz;
-    private javax.swing.JButton DeleteQuiz;
-    private javax.swing.JButton EditQuiz;
-    private javax.swing.JButton History;
-    private javax.swing.JButton Leaderboard;
     private javax.swing.JButton Logout;
-    private javax.swing.JButton ProfileButton;
     private javax.swing.JLabel WelcomeMessage;
+    private javax.swing.JButton createQuizButton;
+    private javax.swing.JButton deleteQuizButton;
+    private javax.swing.JButton editQuizButton;
+    private javax.swing.JButton historyButton;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton leaderboardButton;
+    private javax.swing.JButton profileButton;
     // End of variables declaration//GEN-END:variables
 }

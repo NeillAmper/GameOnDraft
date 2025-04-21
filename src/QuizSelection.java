@@ -13,7 +13,6 @@ public class QuizSelection extends javax.swing.JFrame {
     private JSONArray quizzesArray;
     private static final String FILE_PATH = "src/QuizData.json";
 
-
     public QuizSelection(String playerName, String quizData, String selectedQuiz, String usname) {
         this.playerName = playerName;
         this.usname = usname;
@@ -154,9 +153,10 @@ public class QuizSelection extends javax.swing.JFrame {
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         int selectedRow = quizTable.getSelectedRow(); // Get the selected row from the table
         if (selectedRow != -1) {
-            // Retrieve the quiz title from the selected row
+            // Retrieve the quiz title and category from the selected row
             DefaultTableModel model = (DefaultTableModel) quizTable.getModel();
             String selectedQuizTitle = (String) model.getValueAt(selectedRow, 0);
+            String selectedQuizCategory = (String) model.getValueAt(selectedRow, 2); // Get the category
 
             JSONObject chosenQuiz = null;
 
@@ -171,16 +171,15 @@ public class QuizSelection extends javax.swing.JFrame {
             }
 
             if (chosenQuiz != null) {
-                // Pass the quiz title and quiz data to the Quiz class
-                new Quiz(playerName, chosenQuiz.toJSONString(), selectedQuizTitle, usname).setVisible(true);
+                // Pass the quiz title, category, and quiz data to the Quiz class
+                new Quiz(playerName, chosenQuiz.toJSONString(), selectedQuizTitle, selectedQuizCategory, usname).setVisible(true);
                 this.dispose(); // Close the current frame
             } else {
                 JOptionPane.showMessageDialog(this, "Quiz not found.");
             }
         } else {
             JOptionPane.showMessageDialog(this, "Please select a quiz.");
-        }
-    }//GEN-LAST:event_startButtonActionPerformed
+        }    }//GEN-LAST:event_startButtonActionPerformed
 
     private void searchFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchFieldActionPerformed
     ////

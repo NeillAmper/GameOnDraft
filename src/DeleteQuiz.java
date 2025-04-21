@@ -166,15 +166,13 @@ public class DeleteQuiz extends javax.swing.JFrame {
 
     private void BackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackButtonActionPerformed
         if (adminName != null && !adminName.isEmpty()) {
-            // Navigate back to Administrator.java for adminName
             Administrator admin = new Administrator(adminName, usname);
             admin.setVisible(true);
         } else if (gameMasterName != null && !gameMasterName.isEmpty()) {
             GameMaster g = new GameMaster(gameMasterName, usname);
             g.setVisible(true);
         }
-
-        this.setVisible(false); // Close the current CreateQuiz window
+        this.setVisible(false);
     }//GEN-LAST:event_BackButtonActionPerformed
 
     private void CategorySelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CategorySelectionActionPerformed

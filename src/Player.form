@@ -42,14 +42,14 @@
                   <EmptySpace min="-2" pref="127" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                          <Component id="StartGame" min="-2" max="-2" attributes="0"/>
+                          <Component id="startGameButton" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="Leaderboard" min="-2" max="-2" attributes="0"/>
+                              <Component id="leaderboardButton" min="-2" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="Profile" min="-2" max="-2" attributes="0"/>
-                                      <Component id="History" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="Logout" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="profileButton" min="-2" max="-2" attributes="0"/>
+                                      <Component id="historyButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="logoutButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                               </Group>
@@ -67,15 +67,15 @@
                   <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="StartGame" min="-2" max="-2" attributes="0"/>
+                  <Component id="startGameButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="Leaderboard" min="-2" max="-2" attributes="0"/>
+                  <Component id="leaderboardButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="History" min="-2" max="-2" attributes="0"/>
+                  <Component id="historyButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Component id="Profile" min="-2" max="-2" attributes="0"/>
+                  <Component id="profileButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="8" max="32767" attributes="0"/>
-                  <Component id="Logout" min="-2" max="-2" attributes="0"/>
+                  <Component id="logoutButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -87,44 +87,44 @@
             <Property name="text" type="java.lang.String" value="Welcome, Player (...)!"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="StartGame">
+        <Component class="javax.swing.JButton" name="startGameButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Start Game"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="StartGameActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="startGameButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="Profile">
+        <Component class="javax.swing.JButton" name="profileButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Profile"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ProfileActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="profileButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="Leaderboard">
+        <Component class="javax.swing.JButton" name="leaderboardButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Leaderboards"/>
+            <Property name="text" type="java.lang.String" value="Leaderboard"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LeaderboardActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="leaderboardButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="History">
+        <Component class="javax.swing.JButton" name="historyButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="History"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HistoryActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="historyButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="Logout">
+        <Component class="javax.swing.JButton" name="logoutButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Logout"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="LogoutActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="logoutButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
